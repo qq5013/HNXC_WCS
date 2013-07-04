@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+	<Resources>
+		<DeviceClass Name="补货线">
+			<Resource StateCode="1" StateDesc="正常" Image=".\Image\a.bmp"/>
+		</DeviceClass>
+	</Resources>
+	<Devices>
+		<DeviceClass Name="补货线">
+			<Device DeviceNo="1" X="266" Y="489" Width="14" Height="18"/>
+			<Device DeviceNo="2" X="291" Y="489" Width="14" Height="18"/>
+			<Device DeviceNo="3" X="317" Y="489" Width="14" Height="18"/>
+
+			<Device DeviceNo="4" X="266" Y="448" Width="14" Height="18"/>
+			<Device DeviceNo="5" X="291" Y="448" Width="14" Height="18"/>
+			<Device DeviceNo="6" X="317" Y="448" Width="14" Height="18"/>
+
+			<Device DeviceNo="7" X="266" Y="408" Width="14" Height="18"/>
+			<Device DeviceNo="8" X="291" Y="408" Width="14" Height="18"/>
+			<Device DeviceNo="9" X="317" Y="408" Width="14" Height="18"/>
+
+			<Device DeviceNo="10" X="266" Y="367" Width="14" Height="18"/>
+			<Device DeviceNo="11" X="291" Y="367" Width="14" Height="18"/>
+			<Device DeviceNo="12" X="317" Y="367" Width="14" Height="18"/>
+
+			<Device DeviceNo="13" X="266" Y="324" Width="14" Height="18"/>
+			<Device DeviceNo="14" X="291" Y="324" Width="14" Height="18"/>
+			<Device DeviceNo="15" X="317" Y="324" Width="14" Height="18"/>
+
+			<Device DeviceNo="16" X="266" Y="283" Width="14" Height="18"/>
+			<Device DeviceNo="17" X="291" Y="283" Width="14" Height="18"/>
+			<Device DeviceNo="18" X="317" Y="283" Width="14" Height="18"/>
+
+			<Device DeviceNo="19" X="266" Y="242" Width="14" Height="18"/>
+			<Device DeviceNo="20" X="291" Y="242" Width="14" Height="18"/>
+			<Device DeviceNo="21" X="317" Y="242" Width="14" Height="18"/>
+
+			<Device DeviceNo="22" X="266" Y="202" Width="14" Height="18"/>
+			<Device DeviceNo="23" X="291" Y="202" Width="14" Height="18"/>
+			<Device DeviceNo="24" X="317" Y="202" Width="14" Height="18"/>
+
+			<Device DeviceNo="25" X="266" Y="160" Width="14" Height="18"/>
+			<Device DeviceNo="26" X="291" Y="160" Width="14" Height="18"/>
+			<Device DeviceNo="27" X="317" Y="160" Width="14" Height="18"/>
+
+			<Device DeviceNo="28" X="266" Y="119" Width="14" Height="18"/>
+			<Device DeviceNo="29" X="291" Y="119" Width="14" Height="18"/>
+			<Device DeviceNo="30" X="317" Y="119" Width="14" Height="18"/>
+
+			<Device DeviceNo="31" X="266" Y="78" Width="14" Height="18"/>
+			<Device DeviceNo="32" X="291" Y="78" Width="14" Height="18"/>
+			<Device DeviceNo="33" X="317" Y="78" Width="14" Height="18"/>
+
+			<Device DeviceNo="34" X="346" Y="285" Width="14" Height="18"/>
+			<Device DeviceNo="35" X="379" Y="285" Width="14" Height="18"/>
+
+			<Device DeviceNo="36" X="380" Y="319" Width="14" Height="18"/>
+			<Device DeviceNo="37" X="380" Y="347" Width="14" Height="18"/>
+			<Device DeviceNo="38" X="380" Y="375" Width="14" Height="18"/>
+			<Device DeviceNo="39" X="380" Y="403" Width="14" Height="18"/>
+			<Device DeviceNo="40" X="380" Y="431" Width="14" Height="18"/>
+
+			<Device DeviceNo="41" X="378" Y="554" Width="14" Height="18"/>
+			<Device DeviceNo="42" X="348" Y="556" Width="14" Height="18"/>
+			<Device DeviceNo="43" X="322" Y="556" Width="14" Height="18"/>
+			<Device DeviceNo="44" X="296" Y="556" Width="14" Height="18"/>
+			<Device DeviceNo="45" X="270" Y="556" Width="14" Height="18"/>
+			<Device DeviceNo="46" X="244" Y="556" Width="14" Height="18"/>
+			<Device DeviceNo="47" X="218" Y="556" Width="14" Height="18"/>
+			<Device DeviceNo="48" X="192" Y="556" Width="14" Height="18"/>
+			<Device DeviceNo="49" X="166" Y="556" Width="14" Height="18"/>
+			<Device DeviceNo="50" X="140" Y="556" Width="14" Height="18"/>
+			<Device DeviceNo="51" X="114" Y="556" Width="14" Height="18"/>
+			<Device DeviceNo="52" X="88" Y="556" Width="14" Height="18"/>
+			<Device DeviceNo="53" X="62" Y="556" Width="14" Height="18"/>
+			<Device DeviceNo="54" X="36" Y="556" Width="14" Height="18"/>
+			<Device DeviceNo="55" X="10" Y="556" Width="14" Height="18"/>
+
+			<Device DeviceNo="56" X="530" Y="431" Width="14" Height="18"/>
+			<Device DeviceNo="57" X="563" Y="431" Width="14" Height="18"/>
+			<Device DeviceNo="58" X="596" Y="431" Width="14" Height="18"/>
+			<Device DeviceNo="59" X="629" Y="431" Width="14" Height="18"/>
+			<Device DeviceNo="60" X="662" Y="431" Width="14" Height="18"/>
+			<Device DeviceNo="61" X="695" Y="431" Width="14" Height="18"/>
+			<Device DeviceNo="62" X="730" Y="431" Width="14" Height="18"/>
+
+			<Device DeviceNo="63" X="530" Y="459" Width="14" Height="18"/>
+			<Device DeviceNo="64" X="563" Y="459" Width="14" Height="18"/>
+			<Device DeviceNo="65" X="596" Y="459" Width="14" Height="18"/>
+			<Device DeviceNo="66" X="629" Y="459" Width="14" Height="18"/>
+			<Device DeviceNo="67" X="662" Y="459" Width="14" Height="18"/>
+			<Device DeviceNo="68" X="695" Y="459" Width="14" Height="18"/>
+			<Device DeviceNo="69" X="730" Y="459" Width="14" Height="18"/>
+			<Device DeviceNo="70" X="765" Y="459" Width="14" Height="18"/>
+			<Device DeviceNo="71" X="799" Y="459" Width="14" Height="18"/>
+			<Device DeviceNo="72" X="833" Y="459" Width="14" Height="18"/>
+			<Device DeviceNo="73" X="867" Y="459" Width="14" Height="18"/>
+			<Device DeviceNo="74" X="901" Y="459" Width="14" Height="18"/>
+			<Device DeviceNo="75" X="935" Y="459" Width="14" Height="18"/>
+
+
+
+
+			<Device DeviceNo="76" X="380" Y="249" Width="14" Height="18"/>
+			<Device DeviceNo="77" X="380" Y="221" Width="14" Height="18"/>
+			<Device DeviceNo="78" X="380" Y="193" Width="14" Height="18"/>
+			<Device DeviceNo="79" X="380" Y="165" Width="14" Height="18"/>
+			<Device DeviceNo="80" X="380" Y="137" Width="14" Height="18"/>
+
+			<Device DeviceNo="81" X="378" Y="12" Width="14" Height="18"/>
+			<Device DeviceNo="82" X="349" Y="12" Width="14" Height="18"/>
+			<Device DeviceNo="83" X="323" Y="12" Width="14" Height="18"/>
+			<Device DeviceNo="84" X="297" Y="12" Width="14" Height="18"/>
+			<Device DeviceNo="85" X="271" Y="12" Width="14" Height="18"/>
+			<Device DeviceNo="86" X="245" Y="12" Width="14" Height="18"/>
+			<Device DeviceNo="87" X="219" Y="12" Width="14" Height="18"/>
+			<Device DeviceNo="88" X="193" Y="12" Width="14" Height="18"/>
+			<Device DeviceNo="89" X="167" Y="12" Width="14" Height="18"/>
+			<Device DeviceNo="90" X="141" Y="12" Width="14" Height="18"/>
+			<Device DeviceNo="91" X="115" Y="12" Width="14" Height="18"/>
+			<Device DeviceNo="92" X="89" Y="12" Width="14" Height="18"/>
+			<Device DeviceNo="93" X="63" Y="12" Width="14" Height="18"/>
+			<Device DeviceNo="94" X="37" Y="12" Width="14" Height="18"/>
+			<Device DeviceNo="95" X="11" Y="12" Width="14" Height="18"/>
+
+			<Device DeviceNo="96" X="530" Y="137" Width="14" Height="18"/>
+			<Device DeviceNo="97" X="563" Y="137" Width="14" Height="18"/>
+			<Device DeviceNo="98" X="596" Y="137" Width="14" Height="18"/>
+			<Device DeviceNo="99" X="629" Y="137" Width="14" Height="18"/>
+			<Device DeviceNo="100" X="662" Y="137" Width="14" Height="18"/>
+			<Device DeviceNo="101" X="695" Y="137" Width="14" Height="18"/>
+			<Device DeviceNo="102" X="730" Y="137" Width="14" Height="18"/>
+
+			<Device DeviceNo="103" X="530" Y="108" Width="14" Height="18"/>
+			<Device DeviceNo="104" X="563" Y="108" Width="14" Height="18"/>
+			<Device DeviceNo="105" X="596" Y="108" Width="14" Height="18"/>
+			<Device DeviceNo="106" X="629" Y="108" Width="14" Height="18"/>
+			<Device DeviceNo="107" X="662" Y="108" Width="14" Height="18"/>
+			<Device DeviceNo="108" X="695" Y="108" Width="14" Height="18"/>
+			<Device DeviceNo="109" X="730" Y="108" Width="14" Height="18"/>
+			<Device DeviceNo="110" X="765" Y="108" Width="14" Height="18"/>
+			<Device DeviceNo="111" X="799" Y="108" Width="14" Height="18"/>
+			<Device DeviceNo="112" X="833" Y="108" Width="14" Height="18"/>
+			<Device DeviceNo="113" X="867" Y="108" Width="14" Height="18"/>
+			<Device DeviceNo="114" X="901" Y="108" Width="14" Height="18"/>
+			<Device DeviceNo="115" X="935" Y="108" Width="14" Height="18"/>
+
+		</DeviceClass>
+	</Devices>
+</Configuration>

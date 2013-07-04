@@ -1,0 +1,318 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7C262527-51F1-4586-B590-9F2AD56EDAAC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>THOK.XC.Dispatcher</RootNamespace>
+    <AssemblyName>THOK.XC.Dispatcher</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DataGridViewAutoFilter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Rec\DataGridViewAutoFilter.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
+    <Reference Include="System.Web.Services, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\WINDOWS\assembly\GAC_MSIL\System.Web.Services\2.0.0.0__b03f5f7f11d50a3a\System.Web.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="THOK.AF.View, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Rec\THOK.AF.View.dll</HintPath>
+    </Reference>
+    <Reference Include="XPanderControl, Version=1.2.0.0, Culture=neutral">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Rec\XPanderControl.dll</HintPath>
+    </Reference>
+    <Reference Include="XPExplorerBar, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Rec\XPExplorerBar.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="View\Control\ButtonArea.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="View\Control\ButtonArea.Designer.cs">
+      <DependentUpon>ButtonArea.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\ChannelDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Dialog\ChannelDialog.designer.cs">
+      <DependentUpon>ChannelDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\StateQueryDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Dialog\StateQueryDialog.Designer.cs">
+      <DependentUpon>StateQueryDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Form\ChannelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Form\ChannelForm.Designer.cs">
+      <DependentUpon>ChannelForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Form\ChannelQueryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Form\ChannelQueryForm.designer.cs">
+      <DependentUpon>ChannelQueryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Form\OrderStateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Form\OrderStateForm.Designer.cs">
+      <DependentUpon>OrderStateForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Form\ParameterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Form\ParameterForm.designer.cs">
+      <DependentUpon>ParameterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\ScanDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Dialog\ScanDialog.Designer.cs">
+      <DependentUpon>ScanDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\SimulateDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Dialog\SimulateDialog.Designer.cs">
+      <DependentUpon>SimulateDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Form\StockOutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Form\StockOutForm.Designer.cs">
+      <DependentUpon>StockOutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Form\StockOutTaskForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Form\StockOutTaskForm.Designer.cs">
+      <DependentUpon>StockOutTaskForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Dialog\PrintSelectDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Dialog\PrintSelectDialog.designer.cs">
+      <DependentUpon>PrintSelectDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Form\StockInTaskForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Form\StockInTaskForm.Designer.cs">
+      <DependentUpon>StockInTaskForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\Form\StockInForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Form\StockInForm.Designer.cs">
+      <DependentUpon>StockInForm.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Control\ButtonArea.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ButtonArea.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Dialog\ChannelDialog.resx">
+      <DependentUpon>ChannelDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Dialog\StateQueryDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>StateQueryDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Form\ChannelForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ChannelForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Form\ChannelQueryForm.resx">
+      <DependentUpon>ChannelQueryForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Form\OrderStateForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>OrderStateForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Form\ParameterForm.resx">
+      <DependentUpon>ParameterForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Dialog\ScanDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ScanDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Dialog\SimulateDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SimulateDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Form\StockOutForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>StockOutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Form\StockOutTaskForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>StockOutTaskForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Dialog\PrintSelectDialog.resx">
+      <DependentUpon>PrintSelectDialog.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Form\StockInTaskForm.resx">
+      <DependentUpon>StockInTaskForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\Form\StockInForm.resx">
+      <DependentUpon>StockInForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\Chart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\Exit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\Info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\Save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\Modify.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\Delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{967B4E0D-AD0C-4609-AB67-0FA40C0206D8}" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\THOK.MCP.Service.Siemens\THOK.MCP.Service.Siemens.csproj">
+      <Project>{7635ED62-DE46-4ED5-ACC8-367C84ACE1CA}</Project>
+      <Name>THOK.MCP.Service.Siemens</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\THOK.MCP\THOK.MCP.csproj">
+      <Project>{D162AF5E-4A8A-4FEB-AAD2-4E7143CB38A7}</Project>
+      <Name>THOK.MCP</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\THOK.ParamUtil\THOK.ParamUtil.csproj">
+      <Project>{E5E55D53-F6D8-4644-A534-4036BE112940}</Project>
+      <Name>THOK.ParamUtil</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\THOK.Util\THOK.Util.csproj">
+      <Project>{BD58139F-8D92-44B9-91B8-851441EB9E18}</Project>
+      <Name>THOK.Util</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\THOK.XC.Process\THOK.XC.Process.csproj">
+      <Project>{A305D90D-4B14-4122-8231-C89216996F47}</Project>
+      <Name>THOK.XC.Process</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<Connections>
+  <Connection Name="DefaultConnection" DatabaseType="SQLSERVER">
+    <ConnectionString Value="server=DELL-PC\SQLEXPRESS;database=StockDB;uid=sa;" />
+    <Password Name="password" Value="65CED0851FFD283F" />
+  </Connection>
+  <Connection Name="ServerConnection" DatabaseType="SQLSERVER">
+    <ConnectionString Value="server=DELL-PC\SQLEXPRESS;database=Logistics;uid=sa;" />
+    <Password Name="password" Value="65CED0851FFD283F" />
+  </Connection>
+  <Connection Name="WESConnection" DatabaseType="SQLSERVER">
+    <ConnectionString Value="server=192.168.1.200;database=THOKWES;uid=sa;" />
+    <Password Name="password" Value="65CED0851FFD283F" />
+  </Connection>
+
+</Connections>

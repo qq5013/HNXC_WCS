@@ -1,0 +1,48 @@
+﻿<?xml version='1.0' ?>
+<Config>
+  <OPCServer ConnectionString="OPC.SimaticNET">
+    <OPCGroup GroupName="DefaultGroup" GroupString="S7:[@LOCALSERVER]" UpdateRate="350">
+
+      <OPCItem ItemName="RestartData" ClientHandler="1" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
+
+      <OPCItem ItemName="Scanner_DirectoryData_02" ClientHandler="2" OPCItemName="DB1,INT2,2" ItemType="WRITE"/>
+      <OPCItem ItemName="Scanner_DirectoryData_03" ClientHandler="3" OPCItemName="DB1,INT6,2" ItemType="WRITE"/>
+
+      <!--<OPCItem ItemName="ReScanOk_02" ClientHandler="4" OPCItemName="DB1,INT102,1" ItemType="READ"/>
+			<OPCItem ItemName="ReScanOk_03" ClientHandler="5" OPCItemName="DB1,INT106,1" ItemType="READ"/>
+
+			<OPCItem ItemName="Show_02" ClientHandler="6" OPCItemName="DB1,INT122,1" ItemType="READ"/>
+			<OPCItem ItemName="Show_03" ClientHandler="7" OPCItemName="DB1,INT126,1" ItemType="READ"/>-->
+      <!--状态管理器添加部分-->
+      <!--订单部分-->
+      <OPCItem ItemName="02_OrderDataMoveNext" ClientHandler="4" OPCItemName="DB1,INT42,1" ItemType="READ"/>
+      <OPCItem ItemName="02_OrderDataMoveTo" ClientHandler="5" OPCItemName="DB1,INT34,1" ItemType="READ"/>
+      <OPCItem ItemName="02_OrderData" ClientHandler="6" OPCItemName="DB3,INT0,53" ItemType="WRITE"/>
+      <OPCItem ItemName="02_ReleaseOrder" ClientHandler="7" OPCItemName="DB1,INT38,1" ItemType="WRITE"/>
+
+
+      <!--LED部分-->
+      <OPCItem ItemName="02_LedMoveNext" ClientHandler="10" OPCItemName="DB1,INT56,1" ItemType="READ"/>
+      <OPCItem ItemName="02_LedMoveTo" ClientHandler="11" OPCItemName="DB1,INT64,1" ItemType="READ"/>
+      <OPCItem ItemName="02_LedShowData" ClientHandler="12" OPCItemName="DB1,INT68,1" ItemType="WRITE"/>
+      <OPCItem ItemName="02_ReleaseLed" ClientHandler="13" OPCItemName="DB1,INT60,1" ItemType="WRITE"/>
+      <!--扫码器部分-->
+      <OPCItem ItemName="02_ScannerMoveNext" ClientHandler="14" OPCItemName="DB1,INT20,1" ItemType="READ"/>
+      <OPCItem ItemName="02_ScannerMoveTo" ClientHandler="15" OPCItemName="DB1,INT24,1" ItemType="READ"/>
+      <OPCItem ItemName="02_ScannerShowData" ClientHandler="16" OPCItemName="DB1,INT16,1" ItemType="READ"/>
+      <OPCItem ItemName="02_ReleaseScanner" ClientHandler="17" OPCItemName="DB1,INT4,2" ItemType="WRITE"/>
+      <OPCItem ItemName="03_1_3" ClientHandler="18" OPCItemName="DB1,INT84,1" ItemType="READ"/>
+      <OPCItem ItemName="03_2_3" ClientHandler="19" OPCItemName="DB1,INT84,1" ItemType="READ"/>
+
+      <OPCItem ItemName="01_1_2" ClientHandler="20" OPCItemName="DB1,INT254,1" ItemType="READ"/>
+      <OPCItem ItemName="01_2_2" ClientHandler="21" OPCItemName="DB1,INT260,1" ItemType="READ"/>
+      <OPCItem ItemName="02_1_2" ClientHandler="22" OPCItemName="DB1,INT266,1" ItemType="READ"/>
+      <OPCItem ItemName="02_2_2" ClientHandler="23" OPCItemName="DB1,INT272,1" ItemType="READ"/>
+
+      <OPCItem ItemName="01_1_3" ClientHandler="24" OPCItemName="DB1,INT230,1" ItemType="READ"/>
+      <OPCItem ItemName="01_2_3" ClientHandler="25" OPCItemName="DB1,INT236,1" ItemType="READ"/>
+      <OPCItem ItemName="02_1_3" ClientHandler="26" OPCItemName="DB1,INT242,1" ItemType="READ"/>
+      <OPCItem ItemName="02_2_3" ClientHandler="27" OPCItemName="DB1,INT248,1" ItemType="READ"/>
+    </OPCGroup>
+  </OPCServer>
+</Config>
