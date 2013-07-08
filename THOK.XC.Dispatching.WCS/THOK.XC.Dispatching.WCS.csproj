@@ -57,9 +57,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="XPExplorerBar, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Rec\XPExplorerBar.dll</HintPath>
+    <Reference Include="XPanderControl">
+      <HintPath>..\Libraries\XPanderControl.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

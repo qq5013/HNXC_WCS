@@ -53,9 +53,8 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DataGridViewAutoFilter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Rec\DataGridViewAutoFilter.dll</HintPath>
+    <Reference Include="DataGridViewAutoFilter">
+      <HintPath>..\Libraries\DataGridViewAutoFilter.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -67,17 +66,14 @@
     </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="THOK.AF.View, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Rec\THOK.AF.View.dll</HintPath>
+    <Reference Include="THOK.AF.View">
+      <HintPath>..\Libraries\THOK.AF.View.dll</HintPath>
     </Reference>
-    <Reference Include="XPanderControl, Version=1.2.0.0, Culture=neutral">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Rec\XPanderControl.dll</HintPath>
+    <Reference Include="XPanderControl">
+      <HintPath>..\Libraries\XPanderControl.dll</HintPath>
     </Reference>
-    <Reference Include="XPExplorerBar, Version=3.3.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Rec\XPExplorerBar.dll</HintPath>
+    <Reference Include="XPExplorerBar">
+      <HintPath>..\Libraries\XPExplorerBar.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
