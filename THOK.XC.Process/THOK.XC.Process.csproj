@@ -50,6 +50,8 @@
     <Compile Include="Dal\StateDal.cs" />
     <Compile Include="Dal\StockInDal.cs" />
     <Compile Include="Dal\SupplyDal.cs" />
+    <Compile Include="Dal\TaskDal.cs" />
+    <Compile Include="Dal\TaskDetailDal.cs" />
     <Compile Include="Dao\ChannelDao.cs" />
     <Compile Include="Dao\ServerDao.cs" />
     <Compile Include="Dao\StateDao.cs" />
@@ -58,10 +60,12 @@
     <Compile Include="Dao\StockOutBatchDao.cs" />
     <Compile Include="Dao\StockOutDao.cs" />
     <Compile Include="Dao\SupplyDao.cs" />
+    <Compile Include="Dao\TaskDao.cs" />
+    <Compile Include="Dao\TaskDetailDao.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="Process_01\StockInFinishProcess.cs" />
     <Compile Include="Process_01\StockInRequestProcess.cs" />
-    <Compile Include="Process_Crane\Process.cs" />
+    <Compile Include="Process_Crane\CraneProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockInProcess\LEDProcess.cs" />
     <Compile Include="StockInProcess\ScanProcess.cs" />
