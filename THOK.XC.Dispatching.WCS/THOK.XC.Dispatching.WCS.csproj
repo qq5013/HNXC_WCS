@@ -114,6 +114,10 @@
     <Content Include="DB.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Crane.xml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\S1.0002.gif" />
     <Content Include="Image\indicator.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

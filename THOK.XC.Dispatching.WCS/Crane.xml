@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<Config>
+  <TCPServer IP="127.0.0.1" Port="7000" />
+  <Parse Type="THOK.MCP.Service.TCP,THOK.MCP.Service.TCP.MessageParse" />
+</Config>
