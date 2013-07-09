@@ -230,28 +230,9 @@ namespace THOK.XC.Dispatching.View
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            using (PersistentManager pm = new PersistentManager())
-            {
-                SupplyDal supplyDal = new SupplyDal();
-                StockInDal stockInDal = new StockInDal();
-
-                DataTable cigaretteTable = supplyDal.FindCigarette();
-                DataTable stockInTable = stockInDal.FindStockInForIsInAndNotOut();
-
-                foreach (DataRow row in cigaretteTable.Rows)
-                {
-                    DataRow[] stockInRows = stockInTable.Select(string.Format("CIGARETTECODE='{0}' AND STATE ='1' AND ( STOCKOUTID IS NULL OR STOCKOUTID = 0 )", row["CIGARETTECODE"].ToString()), "STOCKINID");
-
-                    if (stockInRows.Length <= Convert.ToInt32(Context.Attributes["StockInRequestRemainQuantity"]) )
-                    {
-                        Context.ProcessDispatcher.WriteToProcess("StockInRequestProcess", "StockInRequest", row["CIGARETTECODE"].ToString());
-                    }
-                    else if (stockInRows.Length > 0 && stockInRows.Length + Convert.ToInt32(stockInRows[0]["STOCKINQUANTITY"]) <= 30 )
-                    {
-                        Context.ProcessDispatcher.WriteToProcess("StockInRequestProcess", "StockInRequest", row["CIGARETTECODE"].ToString());
-                    }
-                }
-            }
+            TaskDal taskDal = new TaskDal();
+            DataTable dt = taskDal.TaskOutToDetail();
+            Context.ProcessDispatcher.WriteToProcess("StockInRequestProcess", "StockInRequest", dt);
         }
 
 
