@@ -62,7 +62,7 @@
     <Compile Include="Process_01\StockInFinishProcess.cs" />
     <Compile Include="Process_01\StockInRequestProcess.cs" />
     <Compile Include="Process_01\PalletInProcess.cs" />
-    <Compile Include="Process_Crane\Process.cs" />
+    <Compile Include="Process_Crane\CraneProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockInProcess\LEDProcess.cs" />
     <Compile Include="StockInProcess\ScanProcess.cs" />
