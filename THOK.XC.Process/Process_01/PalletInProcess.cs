@@ -5,7 +5,7 @@ using THOK.MCP;
 
 namespace THOK.XC.Process.Process_01
 {
-    public class StockInFinishProcess : AbstractProcess
+    public class PalletInProcess : AbstractProcess
     {
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
         {

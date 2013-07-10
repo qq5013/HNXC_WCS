@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Config\Configuration.cs" />
+    <Compile Include="MessageParse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TCPService.cs" />
   </ItemGroup>

@@ -47,8 +47,11 @@
     <Compile Include="Server.cs" />
     <Compile Include="SocketEventArgs.cs" />
     <Compile Include="SocketEventHandler.cs" />
+    <Compile Include="Util\Message.cs" />
+    <Compile Include="Util\MessageParse.cs" />
     <Compile Include="Writer.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

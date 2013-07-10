@@ -39,7 +39,6 @@
   <ItemGroup>
     <Compile Include="TelegramFraming.cs" />
     <Compile Include="Message.cs" />
-    <Compile Include="Process.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="AssignmentID.cs" />
     <Compile Include="Telegram.cs" />
