@@ -105,6 +105,7 @@ namespace THOK.XC.Process.Process_Crane
             }
             if (dCraneState[CraneNo] == "1") //堆垛机正忙。
                 return;
+
             
 
            
