@@ -148,10 +148,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MCP.TCP\MCP.TCP.csproj">
-      <Project>{16DC7A0E-F713-4406-8027-CBCB59BD6028}</Project>
-      <Name>MCP.TCP</Name>
-    </ProjectReference>
     <ProjectReference Include="..\THOK.XC.Dispatching\THOK.XC.Dispatching.csproj">
       <Project>{7C262527-51F1-4586-B590-9F2AD56EDAAC}</Project>
       <Name>THOK.XC.Dispatching</Name>
