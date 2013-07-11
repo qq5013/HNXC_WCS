@@ -14,6 +14,7 @@ namespace THOK.XC.Dispatching.View
 {
     public partial class ButtonArea : ProcessControl
     {
+        private int IndexStar = 0;
         public ButtonArea()
         {
             InitializeComponent();
@@ -232,7 +233,16 @@ namespace THOK.XC.Dispatching.View
         {
             TaskDal taskDal = new TaskDal();
             DataTable dt = taskDal.TaskOutToDetail();
-            Context.ProcessDispatcher.WriteToProcess("StockInRequestProcess", "StockInRequest", dt);
+            DataTable dt2 = null;
+            if (IndexStar == 0)
+            {
+                dt2 = taskDal.TaskCraneDetail("12,22", "1", "1,2");
+            }
+            DataTable[] dtSend = new DataTable[2];
+            dtSend[0] = dt;
+            dtSend[1] = dt2;
+            Context.ProcessDispatcher.WriteToProcess("StockInRequestProcess", "StockInRequest", dtSend);
+            IndexStar++;
         }
 
 

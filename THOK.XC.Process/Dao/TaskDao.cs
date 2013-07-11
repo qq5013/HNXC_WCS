@@ -8,8 +8,13 @@ namespace THOK.XC.Process.Dao
 {
     public  class TaskDao : BaseDao
     {
+        /// <summary>
+        /// 根据出库任务生成Task_Detail，并返回。
+        /// </summary>
+        /// <returns></returns>
         public DataTable TaskOutToDetail()
         {
+            //处理当前出库单中，有出库，但堆垛机不可用的任务。
             string strSQL = "select * from wcs_task where state='0' and task_type in ('12','22') ";
             DataTable dt = ExecuteQuery(strSQL).Tables[0];
             for (int i = 0; i < dt.Rows.Count; i++)
@@ -34,22 +39,41 @@ namespace THOK.XC.Process.Dao
                     ExecuteNonQuery(strSQL);
                 }
             }
+            return TaskCraneDetail("12,22", "1", "0");
+        }
 
-            strSQL = " select sys_station.item_name,sys_station.crane_no,detail.from_station,detail.to_station,wcs_task.product_code,cmd_product.style_no,detail.bill_no,wcs_task.task_type,wcs_task.task_level " +
-                     " from wcs_task_detail detail " +
-                     "left join wcs_task on detail.task_id=wcs_task.task_id" +
-                     "left join cmd_product on wcs_task.product_code=cmd_product.product_code" +
-                     "left join cmd_product_style style on style.style_no=cmd_product.style_no" +
-                     "left join sys_station on sys_station.station_type=wcs_task.task_type and detail.crane_no=sys_station.crane_no" +
-                     "where wcs_task.task_type in ('12','22') and detail.item_no=1 and detail.state='0'";
-
+        /// <summary>
+        /// 系统重新启动时，获取正在出库，或者出库完成的Task_Detail
+        /// </summary>
+        /// <returns></returns>
+        public DataTable TaskCraneDetail(string TaskType,string ItemNo,string state )
+        {
+            string strSQL = string.Format("SELECT TASK.TASK_ID,DETAIL.TASK_NO, DETAIL.ITEM_NO,DETAIL.ASSIGNMENT_ID,DETAIL.CRANE_NO,DETAIL.FROM_STATION,DETAIL.TO_STATION,DETAIL.STATE,TASK.BILL_NO," +
+                            "TASK.PRODUCT_CODE,TASK.CELL_CODE,TASK.TASK_TYPE,TASK.TASK_LEVEL,TASK.TASK_DATE,STYLE.SORT_LEVEL,TASK.IS_MIX,PRODUCT.STYLE_NO,SYS_STATION.ITEM_NAME,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE " +
+                            "FROM WCS_TASK_DETAIL DETAIL " +
+                            "LEFT JOIN WCS_TASK TASK  ON DETAIL.TASK_ID=TASK.TASK_ID " +
+                            "LEFT JOIN CMD_PRODUCT  PRODUCT ON TASK.PRODUCT_CODE=PRODUCT.PRODUCT_CODE " +
+                            "LEFT JOIN CMD_PRODUCT_STYLE STYLE ON STYLE.STYLE_NO=PRODUCT.STYLE_NO " +
+                            "LEFT JOIN SYS_STATION ON DETAIL.CRANE_NO=SYS_STATION.CRANE_NO AND SYS_STATION.STATION_TYPE=TASK.TASK_TYPE " +
+                            "WHERE TASK.TASK_TYPE IN ({0}) AND DETAIL.ITEM_NO={1} AND DETAIL.STATE IN ({2}) " +
+                            "ORDER BY TASK.TASK_LEVEL,TASK.TASK_DATE,TASK.BILL_NO, TASK.IS_MIX,TASK.PRODUCT_CODE,TASK_ID", TaskType, ItemNo, state);
 
             return ExecuteQuery(strSQL).Tables[0];
         }
-
         private string GetTaskDetailNo()
         {
             return "";
         }
+
+
+        public void UpdateCraneFinshedState(string TaskID, string TaskType, string ItemNo)
+        {
+ 
+        }
+        public void UpdateCraneStarState(string TaskID, string ItemNo)
+        {
+
+        }
+
     }
 }
