@@ -28,6 +28,7 @@ namespace THOK.CRANE
         private string _sequenceNo = "0000";
         private string _currentAisle = "00";
         private string _returnCode = "000";
+        private string _acksequenceNo = "0000";
 
         public TelegramType TelegramType
         {
@@ -193,6 +194,17 @@ namespace THOK.CRANE
             {
                 this._returnCode = value;
             }
-        }        
+        }
+        public string AckSequenceNo
+        {
+            get
+            {
+                return this._acksequenceNo;
+            }
+            set
+            {
+                this._acksequenceNo = value;
+            }
+        }
     }
 }

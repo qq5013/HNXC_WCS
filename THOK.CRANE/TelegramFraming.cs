@@ -4,7 +4,7 @@ using System.Text;
 
 namespace THOK.CRANE
 {
-    public abstract class TelegramFraming
+    public class TelegramFraming
     {
         
         public delegate Telegram TelegramDataDelegate(Telegram tgm,TelegramData tgd);
