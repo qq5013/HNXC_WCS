@@ -13,6 +13,26 @@ namespace THOK.XC.Process.Dal
             TaskDao dao = new TaskDao();
             return dao.TaskOutToDetail();
         }
+         /// <summary>
+        /// 系统重新启动时，获取正在出库，或者出库完成的Task_Detail
+        /// </summary>
+        /// <returns></returns>
+        public DataTable TaskCraneDetail(string TaskType, string ItemNo, string state)
+        {
+            TaskDao dao = new TaskDao();
+            return dao.TaskCraneDetail(TaskType, ItemNo, state);
+        }
+
+        public void UpdateCraneFinshedState(string TaskID, string TaskType, string ItemNo)
+        {
+            TaskDao dao = new TaskDao();
+            dao.UpdateCraneFinshedState(TaskID, TaskType, ItemNo);
+        }
+        public void UpdateCraneStarState(string TaskID, string ItemNo)
+        {
+            TaskDao dao = new TaskDao();
+            dao.UpdateCraneStarState(TaskID, ItemNo);
+        }
       
     }
 }
