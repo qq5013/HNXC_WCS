@@ -13,8 +13,7 @@ namespace THOK.TCP.Util
             Dictionary<string, string> dictionary = new Dictionary<string, string>();
             string AssignmentType = telegramData.Substring(0, 3);
             dictionary.Add("TelegramType",AssignmentType);
-            dictionary.Add("CraneNo",telegramData.Substring(3, 2));
-            dictionary.Add("AssignmenID", telegramData.Substring(5, 8));
+
 
             switch (AssignmentType)
             {
@@ -24,6 +23,8 @@ namespace THOK.TCP.Util
                     dictionary.Add("SequenceNo", telegramData.Substring(14, 4));
                     break;
                 case "ACP":
+                    dictionary.Add("CraneNo", telegramData.Substring(3, 2));
+                    dictionary.Add("AssignmenID", telegramData.Substring(5, 8));
                     dictionary.Add("CranePosition", telegramData.Substring(13, 12));
                     dictionary.Add("RearForkLeft", telegramData.Substring(25, 2));
                     dictionary.Add("RearForkRight", telegramData.Substring(27, 2));
@@ -35,6 +36,8 @@ namespace THOK.TCP.Util
                     dictionary.Add("ReturnCode", telegramData.Substring(33, 3));
                     break;
                 case "CSR":
+                    dictionary.Add("CraneNo", telegramData.Substring(3, 2));
+                    dictionary.Add("AssignmenID", telegramData.Substring(5, 8));
                     dictionary.Add("CraneMode", telegramData.Substring(13, 1));
                     dictionary.Add("CranePosition", telegramData.Substring(14, 6));
                     dictionary.Add("RearForkLeft", telegramData.Substring(20, 2));

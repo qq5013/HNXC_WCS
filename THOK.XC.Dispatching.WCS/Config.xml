@@ -36,6 +36,7 @@
     <Process Name="PalletOutRequestProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.PalletOutRequestProcess">
       <Item ServiceName="StockPLC_01" ItemName="01_1_158" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_200" />
+
     </Process>
     <!--状态管理器添加-->
     <Process Name="OrderDataStateProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.StateManageProcess.OrderDataStateProcess">
