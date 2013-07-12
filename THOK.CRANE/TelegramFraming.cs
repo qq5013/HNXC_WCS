@@ -15,11 +15,12 @@ namespace THOK.CRANE
         /// <param name="tgm">telegram</param>
         /// <param name="tgd">Application telegram data</param>
         /// <param name="tdd">TelegramDelegate传递方法名</param>
-        public string DataFraming(TelegramData tgd, TelegramDataDelegate TelegramDelegate)
+        public string DataFraming(string sequenceno ,TelegramData tgd, TelegramDataDelegate TelegramDelegate)
         {
             Telegram tgm = new Telegram();
             //调用指令序号方法
-            tgm.SequenceNo = "0000";
+            tgm.RequestFlag = byte.Parse(sequenceno.Substring(0, 1));
+            tgm.SequenceNo = sequenceno.Substring(1, 4);
             tgm = TelegramDelegate(tgm, tgd);
             return tgm.ToString();
             //发送报文
