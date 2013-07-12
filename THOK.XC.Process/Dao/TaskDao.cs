@@ -48,8 +48,8 @@ namespace THOK.XC.Process.Dao
         /// <returns></returns>
         public DataTable TaskCraneDetail(string TaskType,string ItemNo,string state )
         {
-            string strSQL = string.Format("SELECT TASK.TASK_ID,DETAIL.TASK_NO, DETAIL.ITEM_NO,DETAIL.ASSIGNMENT_ID,DETAIL.CRANE_NO,DETAIL.FROM_STATION,DETAIL.TO_STATION,DETAIL.STATE,TASK.BILL_NO," +
-                            "TASK.PRODUCT_CODE,TASK.CELL_CODE,TASK.TASK_TYPE,TASK.TASK_LEVEL,TASK.TASK_DATE,STYLE.SORT_LEVEL,TASK.IS_MIX,PRODUCT.STYLE_NO,SYS_STATION.ITEM_NAME,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE " +
+            string strSQL = string.Format("SELECT TASK.TASK_ID,DETAIL.TASK_NO, DETAIL.ITEM_NO,DETAIL.ASSIGNMENT_ID,DETAIL.CRANE_NO,DETAIL.FROM_STATION,DETAIL.TO_STATION,DETAIL.STATE,TASK.BILL_NO,TASK.PRODUCT_CODE," +
+                            "TASK.CELL_CODE,TASK.TASK_TYPE,TASK.TASK_LEVEL,TASK.TASK_DATE,STYLE.SORT_LEVEL,TASK.IS_MIX,PRODUCT.STYLE_NO,SYS_STATION.SERVICE_NAME,SYS_STATION.ITEM_NAME,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE,DETAIL.SQUENCE_NO " +
                             "FROM WCS_TASK_DETAIL DETAIL " +
                             "LEFT JOIN WCS_TASK TASK  ON DETAIL.TASK_ID=TASK.TASK_ID " +
                             "LEFT JOIN CMD_PRODUCT  PRODUCT ON TASK.PRODUCT_CODE=PRODUCT.PRODUCT_CODE " +
@@ -73,6 +73,14 @@ namespace THOK.XC.Process.Dao
         public void UpdateCraneStarState(string TaskID, string ItemNo)
         {
 
+        }
+        /// <summary>
+        /// 获取堆垛机最大流水号
+        /// </summary>
+        /// <returns></returns>
+        public string GetMaxSQUENCENO()
+        {
+            return "";
         }
 
     }

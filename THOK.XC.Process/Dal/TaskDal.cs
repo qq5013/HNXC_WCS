@@ -33,6 +33,15 @@ namespace THOK.XC.Process.Dal
             TaskDao dao = new TaskDao();
             dao.UpdateCraneStarState(TaskID, ItemNo);
         }
+        /// <summary>
+        /// 获取堆垛机最大流水号
+        /// </summary>
+        /// <returns></returns>
+        public string GetMaxSQUENCENO()
+        {
+            TaskDao dao = new TaskDao();
+            return dao.GetMaxSQUENCENO();
+        }
       
     }
 }

@@ -11,6 +11,8 @@ namespace THOK.XC.Process.Process_Crane
     {
         private DataTable dtCrane;
         private Dictionary<string, string> dCraneState; //堆垛机状态表  ""，表示状态未知，发送报文获取堆垛机状态。 0：空闲，1：执行中
+        private string strMaxSQuenceNo = "";
+        private DataTable dtSendCRQ;
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
         {
             /*  处理事项：
@@ -23,11 +25,15 @@ namespace THOK.XC.Process.Process_Crane
              *  stateItem.State ：参数 - 请求的卷烟编码。        
             */
 
-            
-            
-
-
-
+            if (strMaxSQuenceNo == "")
+            {
+                TaskDal dal = new TaskDal();
+                strMaxSQuenceNo = dal.GetMaxSQUENCENO();
+            }
+            if (strMaxSQuenceNo == "")
+            {
+                strMaxSQuenceNo = DateTime.Now.ToString("yyyyMMdd") + "0001";
+            }
             string cigaretteCode = "";
             try
             {
@@ -72,7 +78,9 @@ namespace THOK.XC.Process.Process_Crane
                         THOK.CRANE.TelegramFraming tf = new CRANE.TelegramFraming();
                         string str = tf.DataFraming(tgd, tf.TelegramDUA);
                         WriteToService("Crane", "DUA", str);
-
+                        break;
+                    case "NCK":
+                        NCK(stateItem.State);
                         break;
 
                     default:
@@ -87,7 +95,7 @@ namespace THOK.XC.Process.Process_Crane
 
 
         /// <summary>
-        /// 发送出库报文，并返回发送成功。
+        /// 发送报文，并返回发送成功。
         /// </summary>
         /// <param name="CraneNo"></param>
         /// <param name="TaskID"></param>
@@ -99,7 +107,7 @@ namespace THOK.XC.Process.Process_Crane
             if (!dCraneState.ContainsKey(CraneNo))
             {
                 dCraneState.Add(CraneNo, "");
-                WriteToService("", "", "");
+                SendTelegramCRQ(CraneNo);
                 //发送请求堆垛机状态报文
             }
             while (string.IsNullOrEmpty(dCraneState[CraneNo]))  //等待堆垛机应答。
@@ -112,27 +120,23 @@ namespace THOK.XC.Process.Process_Crane
             if (string.IsNullOrEmpty(TaskID)) //出库任务调用堆垛机
             {
                 //读取二楼出库站台是否有烟包，PLC
-                DataRow[] drs = dtCrane.Select(string.Format("crane_no='{0}' and state=0 and task_type in ('12','22')", CraneNo), ""); //按照任务等级，任务时间，产品形态，
+                DataRow[] drs = dtCrane.Select(string.Format("CRANE_NO='{0}' and STATE=0 and TASK_TYPE in ('12','22')", CraneNo), "TASK_LEVEL,TASK_DATE,BILL_NO,ISMIX,PRODUCT_CODE,TASK_ID"); //按照任务等级，任务时间，产品形态，
                 for (int i = 0; i < drs.Length; i++)
                 {
                     //判断能否出库
-                    if (drs[i][""].ToString() == "22") //二楼出库，判断能否出库
+                    if (drs[i]["TASK_TYPE"].ToString() == "22") //二楼出库，判断能否出库
                     {
                         //判断能否出库
-
                         bool blnCan = ProductCanOut(drs[i]);
                         if (!blnCan)
-                        {
                             continue;
-                        }
-
                     }
 
-                    object t = WriteToService("", "");
+                    object t = WriteToService(drs[i]["SERVICE_NAME"].ToString(), drs[i]["ITEM_NAME"].ToString());
                     if (t == null && dCraneState[CraneNo] == "0")
                     {
                         //发送报文
-                        //更新Task_Detail的状态为1.
+                        SendTelegramARQ(drs[i]);
                         blnSend = true;
                         break;
                     }
@@ -142,11 +146,11 @@ namespace THOK.XC.Process.Process_Crane
             {
                 DataRow[] drs = dtCrane.Select(string.Format("crane_no='{0}' and state=0  and task_ID={1}", CraneNo, ""), ""); //按照任务等级，任务时间，产品形态，
 
-                object t = WriteToService("", "");
+                object t = WriteToService(drs[0]["SERVICE_NAME"].ToString(), drs[0]["ITEM_NAME"].ToString());
                 if (t == null && dCraneState[CraneNo] == "0")
                 {
                     //发送报文
-                    //更新Task_Detail的状态为1.
+                    SendTelegramARQ(drs[0]);
                     blnSend = true;
 
                 }
@@ -260,36 +264,6 @@ namespace THOK.XC.Process.Process_Crane
             }
         }
 
-        /// <summary>
-        /// 插入dtCrane
-        /// </summary>
-        /// <param name="dt"></param>
-        private void InsertCraneQuene(DataTable dt)
-        {
-            if (dtCrane == null)
-            {
-
-                dtCrane = dt.Clone();
-                DataColumn dc = new DataColumn("Index", Type.GetType("System.Int32"));
-                dtCrane.Columns.Add(dc);
-            }
-            DataRow[] drs = dt.Select("", "TASK_LEVEL,TASK_DATE,BILL_NO,ISMIX,PRODUCT_CODE,TASK_ID");
-            for (int i = 0; i < drs.Length; i++)
-            {
-                DataRow dr = dtCrane.NewRow();
-
-                dr["Index"] = dtCrane.Rows.Count + 1;
-                foreach (DataColumn dc in dt.Columns)
-                {
-                    dr[dc.ColumnName] = drs[i][dc.ColumnName];
-                }
-
-                dtCrane.Rows.Add(dr);
-            }
-            dtCrane.AcceptChanges();
-        }
-
-
         #region 处理接堆垛机发送的报文
         private void ACP(object state)
         {
@@ -362,6 +336,107 @@ namespace THOK.XC.Process.Process_Crane
             dtCrane.AcceptChanges();
             TaskDal dal = new TaskDal();
             dal.UpdateCraneStarState(drs[0]["TASK_ID"].ToString(), drs[0]["ITEM_NO"].ToString());
+        }
+
+        /// <summary>
+        ///发送报文，堆垛机返回序列号错误，或Buffer已满
+        /// </summary>
+        /// <param name="state"></param>
+        private void NCK(object state)
+        {
+            Dictionary<string, string> msg = (Dictionary<string, string>)state;
+            if (msg["FaultIndicator"] == "1") //序列号出错，重新发送报文
+            {
+                DataRow[] drs = dtCrane.Select(string.Format("substring(SQUENCE_NO,9,4)='0003'", msg["SequenceNo"]));
+                if (drs.Length > 0)
+                {
+                    dCraneState[drs[0]["CRANE_NO"].ToString()] = "0";
+                    SendTelegram(drs[0]["CRANE_NO"].ToString(), drs[0]["TASK_ID"].ToString());
+                }
+            }
+        }
+        #endregion
+
+        #region 发送堆垛机报文
+        private void SendTelegramARQ(DataRow dr)
+        {
+
+            THOK.CRANE.TelegramData tgd = new CRANE.TelegramData();
+            tgd.CraneNo = dr[""].ToString();
+            tgd.AssignmenID=dr[""].ToString();
+            tgd.StartPosition = dr[""].ToString();
+            tgd.DestinationPosition = dr[""].ToString();
+
+            THOK.CRANE.TelegramFraming tf = new CRANE.TelegramFraming();
+            string str = tf.DataFraming(tgd, tf.TelegramCRQ);
+            WriteToService("Crane", "ARQ", str);
+            dr.BeginEdit();
+            dr[""] = "";
+            dr.EndEdit();
+            dCraneState[""] = "1"; 
+            dtCrane.AcceptChanges();
+            //更新发送报文。
+            
+        }
+        private void SendTelegramCRQ(string CraneNo)
+        {
+            THOK.CRANE.TelegramData tgd = new CRANE.TelegramData();
+            tgd.CraneNo = CraneNo;
+            THOK.CRANE.TelegramFraming tf = new CRANE.TelegramFraming();
+            string str = tf.DataFraming(tgd, tf.TelegramCRQ);
+            WriteToService("Crane", "CRQ", str);
+            //记录发送的CRQ报文，预防堆垛机返回错误序列号的NCK。
+            if (dtSendCRQ == null)
+            {
+                dtSendCRQ = new DataTable();
+                dtSendCRQ.Columns.Add("CRANE_NO", Type.GetType("System.String"));
+                dtSendCRQ.Columns.Add("SQUENCE_NO", Type.GetType("System.String"));
+            }
+
+            DataRow dr = dtSendCRQ.NewRow();
+            dr.BeginEdit();
+            dr["CRANE_NO"] = CraneNo;
+            dr["SQUENCE_NO"] = "";
+            dr.EndEdit();
+            dtSendCRQ.Rows.Add(dr);
+            dtSendCRQ.AcceptChanges();
+        }
+
+        private string GetNextSQuenceNo()
+        {
+            return "";
+        }
+        #endregion
+
+
+        #region 其它函数
+        /// <summary>
+        /// 插入dtCrane
+        /// </summary>
+        /// <param name="dt"></param>
+        private void InsertCraneQuene(DataTable dt)
+        {
+            if (dtCrane == null)
+            {
+
+                dtCrane = dt.Clone();
+                DataColumn dc = new DataColumn("Index", Type.GetType("System.Int32"));
+                dtCrane.Columns.Add(dc);
+            }
+            DataRow[] drs = dt.Select("", "TASK_LEVEL,TASK_DATE,BILL_NO,ISMIX,PRODUCT_CODE,TASK_ID");
+            for (int i = 0; i < drs.Length; i++)
+            {
+                DataRow dr = dtCrane.NewRow();
+
+                dr["Index"] = dtCrane.Rows.Count + 1;
+                foreach (DataColumn dc in dt.Columns)
+                {
+                    dr[dc.ColumnName] = drs[i][dc.ColumnName];
+                }
+
+                dtCrane.Rows.Add(dr);
+            }
+            dtCrane.AcceptChanges();
         }
         #endregion
 
