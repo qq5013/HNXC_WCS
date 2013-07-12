@@ -236,7 +236,7 @@ namespace THOK.XC.Dispatching.View
             DataTable dt2 = null;
             if (IndexStar == 0)
             {
-                dt2 = taskDal.TaskCraneDetail("12,22", "1", "1,2");
+                dt2 = taskDal.TaskCraneDetail("11,21,12,22", "1,2");
             }
             DataTable[] dtSend = new DataTable[2];
             dtSend[0] = dt;

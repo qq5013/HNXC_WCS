@@ -36,8 +36,12 @@ namespace THOK.MCP.Service.TCP
             {
                 message = new Message(e.Read());
             }
+            string text = string.Format("recv: <--- {0}", e.Read());
+            WriteToLog(text);
+
             if (message.Parsed)
                 DispatchState(message.Command, message.Parameters);
+           
         }
 
         public override void Release()
@@ -62,6 +66,9 @@ namespace THOK.MCP.Service.TCP
 
         public override bool Write(string itemName, object state)
         {
+            string text = string.Format("send: ---> {0}", (string)state);
+            WriteToLog(text);
+
             //if(server.OnlineCount)
 
             server.Write("127.0.0.1", "");
@@ -82,6 +89,14 @@ namespace THOK.MCP.Service.TCP
             //ns.Close();
             //tcpClient.Close();
 
+        }
+
+        private void WriteToLog(string Message)
+        {
+            if (!System.IO.Directory.Exists("Crane"))
+                System.IO.Directory.CreateDirectory("Crane");
+            string path = "Crane/" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
+            System.IO.File.AppendAllText(path, string.Format("{0} :  {1}", DateTime.Now, Message + "\r\n"));
         }
     }
 }
