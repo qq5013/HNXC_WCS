@@ -14,9 +14,6 @@
       <Item ServiceName="StockPLC_01" ItemName="01_1_218" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_110" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_126" />
-      <Item ServiceName="StockPLC_01" ItemName="01_2_218" />
-      <Item ServiceName="StockPLC_01" ItemName="01_2_110" />
-      <Item ServiceName="StockPLC_01" ItemName="01_2_126" />
     </Process>
     <!--一层到达入库站台-->
     <Process Name="StockInStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.StockInStationProcess">

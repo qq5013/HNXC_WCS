@@ -4,7 +4,6 @@
     <OPCGroup GroupName="DefaultGroup" GroupString="S7:[@LOCALSERVER]" UpdateRate="350">
       <!--二层入库请求-->
       <OPCItem ItemName="02_1_359" ClientHandler="1" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
-      <OPCItem ItemName="02_2_359" ClientHandler="6" OPCItemName="DB2,INT4,1"  ItemType="WRITE"/>
       <!--二层入库小车站台读-->
       <OPCItem ItemName="02_1_301" ClientHandler="7" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
       <OPCItem ItemName="02_1_305" ClientHandler="8" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
