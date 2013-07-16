@@ -39,24 +39,24 @@ namespace THOK.XC.Process.Dao
                     ExecuteNonQuery(strSQL);
                 }
             }
-            return TaskCraneDetail("12,22", "1", "0");
+            return TaskCraneDetail("12,22", "0");
         }
 
         /// <summary>
         /// 系统重新启动时，获取正在出库，或者出库完成的Task_Detail
         /// </summary>
         /// <returns></returns>
-        public DataTable TaskCraneDetail(string TaskType,string ItemNo,string state )
+        public DataTable TaskCraneDetail(string TaskType,string state )
         {
-            string strSQL = string.Format("SELECT TASK.TASK_ID,DETAIL.TASK_NO, DETAIL.ITEM_NO,DETAIL.ASSIGNMENT_ID,DETAIL.CRANE_NO,DETAIL.FROM_STATION,DETAIL.TO_STATION,DETAIL.STATE,TASK.BILL_NO," +
-                            "TASK.PRODUCT_CODE,TASK.CELL_CODE,TASK.TASK_TYPE,TASK.TASK_LEVEL,TASK.TASK_DATE,STYLE.SORT_LEVEL,TASK.IS_MIX,PRODUCT.STYLE_NO,SYS_STATION.ITEM_NAME,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE " +
+            string strSQL = string.Format("SELECT TASK.TASK_ID,DETAIL.TASK_NO, DETAIL.ITEM_NO,DETAIL.ASSIGNMENT_ID,DETAIL.CRANE_NO,DETAIL.FROM_STATION,DETAIL.TO_STATION,DETAIL.STATE,TASK.BILL_NO,TASK.PRODUCT_CODE," +
+                            "TASK.CELL_CODE,TASK.TASK_TYPE,TASK.TASK_LEVEL,TASK.TASK_DATE,STYLE.SORT_LEVEL,TASK.IS_MIX,PRODUCT.STYLE_NO,SYS_STATION.SERVICE_NAME,SYS_STATION.ITEM_NAME,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE,DETAIL.SQUENCE_NO " +
                             "FROM WCS_TASK_DETAIL DETAIL " +
                             "LEFT JOIN WCS_TASK TASK  ON DETAIL.TASK_ID=TASK.TASK_ID " +
                             "LEFT JOIN CMD_PRODUCT  PRODUCT ON TASK.PRODUCT_CODE=PRODUCT.PRODUCT_CODE " +
                             "LEFT JOIN CMD_PRODUCT_STYLE STYLE ON STYLE.STYLE_NO=PRODUCT.STYLE_NO " +
                             "LEFT JOIN SYS_STATION ON DETAIL.CRANE_NO=SYS_STATION.CRANE_NO AND SYS_STATION.STATION_TYPE=TASK.TASK_TYPE " +
-                            "WHERE TASK.TASK_TYPE IN ({0}) AND DETAIL.ITEM_NO={1} AND DETAIL.STATE IN ({2}) " +
-                            "ORDER BY TASK.TASK_LEVEL,TASK.TASK_DATE,TASK.BILL_NO, TASK.IS_MIX,TASK.PRODUCT_CODE,TASK_ID", TaskType, ItemNo, state);
+                            "WHERE TASK.TASK_TYPE IN ({0}) AND DETAIL.CRANE_NO<>'' AND DETAIL.STATE IN ({1}) " +
+                            "ORDER BY TASK.TASK_LEVEL,TASK.TASK_DATE,TASK.BILL_NO, TASK.IS_MIX,TASK.PRODUCT_CODE,TASK_ID", TaskType, state);
 
             return ExecuteQuery(strSQL).Tables[0];
         }
@@ -65,14 +65,39 @@ namespace THOK.XC.Process.Dao
             return "";
         }
 
-
-        public void UpdateCraneFinshedState(string TaskID, string TaskType, string ItemNo)
+        /// <summary>
+        /// 调用堆垛机完成，更新TaskDetail完成状态 State=2
+        /// </summary>
+        /// <param name="TaskID"></param>
+        /// <param name="TaskType"></param>
+        public void UpdateCraneFinshedState(string TaskID, string TaskType)
         {
  
         }
-        public void UpdateCraneStarState(string TaskID, string ItemNo)
+        /// <summary>
+        /// 发送报文，接收到ACK，更新出库
+        /// </summary>
+        /// <param name="TaskID"></param>
+        public void UpdateCraneStarState(string TaskID)
         {
 
+        }
+        /// <summary>
+        /// 更新堆垛机顺序号。
+        /// </summary>
+        /// <param name="TaskID"></param>
+        /// <param name="Squenceno"></param>
+        public void UpdateCraneQuenceNo(string TaskID, string Squenceno)
+        {
+
+        }
+        /// <summary>
+        /// 获取堆垛机最大流水号
+        /// </summary>
+        /// <returns></returns>
+        public string GetMaxSQUENCENO()
+        {
+            return "";
         }
 
     }
