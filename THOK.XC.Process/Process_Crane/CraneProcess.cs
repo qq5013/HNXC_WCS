@@ -11,6 +11,7 @@ namespace THOK.XC.Process.Process_Crane
     {
         private DataTable dtCrane;
         private Dictionary<string, string> dCraneState = new Dictionary<string, string>(); //堆垛机状态表  ""，表示状态未知，发送报文获取堆垛机状态。 0：空闲，1：执行中
+        private DataTable dtOrderCrane;
         private string strMaxSQuenceNo = "";
         private DataTable dtSendCRQ;
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
@@ -156,6 +157,7 @@ namespace THOK.XC.Process.Process_Crane
         /// <returns></returns>
         private bool ProductCanOut(DataRow drTaskID)
         {
+            
             bool blnvalue = false;
             DataRow[] drs = dtCrane.Select(string.Format("BILL_NO='{0}' and PRODUCT_CODE='{1}' and IS_MIX='{2}' and STATE=1", drTaskID["BILL_NO"], drTaskID["PRODUCT_CODE"], drTaskID["IS_MIX"]));   //判断当前单号，当前产品，当前形态是否有state=1的出库任务，有则返回true;
             if (drs.Length > 0)
@@ -164,11 +166,26 @@ namespace THOK.XC.Process.Process_Crane
             }
             else
             {
-                drs = dtCrane.Select(string.Format("Index<{0} and TASK_TYPE='22' and STATE in (0,1)",drTaskID["Index"]));//判断小于当前Index的出库任务，是否有未完成的出库任务，如果没有，则返回True.
-                if (drs.Length == 0)
+
+                drs = dtOrderCrane.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and ISMIX={2} and SORT_LEVEL={3} and PRODUCT_CODE={4}", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["ISMIX"], drTaskID["SORT_LEVEL"], drTaskID["PRODUCT_CODE"] }));
+                if (drs.Length > 0)
                 {
-                    blnvalue = true;
-                }
+                    drs = dtOrderCrane.Select(string.Format("Index<{0}", drs[0]["Index"]));
+                    for (int i = 0; i < drs.Length; i++)
+                    {
+                        drs = dtCrane.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and ISMIX={2} and SORT_LEVEL={3} and PRODUCT_CODE={4} and TASK_TYPE='22' and STATE in (0,1,2)", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["ISMIX"], drTaskID["SORT_LEVEL"], drTaskID["PRODUCT_CODE"] }));//判断小于当前Index的出库任务，是否有未完成的出库任务，如果没有，则返回True.
+                        if (drs.Length == 0)
+                        {
+                            blnvalue = true;
+                        }
+                        else
+                        {
+                            blnvalue = false;
+                            break;
+                        }
+
+                    }
+                }                
             }
             return blnvalue;
         }
@@ -268,7 +285,7 @@ namespace THOK.XC.Process.Process_Crane
                 DataColumn dc = new DataColumn("Index", Type.GetType("System.Int32"));
                 dtCrane.Columns.Add(dc);
             }
-            DataRow[] drs = dt.Select("", "TASK_LEVEL,TASK_DATE,BILL_NO,ISMIX,PRODUCT_CODE,TASK_ID");
+            DataRow[] drs = dt.Select("", "TASK_LEVEL desc,TASK_DATE,BILL_NO,ISMIX,SORT_LEVEL,PRODUCT_CODE,TASK_ID");
             for (int i = 0; i < drs.Length; i++)
             {
                 DataRow dr = dtCrane.NewRow();
@@ -282,6 +299,29 @@ namespace THOK.XC.Process.Process_Crane
                 dtCrane.Rows.Add(dr);
             }
             dtCrane.AcceptChanges();
+            if (drs.Length > 0) //重新排序
+            {
+                DataTable dtOrder = dtCrane.DefaultView.ToTable(true, new string[] {"TASK_TYPE", "TASK_LEVEL", "TASK_DATE", "ISMIX", "SORT_LEVEL", "PRODUCT_CODE" });
+                dtOrderCrane = new DataTable();
+                dtOrderCrane = dtOrder.Clone();
+                DataColumn dc = new DataColumn("Index", Type.GetType("System.Int32"));
+                dtOrderCrane.Columns.Add(dc);
+
+                drs = dtOrder.Select("TASK_TYPE=22", "TASK_LEVEL desc,TASK_DATE,ISMIX,SORT_LEVEL,PRODUCT_CODE");
+                for (int i = 0; i < drs.Length; i++)
+                {
+                    DataRow dr = dtOrderCrane.NewRow();
+
+                    dr["Index"] = dtOrderCrane.Rows.Count + 1;
+                    foreach (DataColumn dcorder in dtOrder.Columns)
+                    {
+                        dr[dc.ColumnName] = drs[i][dc.ColumnName];
+                    }
+
+                    dtOrderCrane.Rows.Add(dr);
+                }
+
+            }
         }
         #endregion  
        
