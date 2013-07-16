@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using THOK.MCP;
 
-namespace THOK.XC.Process.Process_01
+namespace THOK.XC.Process.Process_02
 {
-    public class StockInFinishProcess : AbstractProcess
+    public class StockOutCarFinishProcess : AbstractProcess
     {
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
         {

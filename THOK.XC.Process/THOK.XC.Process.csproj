@@ -61,9 +61,19 @@
     <Compile Include="Dao\SupplyDao.cs" />
     <Compile Include="Dao\TaskDao.cs" />
     <Compile Include="Parameter.cs" />
-    <Compile Include="Process_01\StockInFinishProcess.cs" />
+    <Compile Include="Process_01\StockOutToStationProcess.cs" />
+    <Compile Include="Process_01\PalletOutRequestProcess.cs" />
+    <Compile Include="Process_01\StockInStationProcess.cs" />
+    <Compile Include="Process_01\PalletOutFinishProcess.cs" />
     <Compile Include="Process_01\StockInRequestProcess.cs" />
-    <Compile Include="Process_01\PalletInProcess.cs" />
+    <Compile Include="Process_01\PalletInRequestProcess.cs" />
+    <Compile Include="Process_02\StockOutInCacheProcess.cs" />
+    <Compile Include="Process_02\StockOutSeparateProcess.cs" />
+    <Compile Include="Process_02\PalletToCarStationProcess.cs" />
+    <Compile Include="Process_02\PalletToStationProcess.cs" />
+    <Compile Include="Process_02\PalletInRequestProcess.cs" />
+    <Compile Include="Process_02\StockOutToCarStationProcess.cs" />
+    <Compile Include="Process_02\StockOutCarFinishProcess.cs" />
     <Compile Include="Process_Crane\CraneProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockInProcess\LEDProcess.cs" />
@@ -104,7 +114,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Process_02\" />
     <Folder Include="Process_Car\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

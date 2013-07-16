@@ -9,7 +9,7 @@
     <Service Name="Crane" Type="THOK.MCP.Service.TCP.dll, THOK.MCP.Service.TCP.TCPService" ConfigFile="Crane.xml" />
   </Services>
   <Processes>
-    <!--入库申请-->
+    <!--一层入库申请-->
     <Process Name="StockInRequestProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.StockInRequestProcess">
       <Item ServiceName="StockPLC_01" ItemName="01_1_218" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_110" />
@@ -18,7 +18,7 @@
       <Item ServiceName="StockPLC_01" ItemName="01_2_110" />
       <Item ServiceName="StockPLC_01" ItemName="01_2_126" />
     </Process>
-    <!--到达入库站台-->
+    <!--一层到达入库站台-->
     <Process Name="StockInStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.StockInStationProcess">
       <Item ServiceName="StockPLC_01" ItemName="01_1_136" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_148" />
@@ -27,36 +27,75 @@
       <Item ServiceName="StockPLC_01" ItemName="01_1_178" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_186" />
     </Process>
-    <!--空托盘组入-->
+    <!--一层出库到达指定位置-->
+    <Process Name="StockOutToStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.StockOutToStationProcess">
+      <Item ServiceName="StockPLC_01" ItemName="01_1_158" />
+      <Item ServiceName="StockPLC_01" ItemName="01_1_200" />
+    </Process>
+    <!--一层空托盘组请求入库-->
     <Process Name="PalletInRequestProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.PalletInRequestProcess">
       <Item ServiceName="StockPLC_01" ItemName="01_1_131" />
-      <Item ServiceName="StockPLC_01" ItemName="01_2_131" />
     </Process>
-    <!--空托盘组出-->
+    <!--一层空托盘组请求出库-->
     <Process Name="PalletOutRequestProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.PalletOutRequestProcess">
       <Item ServiceName="StockPLC_01" ItemName="01_1_158" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_200" />
-
     </Process>
-    <!--状态管理器添加-->
-    <Process Name="OrderDataStateProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.StateManageProcess.OrderDataStateProcess">
-      <Item ServiceName="StockPLC_01" ItemName="01_OrderDataMoveNext" />
-      <Item ServiceName="StockPLC_01" ItemName="01_OrderDataMoveTo" />
-      <Item ServiceName="StockPLC_02" ItemName="02_OrderDataMoveNext" />
-      <Item ServiceName="StockPLC_02" ItemName="02_OrderDataMoveTo" />
+    <!--一层空托盘组到达指定位置-->
+    <Process Name="PalletOutFinishProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.PalletOutFinishProcess">
+      <Item ServiceName="StockPLC_01" ItemName="01_1_195" />
+      <Item ServiceName="StockPLC_01" ItemName="01_1_122" />
     </Process>
-    <Process Name="LedStateProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.StateManageProcess.LedStateProcess">
-      <Item ServiceName="StockPLC_02" ItemName="02_LedMoveNext" />
-      <Item ServiceName="StockPLC_02" ItemName="02_LedMoveTo" />
-      <Item ServiceName="StockPLC_02" ItemName="02_LedShowData" />
-      <Item ServiceName="StockPLC_02" ItemName="02_ReleaseLed" />
+    
+    <!--二层空托盘组请求入库-->
+    <Process Name="PalletInRequestProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.PalletInRequestProcess">
+      <Item ServiceName="StockPLC_02" ItemName="02_1_359" />
     </Process>
-    <Process Name="ScannerStateProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.StateManageProcess.ScannerStateProcess">
-      <Item ServiceName="StockPLC_02" ItemName="02_ScannerMoveNext" />
-      <Item ServiceName="StockPLC_02" ItemName="02_ScannerMoveTo" />
-      <Item ServiceName="StockPLC_02" ItemName="02_ScannerShowData" />
-      <Item ServiceName="StockPLC_02" ItemName="02_ReleaseScanner" />
-      <Item ServiceName="Scanner" ItemName="02" Desc="扫描器主站02" />
+    <!--二层空托盘组入库到达小车站台-->
+    <Process Name="PalletToCarStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.PalletToCarStationProcess">
+      <Item ServiceName="StockPLC_02" ItemName="02_1_301" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_305" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_309" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_313" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_317" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_323" />
+    </Process>
+    <!--二层空托盘组入库到达入库站台-->
+    <Process Name="PalletToStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.PalletToStationProcess">
+      <Item ServiceName="StockPLC_02" ItemName="02_1_302" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_306" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_310" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_314" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_318" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_324" />
+    </Process>
+    <!--二层出库到达小车站台-->
+    <Process Name="StockOutToCarStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.StockOutToCarStationProcess">
+      <Item ServiceName="StockPLC_02" ItemName="02_1_303" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_307" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_311" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_315" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_319" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_321" />
+    </Process>
+    <!--二层出库小车完成-->
+    <Process Name="StockOutCarFinishProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.StockOutCarFinishProcess">
+      <Item ServiceName="StockPLC_02" ItemName="02_1_340" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_360" />
+    </Process>
+    <!--二层出库拆盘完成-->
+    <Process Name="StockOutSeparateProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.StockOutSeparateProcess">
+      <Item ServiceName="StockPLC_02" ItemName="02_1_372" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_392" />
+    </Process>
+    <!--二层出库进入缓存道-->
+    <Process Name="StockOutInCacheProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.StockOutInCacheProcess">
+      <Item ServiceName="StockPLC_02" ItemName="02_1_378" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_381" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_383" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_385" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_387" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_389" />
     </Process>
   </Processes>
 </Configuration>
