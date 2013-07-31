@@ -22,7 +22,7 @@ namespace THOK.MCP
                     string dll = typeName.Substring(0, p).Trim();
                     string type = typeName.Substring(p + 1).Trim();
 
-                    System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadFrom(dll);
+                     System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadFrom(dll);
                     result = assembly.CreateInstance(type);
                 }
             }

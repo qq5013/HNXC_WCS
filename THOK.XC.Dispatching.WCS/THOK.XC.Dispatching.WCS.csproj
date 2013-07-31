@@ -150,6 +150,14 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\THOK.MCP.Service.Siemens\THOK.MCP.Service.Siemens.csproj">
+      <Project>{7635ED62-DE46-4ED5-ACC8-367C84ACE1CA}</Project>
+      <Name>THOK.MCP.Service.Siemens</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\THOK.MCP.Service.TCP\THOK.MCP.Service.TCP.csproj">
+      <Project>{D146305C-952B-422E-B438-936DA46DD669}</Project>
+      <Name>THOK.MCP.Service.TCP</Name>
+    </ProjectReference>
     <ProjectReference Include="..\THOK.XC.Dispatching\THOK.XC.Dispatching.csproj">
       <Project>{7C262527-51F1-4586-B590-9F2AD56EDAAC}</Project>
       <Name>THOK.XC.Dispatching</Name>
