@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dal\BaseDal.cs" />
+    <Compile Include="Dal\BillDal.cs" />
     <Compile Include="Dal\ChannelDal.cs" />
     <Compile Include="Dal\ServerDal.cs" />
     <Compile Include="Dal\StockInBatchDal.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="Dal\StockInDal.cs" />
     <Compile Include="Dal\SupplyDal.cs" />
     <Compile Include="Dal\TaskDal.cs" />
+    <Compile Include="Dao\BillDao.cs" />
     <Compile Include="Dao\ChannelDao.cs" />
     <Compile Include="Dao\ServerDao.cs" />
     <Compile Include="Dao\StateDao.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="Process_02\PalletInRequestProcess.cs" />
     <Compile Include="Process_02\StockOutToCarStationProcess.cs" />
     <Compile Include="Process_02\StockOutCarFinishProcess.cs" />
+    <Compile Include="Process_Car\CarProcess.cs" />
     <Compile Include="Process_Crane\CraneProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StockInProcess\LEDProcess.cs" />
@@ -113,9 +116,7 @@
       <Name>THOK.Util</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Process_Car\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

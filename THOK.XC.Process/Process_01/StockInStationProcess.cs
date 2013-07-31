@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using THOK.MCP;
+using System.Data;
+using THOK.XC.Process.Dal;
 
 namespace THOK.XC.Process.Process_01
 {
@@ -9,32 +11,33 @@ namespace THOK.XC.Process.Process_01
     {
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
         {
-            /*  处理事项：
-             * 
-             *  stateItem.ItemName ：
-             *  Init - 初始化。
-             *      FirstBatch - 生成第一批入库请求任务。
-             *      StockInRequest - 根据请求，生成入库任务。
-             * 
-             *  stateItem.State ：参数 - 请求的卷烟编码。        
+            /*  
+             * 一楼入库到达入库站台。
             */
-            string cigaretteCode = "";
             try
             {
                 switch (stateItem.ItemName)
                 {
-                    case "Init":
+                    case "01_1_136":
                         break;
-                    case "FirstBatch":
-                        //AddFirstBatch();
+                    case "01_1_148":
                         break;
-                    case "StockInRequest":
-                        cigaretteCode = Convert.ToString(stateItem.State);
-                        //StockInRequest(cigaretteCode);
+                    case "01_1_152":
                         break;
-                    default:
+                    case "01_1_170":
+                        break;
+                    case "01_1_178":
+                        break;
+                    case "01_1_186":
                         break;
                 }
+
+                string TaskNo = ""; //读取PLC任务号。
+                TaskDal taskDal = new TaskDal();
+                string strWhere = string.Format("TASK_NO='{0}' AND TASK_TYPE='11' AND DETAIL.STATE='0'", TaskNo);
+                DataTable dtInCrane = taskDal.TaskCraneDetail(strWhere);
+                if (dtInCrane.Rows.Count > 0)
+                    WriteToService("Crane", "CraneInRequest", dtInCrane);
             }
             catch (Exception e)
             {

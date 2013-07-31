@@ -236,12 +236,16 @@ namespace THOK.XC.Dispatching.View
             DataTable dt2 = null;
             if (IndexStar == 0)
             {
-                dt2 = taskDal.TaskCraneDetail("11,21,12,22", "1,2");
+                string strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1})", "11,21,12", "0,1");
+                dt2 = taskDal.TaskCraneDetail(strWhere);
+                strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1})", "22", "0,1,2");
+                DataTable dtout = taskDal.TaskCraneDetail(strWhere);
+                dt2.Merge(dtout);
             }
             DataTable[] dtSend = new DataTable[2];
             dtSend[0] = dt;
             dtSend[1] = dt2;
-            Context.ProcessDispatcher.WriteToProcess("StockInRequestProcess", "StockInRequest", dtSend);
+            Context.ProcessDispatcher.WriteToProcess("CraneProcess", "CraneOutRequest", dtSend);
             IndexStar++;
         }
 
