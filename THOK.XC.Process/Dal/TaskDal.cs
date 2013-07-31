@@ -17,26 +17,37 @@ namespace THOK.XC.Process.Dal
         /// 系统重新启动时，获取正在出库，或者出库完成的Task_Detail
         /// </summary>
         /// <returns></returns>
-        public DataTable TaskCraneDetail(string TaskType, string state)
+        public DataTable TaskCraneDetail(string strWhere)
         {
             TaskDao dao = new TaskDao();
-            return dao.TaskCraneDetail(TaskType, state);
+            return dao.TaskCraneDetail(strWhere);
         }
-
-        public void UpdateCraneFinshedState(string TaskID, string TaskType)
+        /// <summary>
+        /// 更新Task_Detail状态 State
+        /// </summary>
+        /// <param name="strWhere"></param>
+        /// <param name="State"></param>
+        public void UpdateTaskDetailState(string strWhere, string State)
         {
             TaskDao dao = new TaskDao();
-            dao.UpdateCraneFinshedState(TaskID, TaskType);
+            dao.UpdateTaskDetailState(strWhere, State);
         }
-        public void UpdateCraneStarState(string TaskID)
-        {
-            TaskDao dao = new TaskDao();
-            dao.UpdateCraneStarState(TaskID);
-        }
+       
         public void UpdateCraneQuenceNo(string TaskID,string QueueNO)
         {
             TaskDao dao = new TaskDao();
             dao.UpdateCraneQuenceNo(TaskID, QueueNO);
+        }
+
+        /// <summary>
+        /// 更新任务状态
+        /// </summary>
+        /// <param name="TaskID"></param>
+        /// <param name="state"></param>
+        public void UpdateTaskState(string TaskID, string state)
+        {
+            TaskDao dao = new TaskDao();
+            dao.UpdateTaskState(TaskID, state);
         }
 
         /// <summary>
@@ -48,6 +59,89 @@ namespace THOK.XC.Process.Dal
             TaskDao dao = new TaskDao();
             return dao.GetMaxSQUENCENO();
         }
-      
+
+        /// <summary>
+        /// 更新 货物到达小车站台 完成标志。 起始地址，目的地址
+        /// </summary>
+        /// <param name="TaskID"></param>
+        public void UpdateStockOutToStationState(string TaskID, string ItemName)
+        {
+            TaskDao dao = new TaskDao();
+            dao.UpdateStockOutToStationState(TaskID, ItemName);
+
+        }
+        /// <summary>
+        /// 根据条件，返回任务明细。
+        /// </summary>
+        /// <param name="strWhere"></param>
+        /// <returns></returns>
+        public DataTable TaskCarDetail(string strWhere)
+        {
+            TaskDao dao = new TaskDao();
+            return dao.TaskCarDetail(strWhere);
+        }
+
+          /// <summary>
+        /// 插入明细Task_Detail。
+        /// </summary>
+        /// <param name="task_id"></param>
+        /// <returns></returns>
+        public string InsertTaskDetail(string task_id)
+        {
+            TaskDao dao = new TaskDao();
+            return dao.InsertTaskDetail(task_id);
+        }
+
+        /// <summary>
+        /// 给小车安排任务，更新任务明细表小车编号。
+        /// </summary>
+        /// <param name="CarNo"></param>
+        public void UpdateTaskDetailCar(string TaskID, string CarNo)
+        {
+            TaskDao dao = new TaskDao();
+            dao.UpdateTaskDetailCar("", "", "0", CarNo, "");
+        }
+
+        /// <summary>
+        /// 更新起始位置，目标位置
+        /// </summary>
+        /// <param name="FromStation"></param>
+        /// <param name="ToStation"></param>
+        /// <param name="strWhere"></param>
+        public void UpdateTaskDetailStation(string FromStation, string ToStation, string state, string strWhere)
+        {
+            TaskDao dao = new TaskDao();
+            dao.UpdateTaskDetailStation(FromStation, ToStation, state, strWhere);
+        }
+
+        /// <summary>
+        /// 给小车安排任务，更新任务明细表小车编号，起始位置，结束位置
+        /// </summary>
+        /// <param name="CarNo"></param>
+        public void UpdateTaskDetailCar(string FromStation, string ToStation, string state, string CarNo, string strWhere)
+        {
+            TaskDao dao = new TaskDao();
+            dao.UpdateTaskDetailCar(FromStation, ToStation, state,CarNo, strWhere);
+        }
+        /// <summary>
+        /// 给小车安排任务，更新任务明细表小车编号，起始位置，结束位置
+        /// </summary>
+        /// <param name="CarNo"></param>
+        public void UpdateTaskDetailCrane(string FromStation, string ToStation, string state, string CraneNo, string strWhere)
+        {
+            TaskDao dao = new TaskDao();
+            dao.UpdateTaskDetailCrane(FromStation, ToStation, state, CraneNo, strWhere);
+        }
+
+         /// <summary>
+        /// 分配货位,返回TaskID，任务号，货物到达入库站台的目的地址,堆垛机入库站台，货位,堆垛机编号
+        /// </summary>
+        /// <param name="strWhere"></param>
+        public string [] AssignCell(string strWhere)
+        {
+            TaskDao dao = new TaskDao();
+            return dao.AssignCell(strWhere);
+            
+        }  
     }
 }
