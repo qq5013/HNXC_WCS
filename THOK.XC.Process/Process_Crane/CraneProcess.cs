@@ -21,7 +21,9 @@ namespace THOK.XC.Process.Process_Crane
         {
             /*  处理事项：
              * 
-             *  stateItem.ItemName ：
+             *  堆垛机任务处理
+             *  出库任务传入Task 需要产生TaskDetail，并更新起始位置及目的地。
+             *  入库任务传入TaskDetail 
              *  Init - 初始化。
              *      FirstBatch - 生成第一批入库请求任务。
              *      StockInRequest - 根据请求，生成入库任务。
@@ -44,59 +46,30 @@ namespace THOK.XC.Process.Process_Crane
             {
                 switch (stateItem.ItemName)
                 {
-                    case "CraneOutRequest": //开始出库，主动调用。
+                    case "StockOutRequest": //开始出库，主动调用。
                         DataTable[] dtSend = (DataTable[])stateItem.State;
                         if (dtSend[1] != null)
                         {
                             InsertCraneQuene(dtSend[1]);
                         }
                         InsertCraneQuene(dtSend[0]);
-
-                        ThreadStart starter1 = delegate { SendTelegram("01", null); };
-                        new Thread(starter1).Start();
-
-                        ThreadStart starter2 = delegate { SendTelegram("02", null); };
-                        new Thread(starter2).Start();
-
-                        ThreadStart starter3 = delegate { SendTelegram("03", null); };
-                        new Thread(starter3).Start();
-
-                        ThreadStart starter4 = delegate { SendTelegram("04", null); };
-                        new Thread(starter4).Start();
-
-                        ThreadStart starter5 = delegate { SendTelegram("05", null); };
-                        new Thread(starter5).Start();
-
-                        ThreadStart starter6 = delegate { SendTelegram("06", null); };
-                        new Thread(starter6).Start();
+                        CraneThreadStart();//线程调度堆垛机
+                      
                         break;
                     case "StockOutToCarStation": //烟包经过扫描，正确烟包更新为3，错误更新为4.
                         string strdd = (string)stateItem.State;
-                        DataRow[] drs = dtCrane.Select("");
+                        DataRow[] drs = dtCrane.Select(string.Format("TASK_NO='{0}'", strdd));
                         if (drs.Length > 0)
                         {
-                            dtCrane.Rows.Remove(drs[0]);
                             TaskDal tdal = new TaskDal();
-                            tdal.UpdateTaskState("", "");
+                            tdal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=1", drs[0]["TASK_ID"].ToString()), "3");
+
+                            CellDal Cdal = new CellDal();
+                            Cdal.UpdateCellOutUnLock(drs[0]["CELL_CODE"].ToString()); //出库完成，货位解锁
+
+                            dtCrane.Rows.Remove(drs[0]);
                         }
-                        //更新完成之后，调用堆垛机，避免堆垛机因调度原因而是堆垛机没有任务。
-                        ThreadStart starter21 = delegate { SendTelegram("01", null); };
-                        new Thread(starter21).Start();
-
-                        ThreadStart starter22 = delegate { SendTelegram("02", null); };
-                        new Thread(starter22).Start();
-
-                        ThreadStart starter23 = delegate { SendTelegram("03", null); };
-                        new Thread(starter23).Start();
-
-                        ThreadStart starter24 = delegate { SendTelegram("04", null); };
-                        new Thread(starter24).Start();
-
-                        ThreadStart starter25 = delegate { SendTelegram("05", null); };
-                        new Thread(starter25).Start();
-
-                        ThreadStart starter26 = delegate { SendTelegram("06", null); };
-                        new Thread(starter26).Start();
+                        CraneThreadStart(); //更新完成之后，线程调用堆垛机，避免堆垛机因调度原因而是堆垛机没有任务。
 
                         break;
 
@@ -104,6 +77,11 @@ namespace THOK.XC.Process.Process_Crane
                         DataTable dtInCrane = (DataTable)stateItem.State;
                         InsertCraneQuene(dtInCrane);
                         SendTelegram(dtInCrane.Rows[0]["CRANE_NO"].ToString(), dtInCrane.Rows[0]);
+                        break;
+                    case "PalletOutRequest":
+                        DataTable PalletOutCrane = (DataTable)stateItem.State;
+                        InsertCraneQuene(PalletOutCrane);
+                        SendTelegram(PalletOutCrane.Rows[0]["CRANE_NO"].ToString(), PalletOutCrane.Rows[0]);
                         break;
                     case "ACP":
                         ACP(stateItem.State);
@@ -159,6 +137,7 @@ namespace THOK.XC.Process.Process_Crane
             if (dCraneState[CraneNo] == "1") //堆垛机正忙。
                 return true;
 
+            DataRow drTaskCrane = null;
             if (drTaskID==null) //出库任务调用堆垛机
             {
                 //读取二楼出库站台是否有烟包，PLC
@@ -172,32 +151,38 @@ namespace THOK.XC.Process.Process_Crane
                         if (!blnCan)
                             continue;
                     }
-
-                    object t = WriteToService(drs[i]["SERVICE_NAME"].ToString(), drs[i]["ITEM_NAME_1"].ToString());  //读取当前出库站台是否有货位
-                    if (t == null && dCraneState[CraneNo] == "0") 
-                    {
-                        TaskDal dal = new TaskDal();//插入入库明细
-                        string strTaskDetailNo = dal.InsertTaskDetail(drs[i]["TASK_ID"].ToString());
-                        drs[i].BeginEdit();
-                        drs[i]["TASK_NO"] = strTaskDetailNo;
-                        drs[i]["ASSIGNMENT_ID"] = strTaskDetailNo.PadLeft(8, '0');
-                        drs[i].EndEdit();
-                        
-                        SendTelegramARQ(drs[i]); //发送报文
-                        blnSend = true;
-                        break;
-                    }
+                    drTaskCrane=drs[i];
+                    break;
                 }
             }
             else  //根据任务编号发送报文。
             {
-                object t = WriteToService(drTaskID["SERVICE_NAME"].ToString(), drTaskID["ITEM_NAME_1"].ToString());//读取当前出库站台是否有货位
-                if (t == null && dCraneState[CraneNo] == "0")
+                drTaskCrane = drTaskID;
+            }
+            if (drTaskCrane != null)
+            {
+                if (dCraneState[CraneNo] == "0")
                 {
-                    SendTelegramARQ(drTaskID);//发送报文
+                    if (drTaskCrane["TASK_TYPE"].ToString() == "22" || drTaskCrane["TASK_TYPE"].ToString() == "12")
+                    {
+                        object t = WriteToService(drTaskCrane["SERVICE_NAME"].ToString(), drTaskCrane["ITEM_NAME_1"].ToString());//读取当前出库站台是否有货位
+                        if (t != null)
+                        {
+                            blnSend = false;
+                            return blnSend;
+                        }
+                        TaskDal dal = new TaskDal();
+                        string strTaskDetailNo = dal.InsertTaskDetail(drTaskCrane["TASK_ID"].ToString());
+                        drTaskCrane.BeginEdit();
+                        drTaskCrane["TASK_NO"] = strTaskDetailNo;
+                        drTaskCrane["ASSIGNMENT_ID"] = strTaskDetailNo.PadLeft(8, '0');
+                        drTaskCrane.EndEdit();
+                    }
+                    SendTelegramARQ(drTaskCrane);//发送报文
                     blnSend = true;
                 }
             }
+           
             return blnSend;
         }
 
@@ -370,6 +355,31 @@ namespace THOK.XC.Process.Process_Crane
                 }
             }
         }
+
+        /// <summary>
+        /// 多线程调用6台堆垛机。
+        /// </summary>
+        private void CraneThreadStart()
+        {
+            ThreadStart starter1 = delegate { SendTelegram("01", null); };
+            new Thread(starter1).Start();
+
+            ThreadStart starter2 = delegate { SendTelegram("02", null); };
+            new Thread(starter2).Start();
+
+            ThreadStart starter3 = delegate { SendTelegram("03", null); };
+            new Thread(starter3).Start();
+
+            ThreadStart starter4 = delegate { SendTelegram("04", null); };
+            new Thread(starter4).Start();
+
+            ThreadStart starter5 = delegate { SendTelegram("05", null); };
+            new Thread(starter5).Start();
+
+            ThreadStart starter6 = delegate { SendTelegram("06", null); };
+            new Thread(starter6).Start();
+ 
+        }
         #endregion  
        
         #region 处理接堆垛机发送的报文
@@ -394,6 +404,34 @@ namespace THOK.XC.Process.Process_Crane
                 dal.UpdateTaskDetailState(strWhere, "2"); //更新堆垛机状态
                 if (TaskType.PadRight(2, '0').Substring(1, 1) == "2")
                 {
+
+
+                    if (TaskType == "12") //一楼出库
+                    {
+                        // TARGET_CODE
+
+                        CellDal Cdal = new CellDal();
+                        Cdal.UpdateCellOutUnLock(drs[0][""].ToString());//货位解锁
+                    }
+                    else //二楼出库
+                    {
+                        //STATION_NO
+                    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     WriteToService(drs[0]["SERVICE_NAME"].ToString(), drs[0]["ITEM_NAME_2"].ToString(), ""); //通知PLC发送任务。
                     //更新货物到达小车站台为开始执行。
 
@@ -401,6 +439,12 @@ namespace THOK.XC.Process.Process_Crane
                 else if(TaskType.PadRight(2, '0').Substring(1, 1) == "1") //入库完成，更新Task任务完成。
                 {
                     dal.UpdateTaskState(drs[0]["TASK_ID"].ToString(), "2");//更新任务状态。
+                    CellDal Cdal = new CellDal();
+                    Cdal.UpdateCellInLock(); //入库完成，更新货位。
+
+                    BillDal billdal = new BillDal();
+                    billdal.UpdateBillMasterFinished(drs[0]["BILL_NO"].ToString());//更新表单
+
                 }
                 lock (dCraneState)
                 {
@@ -462,14 +506,20 @@ namespace THOK.XC.Process.Process_Crane
         {
             Dictionary<string, string> msg = (Dictionary<string, string>)state;
             
-            DataRow[] drs = dtCrane.Select(string.Format("TASK_NO='{0}'", msg["SequenceNo"]));
-            drs[0].BeginEdit();
-            drs[0]["state"] = "1";
-            drs[0].EndEdit();
-            dtCrane.AcceptChanges();
+            DataRow dr = dtCrane.Select(string.Format("TASK_NO='{0}'", msg["SequenceNo"]))[0];
+
             TaskDal dal = new TaskDal();
-            string strWhere = string.Format("TASK_ID='{0}' and CRANE_NO is not null", drs[0]["TASK_ID"]);
-            dal.UpdateTaskDetailState(strWhere, "1");
+            if (dr["TASK_TYPE"].ToString() == "22" || dr["TASK_TYPE"].ToString() == "12")
+                dal.UpdateTaskDetailCrane(dr["FROM_STATION"].ToString(), dr["TO_STATION"].ToString(), "1", dr["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO={1}", dr["TASK_ID"], dr["ITEM_NO"]));
+            else
+                dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' and ITEM_NO={1}", dr["TASK_ID"], dr["ITEM_NO"]), "1");
+ 
+
+            dr.BeginEdit();
+            dr["state"] = "1";
+            dr.EndEdit();
+            dtCrane.AcceptChanges();
+          
         }
 
         /// <summary>

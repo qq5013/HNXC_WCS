@@ -32,6 +32,21 @@ namespace THOK.XC.Process.Process_01
                         break;
                 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 string TaskNo = ""; //读取PLC任务号。
                 TaskDal taskDal = new TaskDal();
                 string strWhere = string.Format("TASK_NO='{0}' AND TASK_TYPE='11' AND DETAIL.STATE='0'", TaskNo);

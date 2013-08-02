@@ -43,7 +43,9 @@
   <ItemGroup>
     <Compile Include="Dal\BaseDal.cs" />
     <Compile Include="Dal\BillDal.cs" />
+    <Compile Include="Dal\CellDal.cs" />
     <Compile Include="Dal\ChannelDal.cs" />
+    <Compile Include="Dal\ProductStateDal.cs" />
     <Compile Include="Dal\ServerDal.cs" />
     <Compile Include="Dal\StockInBatchDal.cs" />
     <Compile Include="Dal\StockOutDal.cs" />
@@ -53,7 +55,9 @@
     <Compile Include="Dal\SupplyDal.cs" />
     <Compile Include="Dal\TaskDal.cs" />
     <Compile Include="Dao\BillDao.cs" />
+    <Compile Include="Dao\CellDao.cs" />
     <Compile Include="Dao\ChannelDao.cs" />
+    <Compile Include="Dao\ProductStateDao.cs" />
     <Compile Include="Dao\ServerDao.cs" />
     <Compile Include="Dao\StateDao.cs" />
     <Compile Include="Dao\StockInBatchDao.cs" />

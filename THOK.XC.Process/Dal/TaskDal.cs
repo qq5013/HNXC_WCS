@@ -22,6 +22,16 @@ namespace THOK.XC.Process.Dal
             TaskDao dao = new TaskDao();
             return dao.TaskCraneDetail(strWhere);
         }
+         /// <summary>
+        /// 根据Task获取出库信息
+        /// </summary>
+        /// <param name="strWhere"></param>
+        /// <returns></returns>
+        public DataTable CraneTask(string strWhere)
+        {
+            TaskDao dao = new TaskDao();
+            return dao.CraneTask(strWhere);
+        }
         /// <summary>
         /// 更新Task_Detail状态 State
         /// </summary>
@@ -142,6 +152,16 @@ namespace THOK.XC.Process.Dal
             TaskDao dao = new TaskDao();
             return dao.AssignCell(strWhere);
             
-        }  
+        }
+        /// <summary>
+        /// 根据任务号返回的任务号TaskID,及单号Bill_NO
+        /// </summary>
+        /// <param name="TaskNo"></param>
+        /// <returns></returns>
+        public string[] GetTaskInfo(string TaskNo)
+        {
+            TaskDao dao = new TaskDao();
+            return dao.GetTaskInfo(TaskNo);
+        }
     }
 }

@@ -32,9 +32,9 @@ namespace THOK.XC.Process.Dao
         }
 
         /// <summary>
-        /// 空托盘组组盘入库，申请货位时，生成入库单。
+        /// 空托盘组组盘入库，申请货位时，生成入库单。返回TaskID
         /// </summary>
-        public void CreateReturnBillTaskDetail()
+        public string CreatePalletInBillTaskDetail()
         {
             string strBillNo = GetBillNo("TK");
 
@@ -48,11 +48,71 @@ namespace THOK.XC.Process.Dao
             strSQL = string.Format("INSERT INTO WMS_PRODUCT_STATE(BILL_NO,ITEM_NO,PRODUCT_CODE,WEIGHT,REAL_WEIGHT,PACKAGE_COUNT,IS_MIX)" +
                      "VALUES('{0}',1,'0000',0,0,1,0)", strBillNo);
             ExecuteNonQuery(strSQL);
-            strSQL = "INSERT INTO WCS_TASK(TASK_ID,ORITASKNO,TASK_TYPE,TASK_LEVEL,BILL_NO,PRODUCT_CODE,REAL_WEIGHT,PRODUCT_BARCODE,PALLET_CODE,CELL_CODE,TARGET_CODE,STATE,TASK_DATE,TASKER,PRODUCT_TYPE,NEWCELL_CODE,IS_MIX)";
+            strSQL = string.Format("INSERT INTO WCS_TASK(TASK_ID,TASK_TYPE,TASK_LEVEL,BILL_NO,PRODUCT_CODE,REAL_WEIGHT,PRODUCT_BARCODE,PALLET_CODE,STATE,TASK_DATE,TASKER,PRODUCT_TYPE,IS_MIX)" +
+                    "SELECT STATE.BILL_NO||LPAD(ITEM_NO, 2, '0'),BTYPE.TASK_TYPE ,BTYPE.TASK_LEVEL,STATE.BILL_NO,PRODUCT_CODE,REAL_WEIGHT,PRODUCT_BARCODE,PALLET_CODE,STATE,TASK_DATE,TASKER,0,IS_MIX FROM  WMS_PRODUCT_STATE STATE " +
+                    "LEFT JOIN WMS_BILL_MASTER BILL ON STATE.BILL_NO=BILL.BILL_NO " +
+                    "LEFT JOIN CMD_BILL_TYPE BTYPE ON BILL.BTYPE_CODE=BTYPE.BTYPE_CODE WHERE='{0}'", strBillNo);
             ExecuteNonQuery(strSQL);
 
+            return strBillNo + "01";
 
 
+
+        }
+
+        /// <summary>
+        /// 空托盘组出库申请
+        /// </summary>
+        public string CreatePalletOutBillTask(string TARGET_CODE)
+        {
+
+
+            StoredProcParameter parameters = new StoredProcParameter();
+            parameters.AddParameter("VCELL", "", DbType.String, ParameterDirection.Output);
+            ExecuteNonQuery("APPLYPALLETOUTCELL", parameters);
+            string VCell = parameters["VCELL"].ToString();
+
+            if (VCell != "-1")
+            {
+
+
+                string strBillNo = GetBillNo("PK");
+
+                string strSQL = string.Format("INSERT INTO WMS_BILL_MASTER (BILL_NO,BILL_DATE,BTYPE_CODE,WAREHOUSE_CODE,STATUS,STATE,OPERATER,OPERATE_DATE,CHECKER,TASKER,TASK_DATE,BILL_METHOD,SCHEDULE_ITEMNO,TARGET_CODE)" +
+                                              "values ('{0}',SYSDATE,'011','001','1','3','000001',SYSDATE,'000001','000001',SYSDATE,'0',0,'{1}')", strBillNo,TARGET_CODE);
+                ExecuteNonQuery(strSQL);
+
+                strSQL = string.Format("INSERT INTO WMS_BILL_DETAIL(BILL_NO,ITEM_NO,PRODUCT_CODE,WEIGHT,REAL_WEIGHT,PACKAGE_COUNT,NC_COUNT,IS_MIX)" +
+                        " VALUES('{0}',1,'0000',0,0,0,0,0)", strBillNo);
+                ExecuteNonQuery(strSQL);
+                strSQL = string.Format("INSERT INTO WMS_PRODUCT_STATE(BILL_NO,ITEM_NO,PRODUCT_CODE,WEIGHT,REAL_WEIGHT,PACKAGE_COUNT,IS_MIX,CELL_CODE)" +
+                         "VALUES('{0}',1,'0000',0,0,1,0,{1})", strBillNo, VCell);
+                ExecuteNonQuery(strSQL);
+                strSQL = string.Format("INSERT INTO WCS_TASK(TASK_ID,TASK_TYPE,TASK_LEVEL,BILL_NO,PRODUCT_CODE,REAL_WEIGHT,PRODUCT_BARCODE,PALLET_CODE,STATE,TASK_DATE,TASKER,PRODUCT_TYPE,IS_MIX,CELL_CODE,TARGET_CODE)" +
+                        "SELECT STATE.BILL_NO||LPAD(ITEM_NO, 2, '0'),BTYPE.TASK_TYPE ,BTYPE.TASK_LEVEL,STATE.BILL_NO,PRODUCT_CODE,REAL_WEIGHT,PRODUCT_BARCODE,PALLET_CODE,STATE,TASK_DATE,TASKER,0,IS_MIX,CELL_CODE,'{1}' FROM  WMS_PRODUCT_STATE STATE " +
+                        "LEFT JOIN WMS_BILL_MASTER BILL ON STATE.BILL_NO=BILL.BILL_NO " +
+                        "LEFT JOIN CMD_BILL_TYPE BTYPE ON BILL.BTYPE_CODE=BTYPE.BTYPE_CODE WHERE='{0}'", strBillNo,TARGET_CODE);
+                ExecuteNonQuery(strSQL);
+                return strBillNo + "01";
+            }
+            else
+                throw new Exception("没有找到可以出库的托盘货位。");
+
+            
+
+
+
+        }
+        /// <summary>
+        /// 更新单号完成标志。
+        /// </summary>
+        /// <param name="BillNo"></param>
+        public void UpdateBillMasterFinished(string BillNo)
+        {
+            StoredProcParameter parameters = new StoredProcParameter();
+            parameters.AddParameter("VBILLNO", BillNo);
+            ExecuteNonQuery("CONFIRMBILLFINSHED", parameters);
+         
         }
 
        
@@ -82,6 +142,8 @@ namespace THOK.XC.Process.Dao
             }
             return strNew;
          }
+
+        
 
     }
 }
