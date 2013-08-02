@@ -21,10 +21,10 @@ namespace THOK.XC.Process.Process_01
             {
                 switch (stateItem.ItemName)
                 {
-                    case "01_1_158":
+                    case "01_1_158_1":
                         TARGET_CODE = "158";
                         break;
-                    case "01_1_200":
+                    case "01_1_200_1":
                         TARGET_CODE = "200";
                         break;
                     default:

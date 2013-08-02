@@ -14,17 +14,17 @@ namespace THOK.XC.Process.Process_01
             /*  处理事项：
              * 货物到达指定位置
             */
-          
+
             try
             {
-                 
-                    switch (stateItem.ItemName)
+
+                switch (stateItem.ItemName)
                 {
-                    case "01_1_158":
-                        
+                    case "01_1_158_2":
+
                         break;
-                    case "01_1_200":
-                     
+                    case "01_1_200_2":
+
                         break;
                     case "01_1_195":
 
@@ -44,7 +44,7 @@ namespace THOK.XC.Process.Process_01
 
                 BillDal billdal = new BillDal();
                 billdal.UpdateBillMasterFinished(strInfo[1]);
-                  
+
 
                 //更新Bill_Master
             }
