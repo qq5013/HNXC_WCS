@@ -8,8 +8,8 @@
     <ProjectGuid>{16DC7A0E-F713-4406-8027-CBCB59BD6028}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MCP.TCP</RootNamespace>
-    <AssemblyName>MCP.TCP</AssemblyName>
+    <RootNamespace>THOK.TCP</RootNamespace>
+    <AssemblyName>THOK.TCP</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

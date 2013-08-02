@@ -34,7 +34,7 @@ namespace THOK.XC.Process.Dao
         /// <summary>
         /// 空托盘组组盘入库，申请货位时，生成入库单。
         /// </summary>
-        public void CreateReturnBillTaskDetail()
+        public void CreatePalletBillTaskDetail()
         {
             string strBillNo = GetBillNo("TK");
 

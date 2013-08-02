@@ -38,8 +38,6 @@
       <OPCItem ItemName="01_1_122" ClientHandler="16" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
       <OPCItem ItemName="01_1_158" ClientHandler="14" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
       <OPCItem ItemName="01_1_200" ClientHandler="15" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
-      <OPCItem ItemName="01_2_158" ClientHandler="14" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
-      <OPCItem ItemName="01_2_200" ClientHandler="15" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
     </OPCGroup>
   </OPCServer>
 </Config>

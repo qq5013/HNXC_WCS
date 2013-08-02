@@ -14,6 +14,7 @@
       <Item ServiceName="StockPLC_01" ItemName="01_1_218" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_110" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_126" />
+      <Item ServiceName="StockPLC_01" ItemName="01_1_131" />
     </Process>
     <!--一层到达入库站台-->
     <Process Name="StockInStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.StockInStationProcess">
@@ -24,25 +25,18 @@
       <Item ServiceName="StockPLC_01" ItemName="01_1_178" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_186" />
     </Process>
-    <!--一层出库到达指定位置-->
-    <Process Name="StockOutToStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.StockOutToStationProcess">
-      <Item ServiceName="StockPLC_01" ItemName="01_1_158" />
-      <Item ServiceName="StockPLC_01" ItemName="01_1_200" />
-    </Process>
-    <!--一层空托盘组请求入库-->
-    <Process Name="PalletInRequestProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.PalletInRequestProcess">
-      <Item ServiceName="StockPLC_01" ItemName="01_1_131" />
-    </Process>
     <!--一层空托盘组请求出库-->
     <Process Name="PalletOutRequestProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.PalletOutRequestProcess">
-      <Item ServiceName="StockPLC_01" ItemName="01_1_158" />
-      <Item ServiceName="StockPLC_01" ItemName="01_1_200" />
+      <Item ServiceName="StockPLC_01" ItemName="01_1_158_1" />
+      <Item ServiceName="StockPLC_01" ItemName="01_1_200_1" />
     </Process>
-    <!--一层空托盘组到达指定位置-->
-    <Process Name="PalletOutFinishProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.PalletOutFinishProcess">
+    <!--一层出库到达指定位置-->
+    <Process Name="StockOutToStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.StockOutToStationProcess">
+      <Item ServiceName="StockPLC_01" ItemName="01_1_158_2" />
+      <Item ServiceName="StockPLC_01" ItemName="01_1_200_2" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_195" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_122" />
-    </Process>
+    </Process>    
     
     <!--二层空托盘组请求入库-->
     <Process Name="PalletInRequestProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.PalletInRequestProcess">

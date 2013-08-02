@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+  <Resources>
+	  <DeviceClass Name="多沟带缓存段">
+		  <Resource StateCode="1" StateDesc="正常" Image=".\Image\01.bmp"/>		   
+	  </DeviceClass>
+	  <DeviceClass Name="打码缓存段">
+		  <Resource StateCode="1" StateDesc="正常" Image=".\Image\01.bmp"/>		   
+	  </DeviceClass>
+	  <DeviceClass Name="包装缓存段">
+		  <Resource StateCode="1" StateDesc="正常" Image=".\Image\01.bmp"/>		   
+	  </DeviceClass>
+  </Resources>
+
+  <Devices>
+	  <DeviceClass Name="多沟带缓存段">
+		  <Device DeviceNo="1" X="730" Y="332" Width="68" Height="26"/>
+		  <Device DeviceNo="2" X="800" Y="332" Width="60" Height="26"/>
+		  <Device DeviceNo="3" X="720" Y="410" Width="70" Height="28"/>
+		  <Device DeviceNo="4" X="798" Y="410" Width="67" Height="28"/>
+	  </DeviceClass>  
+	  <DeviceClass Name="打码缓存段">
+		  <Device DeviceNo="5" X="863" Y="334" Width="53" Height="22"/>
+		  <Device DeviceNo="6" X="922" Y="334" Width="62" Height="22"/>
+	  </DeviceClass>  
+	  <DeviceClass Name="包装缓存段">
+		  <Device DeviceNo="8" X="1034" Y="317" Width="57" Height="30"/>
+		  <Device DeviceNo="7" X="1096" Y="314" Width="59" Height="29"/>
+	  </DeviceClass>  
+  </Devices>
+</Configuration>
