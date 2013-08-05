@@ -57,7 +57,7 @@ namespace THOK.XC.Process.Process_02
 
                     DataTable[] dtSend = new DataTable[2];
                     dtSend[0] = dt;
-                    WriteToProcess("CraneProcess", "CraneOutRequest", dtSend); // 出库任务调用。
+                    WriteToProcess("CraneProcess", "StockOutRequest", dtSend); // 出库任务调用。
 
                     WriteToProcess("CarProcess", "CarOutRequest", dt); //调用堆垛机。
                    

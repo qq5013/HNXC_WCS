@@ -245,7 +245,7 @@ namespace THOK.XC.Dispatching.View
             DataTable[] dtSend = new DataTable[2];
             dtSend[0] = dt;
             dtSend[1] = dt2;
-            Context.ProcessDispatcher.WriteToProcess("CraneProcess", "CraneOutRequest", dtSend);
+            Context.ProcessDispatcher.WriteToProcess("CraneProcess", "StockOutRequest", dtSend);
             IndexStar++;
         }
 
