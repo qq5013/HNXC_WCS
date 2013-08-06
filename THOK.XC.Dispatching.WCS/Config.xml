@@ -16,6 +16,10 @@
       <Item ServiceName="StockPLC_01" ItemName="01_1_126_1" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_131" />
     </Process>
+    <!--一层不合格站台-->
+    <Process Name="NotReadBarcodeProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.NotReadBarcodeProcess">
+      <Item ServiceName="StockPLC_01" ItemName="01_1_124" />      
+    </Process>
     <!--一层到达入库站台-->
     <Process Name="StockInStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.StockInStationProcess">
       <Item ServiceName="StockPLC_01" ItemName="01_1_136" />
@@ -31,16 +35,16 @@
       <Item ServiceName="StockPLC_01" ItemName="01_1_200_1" />
     </Process>
     <!--一层出库到达指定位置-->
-    <Process Name="PalletOutToStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.StockOutToStationProcess">
+    <Process Name="PalletOutToStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.PalletOutToStationProcess">
       <Item ServiceName="StockPLC_01" ItemName="01_1_158_2" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_200_2" />
     </Process>
     <!--一抽检盘点到达指定位置-->
-    <Process Name="CheckOutToStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.StockOutToStationProcess">
+    <Process Name="CheckOutToStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.CheckOutToStationProcess">
       <Item ServiceName="StockPLC_01" ItemName="01_1_195" />
     </Process>
     <!--一倒库到达指定位置-->
-    <Process Name="MoveOutToStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.StockOutToStationProcess">
+    <Process Name="MoveOutToStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.MoveOutToStationProcess">
       <Item ServiceName="StockPLC_01" ItemName="01_1_122" />
     </Process>
 
