@@ -57,7 +57,7 @@ namespace THOK.XC.Process.Dao
             return ExecuteQuery(string.Format(sql, cigaretteCode)).Tables[0];
         }
 
-        #region 交换分拣烟道        
+        #region 交换分拣烟道
        
         public DataTable FindChannelUSED(string lineCode, string channelCode)
         {
