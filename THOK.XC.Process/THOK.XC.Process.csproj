@@ -67,12 +67,11 @@
     <Compile Include="Dao\SupplyDao.cs" />
     <Compile Include="Dao\TaskDao.cs" />
     <Compile Include="Parameter.cs" />
+    <Compile Include="Process_01\PalletoutToStationProcess.cs" />
     <Compile Include="Process_01\StockOutToStationProcess.cs" />
     <Compile Include="Process_01\PalletOutRequestProcess.cs" />
     <Compile Include="Process_01\StockInStationProcess.cs" />
-    <Compile Include="Process_01\PalletOutFinishProcess.cs" />
     <Compile Include="Process_01\StockInRequestProcess.cs" />
-    <Compile Include="Process_01\PalletInRequestProcess.cs" />
     <Compile Include="Process_02\StockOutInCacheProcess.cs" />
     <Compile Include="Process_02\StockOutSeparateProcess.cs" />
     <Compile Include="Process_02\PalletToCarStationProcess.cs" />

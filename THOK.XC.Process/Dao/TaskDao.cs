@@ -231,7 +231,7 @@ namespace THOK.XC.Process.Dao
         }
 
         /// <summary>
-        /// 分配货位,返回TaskID，任务号，货物到达入库站台的目的地址,堆垛机入库站台，货位，堆垛机编号
+        /// 分配货位,返回 0:TaskID，1:任务号，2:货物到达入库站台的目的地址--平面号,3:堆垛机入库站台，4:货位，5:堆垛机编号
         /// </summary>
         /// <param name="strWhere"></param>
         public string [] AssignCell(string strWhere)
@@ -246,13 +246,20 @@ namespace THOK.XC.Process.Dao
            
             string billNo = dt.Rows[0]["BILL_NO"].ToString();
             string ProductCode = dt.Rows[0]["PRODUCT_CODE"].ToString();
-
-            StoredProcParameter parameters = new StoredProcParameter();
-            parameters.AddParameter("VBILLNO", billNo);
-            parameters.AddParameter("VPRODUCTCODE", ProductCode);
-            parameters.AddParameter("VCELL", "", DbType.String, ParameterDirection.Output);
-            ExecuteNonQuery("APPLYCELL", parameters);
-            string VCell = parameters["VCELL"].ToString();
+            string VCell = "";
+            if (dt.Rows[0]["CELL_CODE"].ToString() == "")
+            {
+                StoredProcParameter parameters = new StoredProcParameter();
+                parameters.AddParameter("VBILLNO", billNo);
+                parameters.AddParameter("VPRODUCTCODE", ProductCode);
+                parameters.AddParameter("VCELL", "", DbType.String, ParameterDirection.Output);
+                ExecuteNonQuery("APPLYCELL", parameters);
+                VCell = parameters["VCELL"].ToString();
+            }
+            else
+            {
+                VCell = dt.Rows[0]["CELL_CODE"].ToString();
+            }
 
 
             strSQL = string.Format("UPDATE CMD_CELL SET IS_LOCK='1' WHERE CELL_CODE='{0}'", VCell);

@@ -16,6 +16,11 @@ namespace THOK.XC.Process.Process_01
              * 空托盘组到达指定出库位置。
              *  
             */
+
+            int intRequest = (int)stateItem.State;
+          
+            if (intRequest == 0) //申请位为0
+                return;
             string TARGET_CODE = "";
             try
             {
@@ -30,36 +35,12 @@ namespace THOK.XC.Process.Process_01
                     default:
                         break;
                 }
+                BillDal dal = new BillDal();
+                string Taskid = dal.CreatePalletOutBillTask(TARGET_CODE);
+                TaskDal task = new TaskDal();
+                DataTable dt = task.CraneTask(string.Format("TASK_ID='{0}'", Taskid));
+                WriteToProcess("CraneProcess", "PalletOutRequest", dt);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                object sta = stateItem.State;
-                if (sta == null) //申请
-                { //空托盘组出库单，生成任务，及明细。
-
-                    BillDal dal = new BillDal();
-                    string Taskid = dal.CreatePalletOutBillTask(TARGET_CODE);
-                    TaskDal task = new TaskDal();
-                    DataTable dt = task.CraneTask(string.Format("TASK_ID='{0}'", Taskid));
-                    WriteToProcess("CraneProcess", "PalletOutRequest", dt);
-                }
             }
             catch (Exception e)
             {
