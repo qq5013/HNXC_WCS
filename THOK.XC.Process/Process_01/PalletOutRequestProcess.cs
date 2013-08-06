@@ -60,21 +60,6 @@ namespace THOK.XC.Process.Process_01
                     DataTable dt = task.CraneTask(string.Format("TASK_ID='{0}'", Taskid));
                     WriteToProcess("CraneProcess", "PalletOutRequest", dt);
                 }
-                else // 空托盘组到达。
-                {
-                    TaskDal dal = new TaskDal(); //更具任务号，获取TaskID及BILL_NO
-                    string[] strInfo = dal.GetTaskInfo(sta.ToString());
-                    dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=2", strInfo[0]), "2");
-                    dal.UpdateTaskState(strInfo[0], "2");
-
-                    
-                    //更新Bill_Master
-                    BillDal billdal = new BillDal();
-                    billdal.UpdateBillMasterFinished(strInfo[1]);
-                  
-                  
- 
-                }
             }
             catch (Exception e)
             {
