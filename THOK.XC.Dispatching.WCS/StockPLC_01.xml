@@ -67,6 +67,8 @@
       <OPCItem ItemName="01_1_122" ClientHandler="57" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
       <OPCItem ItemName="01_1_158_2" ClientHandler="58" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
       <OPCItem ItemName="01_1_200_2" ClientHandler="59" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="01_1_158_3" ClientHandler="58" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
+      <OPCItem ItemName="01_1_200_3" ClientHandler="59" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
       <!--一层抽检倒库完成处理-->
       <OPCItem ItemName="01_2_195_1" ClientHandler="60" OPCItemName="DB2,INT4,3"  ItemType="WRITE"/>
       <OPCItem ItemName="01_2_195_2" ClientHandler="61" OPCItemName="DB1,STRING100.100"  ItemType="WRITE"/>
