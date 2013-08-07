@@ -10,13 +10,14 @@ namespace THOK.XC.Process.Dal
     {
 
         /// <summary>
-        /// 空托盘组组盘入库申请
+        /// 一楼，二楼空托盘组组盘入库，申请货位时，生成入库单,返回TaskID
         /// </summary>
-        /// <returns></returns>
-        public string CreatePalletInBillTaskDetail()
+        /// <param name="blnOne">true,一楼入库</param>
+        /// <returns>TaskID</returns>
+        public string CreatePalletInBillTask(bool blnOne)
         {
             BillDao dao = new BillDao();
-            return dao.CreatePalletInBillTaskDetail();
+            return dao.CreatePalletInBillTask(blnOne);
         }
 
          /// <summary>

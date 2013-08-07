@@ -16,6 +16,11 @@ namespace THOK.XC.Process.Process_01
              * 空托盘组到达指定出库位置。
              *  
             */
+
+            int intRequest = (int)stateItem.State;
+          
+            if (intRequest == 0) //申请位为0
+                return;
             string TARGET_CODE = "";
             try
             {
@@ -30,51 +35,12 @@ namespace THOK.XC.Process.Process_01
                     default:
                         break;
                 }
+                BillDal dal = new BillDal();
+                string Taskid = dal.CreatePalletOutBillTask(TARGET_CODE);
+                TaskDal task = new TaskDal();
+                DataTable dt = task.CraneTask(string.Format("TASK_ID='{0}'", Taskid));
+                WriteToProcess("CraneProcess", "PalletOutRequest", dt);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                object sta = stateItem.State;
-                if (sta == null) //申请
-                { //空托盘组出库单，生成任务，及明细。
-
-                    BillDal dal = new BillDal();
-                    string Taskid = dal.CreatePalletOutBillTask(TARGET_CODE);
-                    TaskDal task = new TaskDal();
-                    DataTable dt = task.CraneTask(string.Format("TASK_ID='{0}'", Taskid));
-                    WriteToProcess("CraneProcess", "PalletOutRequest", dt);
-                }
-                else // 空托盘组到达。
-                {
-                    TaskDal dal = new TaskDal(); //更具任务号，获取TaskID及BILL_NO
-                    string[] strInfo = dal.GetTaskInfo(sta.ToString());
-                    dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=2", strInfo[0]), "2");
-                    dal.UpdateTaskState(strInfo[0], "2");
-
-                    
-                    //更新Bill_Master
-                    BillDal billdal = new BillDal();
-                    billdal.UpdateBillMasterFinished(strInfo[1]);
-                  
-                  
- 
-                }
             }
             catch (Exception e)
             {
