@@ -7,7 +7,7 @@ using THOK.XC.Process.Dal;
 
 namespace THOK.XC.Process.Process_01
 {
-    public class PalletOutToStationProcess : AbstractProcess
+    public class NotReadBarcodeProcess : AbstractProcess
     {
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
         {
