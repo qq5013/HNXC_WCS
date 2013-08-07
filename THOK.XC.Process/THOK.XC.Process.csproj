@@ -73,6 +73,10 @@
     <Compile Include="Process_01\PalletOutFinishProcess.cs" />
     <Compile Include="Process_01\StockInRequestProcess.cs" />
     <Compile Include="Process_01\PalletInRequestProcess.cs" />
+    <Compile Include="Process_01\NotReadBarcodeProcess.cs" />
+    <Compile Include="Process_01\PalletOutToStationProcess.cs" />
+    <Compile Include="Process_01\CheckOutToStationProcess.cs" />
+    <Compile Include="Process_01\MoveOutToStationProcess.cs" />
     <Compile Include="Process_02\StockOutInCacheProcess.cs" />
     <Compile Include="Process_02\StockOutSeparateProcess.cs" />
     <Compile Include="Process_02\PalletToCarStationProcess.cs" />

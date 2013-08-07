@@ -94,12 +94,6 @@
     <Compile Include="View\Control\ButtonArea.Designer.cs">
       <DependentUpon>ButtonArea.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\Control\UserControl1.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="View\Control\UserControl1.Designer.cs">
-      <DependentUpon>UserControl1.cs</DependentUpon>
-    </Compile>
     <Compile Include="View\Dialog\ChannelDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -188,9 +182,6 @@
     <EmbeddedResource Include="View\Control\ButtonArea.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ButtonArea.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\Control\UserControl1.resx">
-      <DependentUpon>UserControl1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\Dialog\ChannelDialog.resx">
       <DependentUpon>ChannelDialog.cs</DependentUpon>
