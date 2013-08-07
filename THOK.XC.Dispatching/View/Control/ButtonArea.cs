@@ -108,8 +108,8 @@ namespace THOK.XC.Dispatching.View
 
         private void SwitchStatus(bool isStart)
         {
-            btnDownload.Enabled = !isStart;
-            btnUpload.Enabled = !isStart;
+            btnWarningHandle.Enabled = !isStart;
+            btnPalletIn.Enabled = !isStart;
             btnStart.Enabled = !isStart;
             btnStop.Enabled = isStart;
             btnSimulate.Enabled = !isStart;
