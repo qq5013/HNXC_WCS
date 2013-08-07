@@ -67,6 +67,8 @@
     <Compile Include="Dao\SupplyDao.cs" />
     <Compile Include="Dao\TaskDao.cs" />
     <Compile Include="Parameter.cs" />
+    <Compile Include="Process_01\CheckOutToStationProcess.cs" />
+    <Compile Include="Process_01\MoveOutToStationProcess.cs" />
     <Compile Include="Process_01\PalletoutToStationProcess.cs" />
     <Compile Include="Process_01\StockOutToStationProcess.cs" />
     <Compile Include="Process_01\PalletOutRequestProcess.cs" />

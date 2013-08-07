@@ -9,28 +9,36 @@ namespace THOK.XC.Process.Process_01
 {
     public class PalletoutToStationProcess : AbstractProcess
     {
+            /*  处理事项：
+             *  空托盘组出库到达158，200
+            */
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
         {
             try
             {
-
+                string writeItem = "";
                 switch (stateItem.ItemName)
                 {
                     case "01_1_158_2":
-
+                        writeItem = "01_1_158_3";
                         break;
                     case "01_1_200_2":
+                        writeItem = "01_1_200_3";
                         break;
                 }
-                object sta = "";
-
+                string TaskNo = ((int)stateItem.State).ToString().PadLeft(4, '0');
+                
                 TaskDal dal = new TaskDal(); //更具任务号，获取TaskID及BILL_NO
-                string[] strInfo = dal.GetTaskInfo(sta.ToString());
-                dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=2", strInfo[0]), "2");
-                dal.UpdateTaskState(strInfo[0], "2");
+                string[] strInfo = dal.GetTaskInfo(TaskNo);
+                if (!string.IsNullOrEmpty(strInfo[0]))
+                {
+                    dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=2", strInfo[0]), "2");
+                    dal.UpdateTaskState(strInfo[0], "2");
 
-                BillDal billdal = new BillDal();
-                billdal.UpdateBillMasterFinished(strInfo[1]);
+                    BillDal billdal = new BillDal();
+                    billdal.UpdateBillMasterFinished(strInfo[1]);
+                    WriteToService("StockPLC_01", writeItem, 1); //通知电控，空托盘组到达158,200       
+                }
             }
             catch (Exception e)
             {

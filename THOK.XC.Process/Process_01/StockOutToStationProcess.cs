@@ -20,12 +20,7 @@ namespace THOK.XC.Process.Process_01
 
                 switch (stateItem.ItemName)
                 {
-                    case "01_1_158_2":
-
-                        break;
-                    case "01_1_200_2":
-
-                        break;
+                  
                     case "01_1_195":
 
                         break;

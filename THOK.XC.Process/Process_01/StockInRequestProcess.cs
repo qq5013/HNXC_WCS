@@ -48,7 +48,7 @@ namespace THOK.XC.Process.Process_01
                         break;
                     case "01_1_131": //空托盘组盘入
                         BillDal Billdal = new BillDal();
-                        TaskID = Billdal.CreatePalletInBillTaskDetail(); //空托盘组入库单，生成Task.
+                        TaskID = Billdal.CreatePalletInBillTask(true); //空托盘组入库单，生成Task.
                         FromStation = "124";
                         ToStation = "131";
                         writeItem = "01_2_131_";
