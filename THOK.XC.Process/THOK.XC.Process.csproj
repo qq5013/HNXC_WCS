@@ -84,6 +84,7 @@
     <Compile Include="Process_02\PalletInRequestProcess.cs" />
     <Compile Include="Process_02\StockOutToCarStationProcess.cs" />
     <Compile Include="Process_02\StockOutCarFinishProcess.cs" />
+    <Compile Include="Process_02\StockOutCarLoadProcess.cs" />
     <Compile Include="Process_Car\CarProcess.cs" />
     <Compile Include="Process_Crane\CraneProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
