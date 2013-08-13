@@ -33,7 +33,8 @@ namespace THOK.XC.Process.Process_01
                 }
                 string TaskNo = ((int)stateItem.State).ToString().PadLeft(4, '0'); //读取PLC任务号。
                 TaskDal taskDal = new TaskDal();
-                string strWhere = string.Format("TASK_NO='{0}' AND TASK_TYPE='11' AND DETAIL.STATE='0'", TaskNo);
+                taskDal.UpdateTaskDetailState(string.Format("TASK_NO='{0}' AND ITEM_NO='2'", TaskNo), "2");
+                string strWhere = string.Format("TASK_NO='{0}'AND DETAIL.STATE='0' and ITEM_NO='3'", TaskNo);
                 DataTable dtInCrane = taskDal.TaskCraneDetail(strWhere);
                 if (dtInCrane.Rows.Count > 0)
                     WriteToService("Crane", "CraneInRequest", dtInCrane);

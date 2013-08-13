@@ -27,10 +27,10 @@ namespace THOK.XC.Process.Dal
         /// </summary>
         /// <param name="strWhere"></param>
         /// <returns></returns>
-        public DataTable CraneTask(string strWhere)
+        public DataTable CraneOutTask(string strWhere)
         {
             TaskDao dao = new TaskDao();
-            return dao.CraneTask(strWhere);
+            return dao.CraneOutTask(strWhere);
         }
         /// <summary>
         /// 更新Task_Detail状态 State
@@ -81,7 +81,7 @@ namespace THOK.XC.Process.Dal
 
         }
         /// <summary>
-        /// 根据条件，返回任务明细。
+        /// 根据条件，返回小车任务明细。
         /// </summary>
         /// <param name="strWhere"></param>
         /// <returns></returns>
@@ -101,17 +101,6 @@ namespace THOK.XC.Process.Dal
             TaskDao dao = new TaskDao();
             return dao.InsertTaskDetail(task_id);
         }
-
-        /// <summary>
-        /// 给小车安排任务，更新任务明细表小车编号。
-        /// </summary>
-        /// <param name="CarNo"></param>
-        public void UpdateTaskDetailCar(string TaskID, string CarNo)
-        {
-            TaskDao dao = new TaskDao();
-            dao.UpdateTaskDetailCar("", "", "0", CarNo, "");
-        }
-
         /// <summary>
         /// 更新起始位置，目标位置
         /// </summary>
@@ -153,6 +142,16 @@ namespace THOK.XC.Process.Dal
             return dao.AssignCell(strWhere);
             
         }
+
+         /// <summary>
+        /// 二楼分配货位,更新货位信息，插入Task_Detail明细,更新货位申请完成。
+        /// </summary>
+        /// <param name="strWhere"></param>
+        public void AssignCellTwo(string strWhere) //
+        {
+            TaskDao dao = new TaskDao();
+            dao.AssignCellTwo(strWhere);
+        }
         /// <summary>
         /// 根据任务号返回的任务号TaskID,及单号Bill_NO
         /// </summary>
@@ -163,5 +162,28 @@ namespace THOK.XC.Process.Dal
             TaskDao dao = new TaskDao();
             return dao.GetTaskInfo(TaskNo);
         }
+
+          /// <summary>
+        /// 根据Task获取入库，起始位置，目标位置，及堆垛机编号
+        /// </summary>
+        /// <param name="strWhere"></param>
+        /// <returns></returns>
+        public DataTable TaskInCraneStation(string strWhere)
+        {
+            TaskDao dao = new TaskDao();
+            return dao.TaskInCraneStation(strWhere);
+        }
+        /// <summary>
+        /// 返回任务信息
+        /// </summary>
+        /// <param name="strWhere"></param>
+        /// <returns></returns>
+        public DataTable TaskInfo(string strWhere)
+        {
+            TaskDao dao = new TaskDao();
+            return dao.TaskInfo(strWhere);
+ 
+        }
+
     }
 }

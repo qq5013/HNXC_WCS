@@ -404,19 +404,21 @@ namespace THOK.XC.Process.Process_Crane
                 dal.UpdateTaskDetailState(strWhere, "2"); //更新堆垛机状态
                 if (TaskType.PadRight(2, '0').Substring(1, 1) == "2")
                 {
-
-
                     if (TaskType == "12") //一楼出库
                     {
-                        // TARGET_CODE
-
                         CellDal Cdal = new CellDal();
                         Cdal.UpdateCellOutUnLock(drs[0][""].ToString());//货位解锁
                     }
-                    else //二楼出库
-                    {
-                        //STATION_NO
-                    }
+                    int[] WriteValue = new int[3];
+                    WriteValue[0] = int.Parse(drs[0]["TASK_NO"].ToString());
+                    if (TaskType == "12")
+                        WriteValue[1] = int.Parse(drs[0]["TARGET_CODE"].ToString());
+                    else
+                        WriteValue[1] = int.Parse(drs[0]["MEMO"].ToString());
+                    WriteValue[2] = int.Parse(drs[0]["PRODUCT_TYPE"].ToString());
+
+
+                    string Barcode = "";
 
 
 
@@ -431,9 +433,14 @@ namespace THOK.XC.Process.Process_Crane
 
 
 
+                    dal.UpdateTaskDetailStation(drs[0]["STATION_NO"].ToString(), WriteValue[1].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", TASK_ID));
 
-                    WriteToService(drs[0]["SERVICE_NAME"].ToString(), drs[0]["ITEM_NAME_2"].ToString(), ""); //通知PLC发送任务。
-                    //更新货物到达小车站台为开始执行。
+                    WriteToService(drs[0]["SERVICE_NAME"].ToString(), drs[0]["ITEM_NAME_2"].ToString() + "_1", WriteValue);
+
+                    WriteToService(drs[0]["SERVICE_NAME"].ToString(), drs[0]["ITEM_NAME_2"].ToString() + "_2", Barcode);
+                    WriteToService(drs[0]["SERVICE_NAME"].ToString(), drs[0]["ITEM_NAME_2"].ToString() + "_3", 1);
+                  
+                
 
                 }
                 else if(TaskType.PadRight(2, '0').Substring(1, 1) == "1") //入库完成，更新Task任务完成。

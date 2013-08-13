@@ -74,21 +74,6 @@ namespace THOK.XC.Process.Process_02
 
  
                 }
-
-                switch (stateItem.ItemName)
-                {
-                    case "Init":
-                        break;
-                    case "FirstBatch":
-                        //AddFirstBatch();
-                        break;
-                    case "StockInRequest":
-                        cigaretteCode = Convert.ToString(stateItem.State);
-                        //StockInRequest(cigaretteCode);
-                        break;
-                    default:
-                        break;
-                }
             }
             catch (Exception e)
             {

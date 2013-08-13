@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using THOK.MCP;
+using System.Data;
+using THOK.XC.Process.Dal;
+
 
 namespace THOK.XC.Process.Process_02
 {
@@ -12,28 +15,42 @@ namespace THOK.XC.Process.Process_02
             /*  处理事项：
              * 
              *  stateItem.ItemName ：
-             *  Init - 初始化。
-             *      FirstBatch - 生成第一批入库请求任务。
-             *      StockInRequest - 根据请求，生成入库任务。
-             * 
-             *  stateItem.State ：参数 - 请求的卷烟编码。        
+             *  空托盘组，从小车站台到达入库站台。
+             *  stateItem.State ：参数 - 任务号。        
             */
-            string cigaretteCode = "";
+            string TaskNo = ((int)stateItem.State).ToString().PadLeft(4, '0');
             try
             {
                 switch (stateItem.ItemName)
                 {
-                    case "Init":
+                    case "02_1_302":
                         break;
-                    case "FirstBatch":
-                        //AddFirstBatch();
+                    case "02_1_306":
                         break;
-                    case "StockInRequest":
-                        cigaretteCode = Convert.ToString(stateItem.State);
-                        //StockInRequest(cigaretteCode);
+                    case "02_1_310":
+                        break;
+                    case "02_1_314":
+                        break;
+                    case "02_1_318":
+                        break;
+                    case "02_1_324":
                         break;
                     default:
                         break;
+                }
+                TaskDal dal = new TaskDal();
+                string[] strValue = dal.GetTaskInfo(TaskNo);
+                if (!string.IsNullOrEmpty(strValue[1]))
+                {
+                    dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO='3'", strValue[0]), "2");//更新小车站台到达入库站台任务完成。
+                    DataTable dt = dal.TaskInCraneStation(string.Format("TASK_ID='{0}'", strValue[0]));
+                    if (dt.Rows.Count > 0)
+                    {
+                        DataRow dr = dt.Rows[0];
+                        dal.UpdateTaskDetailCrane(dr["FROM_STATION"].ToString(), dr["TO_STATION"].ToString(), "0", dr["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO='5'", strValue[0]));
+                        dt = dal.TaskCraneDetail(string.Format("TASK_ID='{0}'", strValue[0]));
+                        WriteToProcess("CraneProcess", "CraneInRequest", dt);
+                    }
                 }
             }
             catch (Exception e)
