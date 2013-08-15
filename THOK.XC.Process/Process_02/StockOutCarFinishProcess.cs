@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using THOK.MCP;
+using System.Data;
+using THOK.XC.Process.Dal;
 
 namespace THOK.XC.Process.Process_02
 {
@@ -18,24 +20,60 @@ namespace THOK.XC.Process.Process_02
              * 
              *  stateItem.State ：参数 - 请求的卷烟编码。        
             */
-            string cigaretteCode = "";
+            string FromStation="";
+            string ToStation="";
             try
             {
                 switch (stateItem.ItemName)
                 {
-                    case "Init":
+                    case "02_1_340":
+                        FromStation = "340";
+                        ToStation = "372";
                         break;
-                    case "FirstBatch":
-                        //AddFirstBatch();
+                    case "02_1_360":
+                        FromStation = "360";
+                        ToStation = "392";
                         break;
-                    case "StockInRequest":
-                        cigaretteCode = Convert.ToString(stateItem.State);
-                        //StockInRequest(cigaretteCode);
-                        break;
-                    default:
-                        break;
+                        
+                }
+
+                string TaskNo = ((int)stateItem.State).ToString().PadLeft(4, '0');
+                TaskDal dal = new TaskDal();
+                string[] strValue = dal.GetTaskInfo(TaskNo);
+                if (!string.IsNullOrEmpty(strValue[0]))
+                {
+                    dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEMNO=3", strValue[0]), "2");
+
+                    //
+                    DataTable dt = dal.TaskInfo(string.Format("TASK_ID='{0}'", strValue[0]));
+                    if (dt.Rows.Count > 0)
+                    {
+                        string barCode = "";//PRODUCT_BARCODE
+                        int[] WriteValue = new int[3];
+                        WriteValue[0] = (int)stateItem.State;
+                        WriteValue[1] = int.Parse(ToStation);
+                        WriteValue[2] = 1;//下任务给小车移动到最大目的地址+1个工位。
+                        WriteToService("StockPLC_02", drMax[i]["WriteItem"].ToString() + "_1", WriteValue);
+                        string BarCode = "";
+                        WriteToService("StockPLC_02", drMax[i]["WriteItem"].ToString() + "_2", BarCode);
+                        WriteToService("StockPLC_02", drMax[i]["WriteItem"].ToString() + "_3", 1); 
+                        WriteToService("", "", "");
+                        
+ 
+                    }
+
+                    //
+                  
+
+
+
+
+
+
+                    dal.UpdateTaskDetailStation(FromStation, ToStation, "1", string.Format("TASK_ID='{0}' AND ITEMNO=4", strValue[0]));
                 }
             }
+
             catch (Exception e)
             {
                 Logger.Error("入库任务请求批次生成处理失败，原因：" + e.Message);

@@ -14,26 +14,50 @@ namespace THOK.XC.Process.Process_Car
         private DataTable dtOrder;
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
         {
+            bool blnChange = false;
+            string strState = "";
+            string strCarNo = "";
+            string strReadItem = "";
+            string strWriteItem = "";
             switch (stateItem.ItemName)
             {
                 case "CarOutRequest":
-                    InsertdtCar((DataTable)stateItem.State);
-                    break;
                 case "CarInRequest":
-
+                    blnChange = false;
                     InsertdtCar((DataTable)stateItem.State);
                     break;
-                case "02_1_C01":
-                case "02_1_C02":
-                case "02_1_C03":
-                case "02_1_C04":
-
-                    
+                case "02_1_C01_2":
+                    strState = (string)stateItem.State;
+                    blnChange = true;
+                    strCarNo = "01";
+                    strReadItem = "02_1_C01_1";
+                    strWriteItem = "02_2_C01";
                     break;
-                  
-             
-                    
+                case "02_1_C02_2":
+                    strState = (string)stateItem.State;
+                    blnChange = true;
+                    strCarNo = "02";
+                    strReadItem = "02_1_C02_1";
+                    strWriteItem = "02_2_C02";
+                    break;
+                case "02_1_C03_2":
+                    strState = (string)stateItem.State;
+                     blnChange = true;
+                    strCarNo = "03";
+                    strReadItem = "02_1_C03_1";
+                    strWriteItem = "02_2_C03";
+                    break;
+                case "02_1_C04_2":
+                    strState = (string)stateItem.State;
+                     blnChange = true;
+                    strCarNo = "04";
+                    strReadItem = "02_1_C04_1";
+                    strWriteItem = "02_2_C04";
+                    break;
             }
+            if (!blnChange)
+                return;
+            CarStateChange(strState, strCarNo, strReadItem, strWriteItem);
         }
         /// <summary>
         /// 
@@ -170,29 +194,33 @@ namespace THOK.XC.Process.Process_Car
                 DataColumn dc3 = new DataColumn("CurStation", Type.GetType("System.Int16"));
                 DataColumn dc4 = new DataColumn("OrderNo", Type.GetType("System.Int16"));
                 DataColumn dc5 = new DataColumn("ToStation", Type.GetType("System.Int16"));
+                
                 DataColumn dc6 = new DataColumn("WriteItem", Type.GetType("System.String"));
+                DataColumn dc7 = new DataColumn("cc", Type.GetType("System.Int16"));
 
                 dtCarOrder.Columns.Add(dc1);
                 dtCarOrder.Columns.Add(dc2);
                 dtCarOrder.Columns.Add(dc3);
                 dtCarOrder.Columns.Add(dc4);
                 dtCarOrder.Columns.Add(dc5);
+                dtCarOrder.Columns.Add(dc6);
+                dtCarOrder.Columns.Add(dc7);
             }
             DataTable dt = new DataTable();
             dt = dtCarOrder.Clone();
 
 
 
-            int[] obj =(int []) WriteToService("StockPLC_02", "02_1_C01"); //第一辆小车
+            int[] obj =(int []) WriteToService("StockPLC_02", "02_1_C01_1"); //第一辆小车
 
             InsertCarOrder(dt, "01","02_2_C01", CurStation, obj);
-           
-            obj = (int[])WriteToService("StockPLC_02", "02_1_C02"); //第二两小车
+
+            obj = (int[])WriteToService("StockPLC_02", "02_1_C02_1"); //第二辆小车
             InsertCarOrder(dt, "02","02_2_C02", CurStation, obj);
 
-            obj = (int[])WriteToService("StockPLC_02", "02_1_C03"); //第二两小车
+            obj = (int[])WriteToService("StockPLC_02", "02_1_C03_1"); //第三辆小车
             InsertCarOrder(dt, "03", "02_2_C03",CurStation, obj);
-            obj = (int[])WriteToService("StockPLC_02", "02_1_C04"); //第二两小车
+            obj = (int[])WriteToService("StockPLC_02", "02_1_C04_1"); //第四辆小车
             InsertCarOrder(dt, "04","02_2_C04", CurStation, obj);
             return dt;
         }
@@ -200,9 +228,9 @@ namespace THOK.XC.Process.Process_Car
         {
             DataRow dr = dt.NewRow();
             dr["CarNo"] = CarNo;
-            dr["State"] = obj[0];
+            dr["State"] = obj[0]; //状态
             dr["WriteItem"] = WriteItem;
-            dr["CurStation"] = obj[1];
+            dr["CurStation"] = obj[1];//当前位置
             if (obj[1] <= CurStation)
                 dr["OrderNo"] = obj[1] + 10000; //小车位置小于当前位置，加上最大码尺地址。
 
@@ -212,7 +240,10 @@ namespace THOK.XC.Process.Process_Car
 
             else
                 dr["OrderNo"] = obj[1];
-            dr["ToStation"] = obj[2];
+            dr["ToStation"] = obj[2]; //目的地
+            dr["ToStationOrder"] = obj[2];                                                  
+            if (obj[2] < 5000)
+                dr["ToStationOrder"] = obj[2] + 10000;//最大码尺地址
             dt.Rows.Add(dr);
         }
 
@@ -257,9 +288,9 @@ namespace THOK.XC.Process.Process_Car
             return blnvalue;
         }
 
-        private void CarStateChange(string Objstate,string CarNO,string CarItem)
+        private void CarStateChange(string Objstate, string CarNO, string CarItem, string WriteItem)
         {
-            
+
             string CarNo = "";
             if (Objstate == "0") //空任务
             {
@@ -276,7 +307,7 @@ namespace THOK.XC.Process.Process_Car
                     dr.BeginEdit();
                     dr["state"] = 1;
                     dr.EndEdit();
-                   
+
                     int CurPostion = 0;
                     int ToPostion = 0;
                     string FromStation = "";
@@ -307,7 +338,7 @@ namespace THOK.XC.Process.Process_Car
                         ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
                         FromStation = dr["STATION_NO"].ToString();
                         ToStation = dr["OUT_STATION_1"].ToString();
-                       
+
                     }
 
 
@@ -335,30 +366,77 @@ namespace THOK.XC.Process.Process_Car
                     dal.UpdateTaskDetailCar(FromStation, ToStation, "1", dr["CARNO"].ToString(), string.Format("TASK_ID='{0}' and ITEM_NO='{1}'", dr["TASK_ID"], dr["ITEM_NO"]));
 
                 }
-                else
+                else  //小车空闲，且没任务。
                 {
-                    object obj = WriteToService("StockPLC_02", CarItem);//读取小车位置
 
-                    DataTable dtOrder = GetCarOrder(0);
+                    int[] obj = (int[])WriteToService("StockPLC_02", CarItem);//读取小车位置
+                    //判断当前位置
+
+                    DataTable dtOrder = GetCarOrder(obj[1]);
+                    DataRow[] drMax = dtOrder.Select("state=1", "ToStationOrder desc");
                     //按照最大目的地址倒排。最大目的地址大于当前位置，则下任务给小车移动到最大目的地址+1个工位。
-                    WriteToService("", "", "");//直接下任务。
+                    if (drMax.Length > 0)
+                    {
+                        if ((int)drMax[0]["ToStation"] > obj[1])
+                        {
+                            int[] WriteValue = new int[4];
+                            WriteValue[0] = 9999;
+                            WriteValue[1] = obj[1];
+                            WriteValue[2] = (int)drMax[0]["ToStation"] + 10;//下任务给小车移动到最大目的地址+1个工位。
+                            WriteValue[3] = 5;
+                            WriteToService("StockPLC_02", WriteItem + "_1", WriteValue);
+                            string BarCode = "";
+                            WriteToService("StockPLC_02", WriteItem + "_2", BarCode);
+                            WriteToService("StockPLC_02", WriteItem + "_3", 1);
+
+                        }
+
+                    }
+
+
                 }
             }
             else
             {
-                if (Objstate == "2")//烟包接货完成，处理目前位置与目的地之间的小车
+                if (Objstate == "2")//烟包接货完成，处理目前位置与目的地之间的空闲小车
                 {
-                    DataTable dtOrder = GetCarOrder(0);
-                    for (int i = 0; i < dtOrder.Rows.Count; i++)
+
+
+
+
+                    int[] obj = (int[])WriteToService("StockPLC_02", CarItem);//读取小车位置
+                    //判断当前位置
+
+                    DataTable dtOrder = GetCarOrder(obj[1]);
+                    DataRow[] drMax = dtOrder.Select(string.Format("state=0 and CurStation>={0} and CurStation<={1}", obj[1], obj[2]), "orderNo desc");
+
+                    //按照最大目的地址倒排。最大目的地址大于当前位置，则下任务给小车移动到最大目的地址+1个工位。
+                    if (drMax.Length > 0)
                     {
-                        if (true)//小车空闲，且位置在当前位置与目标位置区间
+                        for (int i = 0; i < drMax.Length; i++)
                         {
-                            WriteToService("", "", ""); //下达空车跑任务。
+                            int[] WriteValue = new int[4];
+                            WriteValue[0] = 9999;
+                            WriteValue[1] = (int)drMax[i]["CurStation"];
+                            WriteValue[2] = (int)drMax[i]["ToStation"] + (drMax.Length - i) * 10;//下任务给小车移动到最大目的地址+1个工位。
+                            WriteValue[3] = 5;
+                            WriteToService("StockPLC_02", drMax[i]["WriteItem"].ToString() + "_1", WriteValue);
+                            string BarCode = "";
+                            WriteToService("StockPLC_02", drMax[i]["WriteItem"].ToString() + "_2", BarCode);
+                            WriteToService("StockPLC_02", drMax[i]["WriteItem"].ToString() + "_3", 1);
+
                         }
+
+
                     }
+
                 }
+
+
+
             }
- 
+
+
         }
 
 

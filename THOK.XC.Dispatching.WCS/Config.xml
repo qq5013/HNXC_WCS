@@ -80,7 +80,7 @@
       <Item ServiceName="StockPLC_02" ItemName="02_1_321" />
     </Process>
     <!--二层小车接送货完成-->
-    <Process Name="StockOutCarLoadProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.StockOutCarLoadProcess">
+    <Process Name="CarProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_Car">
       <Item ServiceName="StockPLC_02" ItemName="02_1_C01_2" />
       <Item ServiceName="StockPLC_02" ItemName="02_1_C02_2" />
       <Item ServiceName="StockPLC_02" ItemName="02_1_C03_2" />
