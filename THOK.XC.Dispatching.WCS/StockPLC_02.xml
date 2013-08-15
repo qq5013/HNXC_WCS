@@ -96,8 +96,12 @@
       <!--二层出库小车到达站台-->
       <OPCItem ItemName="02_1_340" ClientHandler="78" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
       <OPCItem ItemName="02_1_360" ClientHandler="79" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
-      <OPCItem ItemName="02_2_340" ClientHandler="80" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
-      <OPCItem ItemName="02_2_360" ClientHandler="81" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
+      <OPCItem ItemName="02_2_340_1" ClientHandler="80" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
+      <OPCItem ItemName="02_2_340_2" ClientHandler="9" OPCItemName="DB1,STRING100.100"  ItemType="WRITE"/>
+      <OPCItem ItemName="02_2_340_3" ClientHandler="10" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
+      <OPCItem ItemName="02_2_360_1" ClientHandler="81" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
+      <OPCItem ItemName="02_2_360_2" ClientHandler="9" OPCItemName="DB1,STRING100.100"  ItemType="WRITE"/>
+      <OPCItem ItemName="02_2_360_3" ClientHandler="10" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
       <!--二层出库拆盘完成-->
       <OPCItem ItemName="02_1_372" ClientHandler="82" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
       <OPCItem ItemName="02_1_392" ClientHandler="83" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
