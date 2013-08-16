@@ -80,7 +80,7 @@
       <Item ServiceName="StockPLC_02" ItemName="02_1_321" />
     </Process>
     <!--二层小车接送货完成-->
-    <Process Name="CarProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_Car">
+    <Process Name="CarProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_Car.CarProcess">
       <Item ServiceName="StockPLC_02" ItemName="02_1_C01_2" />
       <Item ServiceName="StockPLC_02" ItemName="02_1_C02_2" />
       <Item ServiceName="StockPLC_02" ItemName="02_1_C03_2" />
@@ -104,6 +104,21 @@
       <Item ServiceName="StockPLC_02" ItemName="02_1_385" />
       <Item ServiceName="StockPLC_02" ItemName="02_1_387" />
       <Item ServiceName="StockPLC_02" ItemName="02_1_389" />
+    </Process>
+    <!--二层出库进入缓存道-->
+    <Process Name="StockOutCacheProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.StockOutCacheProcess">
+      <Item ServiceName="StockPLC_02" ItemName="02_1_475" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_440" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_412" />      
+    </Process>
+    <!--二层出库到开包线-->
+    <Process Name="StockOutToUnpackLineProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.StockOutToUnpackLineProcess">
+      <Item ServiceName="StockPLC_02" ItemName="02_1_250" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_251" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_252" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_253" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_254" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_255" />
     </Process>
   </Processes>
 </Configuration>

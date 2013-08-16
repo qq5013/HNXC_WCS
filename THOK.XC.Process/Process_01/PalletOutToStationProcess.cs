@@ -7,7 +7,7 @@ using THOK.XC.Process.Dal;
 
 namespace THOK.XC.Process.Process_01
 {
-    public class PalletoutToStationProcess : AbstractProcess
+    public class PalletOutToStationProcess : AbstractProcess
     {
             /*  处理事项：
              *  空托盘组出库到达158，200

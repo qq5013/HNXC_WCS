@@ -120,6 +120,27 @@
       <OPCItem ItemName="02_2_385" ClientHandler="95" OPCItemName="DB1,INT0,2"  ItemType="WRITE"/>
       <OPCItem ItemName="02_2_387" ClientHandler="96" OPCItemName="DB1,INT0,2"  ItemType="WRITE"/>
       <OPCItem ItemName="02_2_389" ClientHandler="97" OPCItemName="DB1,INT0,2"  ItemType="WRITE"/>
+      <!--二层出库出缓存道-->
+      <OPCItem ItemName="02_1_475" ClientHandler="86" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_440" ClientHandler="87" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_412" ClientHandler="88" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_2_475" ClientHandler="92" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
+      <OPCItem ItemName="02_2_440" ClientHandler="93" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
+      <OPCItem ItemName="02_2_412" ClientHandler="94" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
+      <!--二层出库到达开包线-->
+      <OPCItem ItemName="02_1_250" ClientHandler="86" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_251" ClientHandler="87" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_252" ClientHandler="88" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_253" ClientHandler="86" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_254" ClientHandler="87" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_255" ClientHandler="88" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_2_250" ClientHandler="92" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
+      <OPCItem ItemName="02_2_251" ClientHandler="93" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
+      <OPCItem ItemName="02_2_252" ClientHandler="94" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
+      <OPCItem ItemName="02_2_253" ClientHandler="92" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
+      <OPCItem ItemName="02_2_254" ClientHandler="93" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
+      <OPCItem ItemName="02_2_255" ClientHandler="94" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
+
     </OPCGroup>
   </OPCServer>
 </Config>
