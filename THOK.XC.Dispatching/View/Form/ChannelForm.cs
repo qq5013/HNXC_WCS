@@ -24,9 +24,7 @@ namespace THOK.XC.Dispatching.View
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-            ChannelDal channelDal = new ChannelDal();
-            DataTable table = channelDal.FindAll();
-            bsMain.DataSource = table;
+            
         }
     }
 }

@@ -22,6 +22,7 @@ namespace THOK.XC.Process.Process_02
             */
             string FromStation="";
             string ToStation="";
+            string WriteItem = "";
             try
             {
                 switch (stateItem.ItemName)
@@ -29,10 +30,12 @@ namespace THOK.XC.Process.Process_02
                     case "02_1_340":
                         FromStation = "340";
                         ToStation = "372";
+                        WriteItem = "02_2_372";
                         break;
                     case "02_1_360":
                         FromStation = "360";
                         ToStation = "392";
+                        WriteItem = "02_2_392";
                         break;
                         
                 }
@@ -48,28 +51,21 @@ namespace THOK.XC.Process.Process_02
                     DataTable dt = dal.TaskInfo(string.Format("TASK_ID='{0}'", strValue[0]));
                     if (dt.Rows.Count > 0)
                     {
-                        string barCode = "";//PRODUCT_BARCODE
                         int[] WriteValue = new int[3];
                         WriteValue[0] = (int)stateItem.State;
                         WriteValue[1] = int.Parse(ToStation);
-                        WriteValue[2] = 1;//下任务给小车移动到最大目的地址+1个工位。
-                        WriteToService("StockPLC_02", drMax[i]["WriteItem"].ToString() + "_1", WriteValue);
-                        string BarCode = "";
-                        WriteToService("StockPLC_02", drMax[i]["WriteItem"].ToString() + "_2", BarCode);
-                        WriteToService("StockPLC_02", drMax[i]["WriteItem"].ToString() + "_3", 1); 
-                        WriteToService("", "", "");
-                        
- 
+                        WriteValue[2] = 1;
+                        WriteToService("StockPLC_02",  WriteItem  + "_1", WriteValue);
+                        string BarCode = "";//PRODUCT_BARCODE
+
+
+
+
+
+
+                        WriteToService("StockPLC_02",  WriteItem  + "_2", BarCode);
+                        WriteToService("StockPLC_02",  WriteItem  + "_3", 1);  
                     }
-
-                    //
-                  
-
-
-
-
-
-
                     dal.UpdateTaskDetailStation(FromStation, ToStation, "1", string.Format("TASK_ID='{0}' AND ITEMNO=4", strValue[0]));
                 }
             }

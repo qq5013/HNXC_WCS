@@ -9,136 +9,157 @@ namespace THOK.XC.Process.Dal
 {
     public class ChannelDal : BaseDal
     {
-        public void Delete()
+
+        /// <summary>
+        /// 分配缓存道，插入缓存到表。并返回缓存道ID。
+        /// </summary>
+        /// <param name="TaskID"></param>
+        /// <returns></returns>
+        public string InsertChannel(string TaskID)
         {
-            using (PersistentManager pm = new PersistentManager())
+            string strChannel_No = "";
+            TaskDao dao = new TaskDao();
+            DataTable dt = dao.TaskInfo(string.Format("TASK_ID='{0}'", TaskID));
+            string Line_No = dt.Rows[0]["TARGET_CODE"].ToString();
+            string BillNo = dt.Rows[0]["BILL_NO"].ToString();
+
+            ChannelDao Cdao = new ChannelDao();
+            dt = Cdao.ChannelInfo(Line_No);
+            switch (Line_No)
             {
-                ChannelDao channelDao = new ChannelDao();
-                channelDao.Delete();
+                case "01":
+                    if (dt.Rows[0][""].ToString() == "0")
+                    {
+                        strChannel_No = dt.Rows[0][""].ToString();
+                    }
+                    else
+                    {
+                        if (dt.Rows[1][""].ToString() == "0")
+                        {
+                            strChannel_No = dt.Rows[0][""].ToString();
+
+                        }
+                        else
+                        {
+                            if (dt.Rows[2][""].ToString() == "0")
+                            {
+                                strChannel_No = dt.Rows[1][""].ToString();
+                            }
+                            else
+                            {
+ 
+                            }
+ 
+                        }
+                    }
+
+                    break;
+                case "02":
+                    DataRow dr021=dt.Rows[0];
+                    DataRow dr022=dt.Rows[1];
+                    if (dr021["QTY"].ToString() == "0")
+                    {
+                        if (dr022["QTY"].ToString() == "0")
+                        {
+                            strChannel_No = dr021["CHANNEL_NO"].ToString();
+                        }
+                        else
+                        {
+                            if (int.Parse(dr022["CACHE_QTY"].ToString()) - int.Parse(dr022["QTY"].ToString()) > 0)
+                            {
+                                DataTable dt022 = Cdao.ChannelProductInfo(dr022["CHANNEL_NO"].ToString());
+                                if (dt022.Rows.Count > 0)
+                                {
+                                    if (dt022.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                    {
+                                        strChannel_No = dr022["CHANNEL_NO"].ToString();
+                                    }
+                                    else
+                                    {
+                                        strChannel_No = dr021["CHANNEL_NO"].ToString();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                strChannel_No = dr021["CHANNEL_NO"].ToString();
+                            }
+                        }
+                    }
+                    else
+                    {
+
+                        if (int.Parse(dr021["CACHE_QTY"].ToString()) - int.Parse(dr021["QTY"].ToString()) > 0)
+                        {
+                            if (int.Parse(dr022["QTY"].ToString()) == 0)
+                            {
+                                strChannel_No = dr021["CHANNEL_NO"].ToString();
+                            }
+                            else
+                            {
+                                if (int.Parse(dr022["CACHE_QTY"].ToString()) - int.Parse(dr022["QTY"].ToString()) > 0)
+                                {
+                                    DataTable dt021 = Cdao.ChannelProductInfo(dr021["CHANNEL_NO"].ToString());
+                                    DataTable dt022 = Cdao.ChannelProductInfo(dr022["CHANNEL_NO"].ToString());
+
+                                    if (dt021.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                    {
+                                        if (dt022.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                        {
+                                            if (int.Parse(dr021[""].ToString()) > int.Parse(dr022[""].ToString()))
+                                            {
+                                                strChannel_No = dr021["CHANNEL_NO"].ToString();
+                                            }
+                                            else
+                                            {
+                                                strChannel_No = dr022["CHANNEL_NO"].ToString();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            strChannel_No = dr021["CHANNEL_NO"].ToString();
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (dt022.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                        {
+                                            strChannel_No = dr022["CHANNEL_NO"].ToString();
+                                        }
+                                        else
+                                        {
+                                            strChannel_No = dr021["CHANNEL_NO"].ToString();
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    strChannel_No = dr021["CHANNEL_NO"].ToString();
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            if (int.Parse(dr022["CACHE_QTY"].ToString()) - int.Parse(dr022["QTY"].ToString()) > 0)
+                            {
+                                strChannel_No = dr022["CHANNEL_NO"].ToString();
+                            }
+                        } 
+                    }
+
+                    break;
+                case "03":
+                    if (int.Parse(dt.Rows[0]["CACHE_QTY"].ToString()) - int.Parse(dt.Rows[0]["QTY"].ToString()) > 0)
+                    {
+                        strChannel_No = dt.Rows[0]["CHANNEL_NO"].ToString();
+                    }
+                    break;
             }
+
+
+            return "";
         }
-
-        public void InsertChannel(DataTable channelTable)
-        {
-            using (PersistentManager pm = new PersistentManager())
-            {
-                ChannelDao channelDao = new ChannelDao();
-                channelDao.InsertChannel(channelTable);
-            }
-        }
-
-        public void InsertChannelUSED(DataTable channelTable)
-        {
-            using (PersistentManager pm = new PersistentManager())
-            {
-                ChannelDao channelDao = new ChannelDao();
-                channelDao.InsertChannelUSED(channelTable);
-            }
-        }
-
-        public void InsertMixChannel(DataTable mixTable)
-        {
-            using (PersistentManager pm = new PersistentManager())
-            {
-                ChannelDao channelDao = new ChannelDao();
-                channelDao.InsertMixChannel(mixTable);
-            }
-        }
-
-        public DataTable FindAll()
-        {
-            using (PersistentManager pm = new PersistentManager())
-            {
-                ChannelDao channelDao = new ChannelDao();
-                return channelDao.FindAll();
-            }
-        }
-
-        public string FindLed(string channelCode)
-        {
-            using (PersistentManager pm = new PersistentManager())
-            {
-                ChannelDao channelDao = new ChannelDao();
-                return channelDao.FindLed(channelCode);
-            }
-        }
-
-        public DataTable FindChannelForCigaretteCode(string cigaretteCode)
-        {
-            using (PersistentManager pm = new PersistentManager())
-            {
-                ChannelDao channelDao = new ChannelDao();
-                return channelDao.FindChannelForCigaretteCode(cigaretteCode);
-            }
-        }
-
-        #region 交换分拣烟道      
-        
-        public DataTable GetChannelUSED(string lineCode, string channelCode)
-        {
-            using (PersistentManager pm = new PersistentManager())
-            {
-                ChannelDao channelDao = new ChannelDao();
-                return channelDao.FindChannelUSED(lineCode, channelCode);
-            }
-        }
-
-        public DataTable GetEmptyChannelUSED(string lineCode, string channelCode, int channelGroup, string channelType)
-        {
-            using (PersistentManager pm = new PersistentManager())
-            {
-                ChannelDao channelDao = new ChannelDao();
-                return channelDao.FindEmptyChannel(lineCode,channelCode, channelGroup, channelType);
-            }
-        }
-
-        public void ExechangeChannelUSED(string lineCode, string sourceChannel, string targetChannel)
-        {
-            using (PersistentManager pm = new PersistentManager())
-            {
-                ChannelDao channelDao = new ChannelDao();
-                SupplyDao supplyDao = new SupplyDao();
-                try
-                {
-                    pm.BeginTransaction();
-
-                    DataTable channelTableSource = channelDao.FindChannelUSED(lineCode, sourceChannel);
-                    DataTable channelTableTarget = channelDao.FindChannelUSED(lineCode, targetChannel);
-
-                    channelDao.UpdateChannelUSED(lineCode, targetChannel,
-                        channelTableSource.Rows[0]["CIGARETTECODE"].ToString(),
-                        channelTableSource.Rows[0]["CIGARETTENAME"].ToString(),
-                        Convert.ToInt32(channelTableSource.Rows[0]["QUANTITY"]),
-                        channelTableSource.Rows[0]["SORTNO"].ToString());
-
-                    channelDao.UpdateChannelUSED(lineCode, sourceChannel,
-                        channelTableTarget.Rows[0]["CIGARETTECODE"].ToString(),
-                        channelTableTarget.Rows[0]["CIGARETTENAME"].ToString(),
-                        Convert.ToInt32(channelTableTarget.Rows[0]["QUANTITY"]),
-                        channelTableTarget.Rows[0]["SORTNO"].ToString());
-
-                    supplyDao.UpdateChannelUSED(lineCode, sourceChannel, "0000", channelTableTarget.Rows[0]["GROUPNO"].ToString());
-                    supplyDao.UpdateChannelUSED(lineCode, targetChannel, sourceChannel, channelTableSource.Rows[0]["GROUPNO"].ToString());
-                    supplyDao.UpdateChannelUSED(lineCode, "0000", targetChannel, channelTableTarget.Rows[0]["GROUPNO"].ToString());
-
-                    pm.Commit();
-                }
-                catch
-                {
-                    pm.Rollback();
-                }
-            }
-        }
-
-        public DataTable GetChannelUSED()
-        {
-            using (PersistentManager pm = new PersistentManager())
-            {
-                ChannelDao channelDao = new ChannelDao();
-                return channelDao.FindChannelUSED();
-            }
-        }
-
-        #endregion
+       
     }
 }

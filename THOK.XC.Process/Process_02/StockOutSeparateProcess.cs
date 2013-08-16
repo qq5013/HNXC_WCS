@@ -15,14 +15,19 @@ namespace THOK.XC.Process.Process_02
              * 二层出库拆盘完成
              *  stateItem.State ：参数 - 请求的卷烟编码。        
             */
-           
+            string WriteItem="";
+            string FromStation = "";
             try
             {
                 switch (stateItem.ItemName)
                 {
                     case "02_1_372":
+                        FromStation = "372";
+                        WriteItem = "02_2_372";
                         break;
                     case "02_1_392":
+                        FromStation = "392";
+                        WriteItem = "02_2_392";
                         break;
                 }
                 string TaskNo = ((int)stateItem.State).ToString().PadLeft(4, '0');
@@ -30,24 +35,26 @@ namespace THOK.XC.Process.Process_02
                 string[] strValue = dal.GetTaskInfo(TaskNo);
                 if (!string.IsNullOrEmpty(strValue[0]))
                 {
-                    dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEMNO=4", strValue[0]), "2");
-                    //分配缓存到
+                    ChannelDal cdal = new ChannelDal();
+                    string strChannelNo = cdal.InsertChannel(strValue[0]);//分配缓存道
+                    if (strChannelNo != "")
+                    {
+                        dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEMNO=4", strValue[0]), "2");
+                        int[] WriteValue = new int[3];
+                        WriteValue[0] = (int)stateItem.State;
+                        WriteValue[1] = int.Parse(strChannelNo);
+                        WriteValue[2] = 3;
+                        WriteToService("StockPLC_02", WriteItem + "_1", WriteValue);
+                        string BarCode = "";//PRODUCT_BARCODE
 
+                        WriteToService("StockPLC_02", WriteItem + "_2", BarCode);
+                        WriteToService("StockPLC_02", WriteItem + "_3", 1);
 
+                        dal.UpdateTaskDetailStation(FromStation, strChannelNo, "1", string.Format("TASK_ID='{0}' AND ITEMNO=5", strValue[0]));
+                    }
 
-
-
-
-                    //
-                    WriteToService("", "", "");
-
-
-
-
-
-
-                
                 }
+
             }
             catch (Exception e)
             {

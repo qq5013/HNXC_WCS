@@ -87,13 +87,6 @@
     <Compile Include="Process_Car\CarProcess.cs" />
     <Compile Include="Process_Crane\CraneProcess.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StockInProcess\LEDProcess.cs" />
-    <Compile Include="StockInProcess\ScanProcess.cs" />
-    <Compile Include="StockInProcess\StockInRequestProcess.cs" />
-    <Compile Include="StockInProcess\ViewProcess.cs" />
-    <Compile Include="StockOutProcess\DataRequestProcess.cs" />
-    <Compile Include="StockOutProcess\SupplyFirstRequestProcess.cs" />
-    <Compile Include="StockOutProcess\SupplyNextRequestProcess.cs" />
     <Compile Include="Util\GraphicsUtil.cs" />
     <Compile Include="Util\LED2008\EQ2008_DataStruct.cs" />
     <Compile Include="Util\LED2008\LED2008.cs" />
