@@ -107,6 +107,9 @@
       <OPCItem ItemName="02_1_392" ClientHandler="83" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
       <OPCItem ItemName="02_2_372" ClientHandler="84" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
       <OPCItem ItemName="02_2_392" ClientHandler="85" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
+      <!--二层出库拆盘设备故障-->
+      <OPCItem ItemName="02_1_370" ClientHandler="82" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_390" ClientHandler="83" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
       <!--二层出库进入缓存道-->
       <OPCItem ItemName="02_1_378" ClientHandler="86" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
       <OPCItem ItemName="02_1_381" ClientHandler="87" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
