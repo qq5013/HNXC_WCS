@@ -1,4 +1,4 @@
-namespace THOK.XC.Process.Util
+namespace THOK.XC.Dispatching.Util
 {
     public class BarCode
     {

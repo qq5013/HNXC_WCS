@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using System.Collections;
 using System.Drawing;
 
-namespace THOK.XC.Process.Util.LED2008
+namespace THOK.XC.Dispatching.Util.LED2008
 {
     public class LED2008
     {

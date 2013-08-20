@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 
-namespace THOK.XC.Process.Util.LED2008
+namespace THOK.XC.Dispatching.Util.LED2008
 {
     public class LedItem
     {

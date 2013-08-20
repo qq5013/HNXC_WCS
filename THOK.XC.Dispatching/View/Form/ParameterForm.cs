@@ -7,14 +7,14 @@ using System.Text;
 using System.Windows.Forms;
 using THOK.MCP.Config;
 using THOK.XC.Process;
-using THOK.XC.Process.Util;
+using THOK.XC.Dispatching.Util;
 using THOK.Util;
 
 namespace THOK.XC.Dispatching.View
 {
     public partial class ParameterForm : THOK.AF.View.ToolbarForm
     {
-        private THOK.XC.Process.Parameter parameter = new THOK.XC.Process.Parameter();
+        private THOK.XC.Dispatching.Parameter parameter = new THOK.XC.Dispatching.Parameter();
         private DBConfigUtil config = new DBConfigUtil("DefaultConnection", "SQLSERVER");
         private DBConfigUtil serverConfig = new DBConfigUtil("ServerConnection", "SQLSERVER");
 

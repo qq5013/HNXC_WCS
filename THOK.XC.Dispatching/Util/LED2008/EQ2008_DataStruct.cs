@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace THOK.XC.Process.Util.LED2008
+namespace THOK.XC.Dispatching.Util.LED2008
 {
     /// <summary>
     /// 节目区域参数

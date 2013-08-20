@@ -7,7 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
 using System.Xml;
 
-namespace THOK.XC.Process.Util
+namespace THOK.XC.Dispatching.Util
 {
     class SerializableUtil
     {

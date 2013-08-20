@@ -4,7 +4,7 @@ using System.Text;
 using System.ComponentModel;
 using THOK.ParamUtil;
 
-namespace THOK.XC.Process
+namespace THOK.XC.Dispatching
 {
     public class Parameter: BaseObject
     {
