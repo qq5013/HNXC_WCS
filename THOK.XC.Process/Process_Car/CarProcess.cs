@@ -114,8 +114,11 @@ namespace THOK.XC.Process.Process_Car
                 CurPostion = int.Parse(dr["STATION_NO_ADDRESS"].ToString());
                 //判断使用哪个出口？
 
-
-
+                if (dr["TARGET_CODE"].ToString() == "01")
+                {
+ 
+                }
+                
 
 
 
@@ -309,7 +312,7 @@ namespace THOK.XC.Process.Process_Car
                 {
                     string strStationNo = drsAddress[0]["STATION_NO"].ToString();
                     string strItemName = "";
-                    string strItemState = "02_1_" + obj[3].ToString();
+                    string strItemState = "02_1_" + strStationNo;
                     if (strStationNo == "340" || strStationNo == "360")
                     {
                         strItemName = "StockOutCarFinishProcess";
@@ -324,16 +327,8 @@ namespace THOK.XC.Process.Process_Car
                     }
 
                     if (strItemName != "")
-                        WriteToProcess("StockPLC_02", strItemName, strItemState);
+                        WriteToProcess(strItemName, strItemState,obj[3]);
                 }
-
-
-
-
-
-              
-
-
 
                 DataRow[] drexist = dtCar.Select(string.Format("CARNO='{0}' and STATE=1", CarNo));//获取小车开始执行完毕之后
                 if (drexist.Length > 0)
