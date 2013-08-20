@@ -8,8 +8,8 @@
     <ProjectGuid>{7C262527-51F1-4586-B590-9F2AD56EDAAC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>THOK.XC.Dispatcher</RootNamespace>
-    <AssemblyName>THOK.XC.Dispatcher</AssemblyName>
+    <RootNamespace>THOK.XC.Dispatching</RootNamespace>
+    <AssemblyName>THOK.XC.Dispatching</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
