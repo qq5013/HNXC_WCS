@@ -54,6 +54,7 @@
     <Compile Include="Dal\StateDal.cs" />
     <Compile Include="Dal\StockInDal.cs" />
     <Compile Include="Dal\SupplyDal.cs" />
+    <Compile Include="Dal\SysCarAddressDal.cs" />
     <Compile Include="Dal\TaskDal.cs" />
     <Compile Include="Dao\BillDao.cs" />
     <Compile Include="Dao\CellDao.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Dao\StockOutBatchDao.cs" />
     <Compile Include="Dao\StockOutDao.cs" />
     <Compile Include="Dao\SupplyDao.cs" />
+    <Compile Include="Dao\SysCarAddressDao.cs" />
     <Compile Include="Dao\TaskDao.cs" />
     <Compile Include="Parameter.cs" />
     <Compile Include="Process_01\StockOutToStationProcess.cs" />

@@ -37,7 +37,7 @@ namespace THOK.XC.Process.Process_01
                 string strWhere = string.Format("TASK_NO='{0}'AND DETAIL.STATE='0' and ITEM_NO='3'", TaskNo);
                 DataTable dtInCrane = taskDal.TaskCraneDetail(strWhere);
                 if (dtInCrane.Rows.Count > 0)
-                    WriteToService("Crane", "CraneInRequest", dtInCrane);
+                    WriteToProcess("Crane", "CraneInRequest", dtInCrane);
             }
             catch (Exception e)
             {

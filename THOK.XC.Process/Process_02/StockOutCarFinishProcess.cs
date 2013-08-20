@@ -9,6 +9,7 @@ namespace THOK.XC.Process.Process_02
 {
     public class StockOutCarFinishProcess : AbstractProcess
     {
+       
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
         {
             /*  处理事项：

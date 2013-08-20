@@ -12,8 +12,16 @@ namespace THOK.XC.Process.Process_Car
         private DataTable dtCar;
         private DataTable dtCarOrder;
         private DataTable dtOrder;
+        private DataTable dtCarAddress;
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
         {
+            if (dtCarAddress == null)
+            {
+                SysCarAddressDal cad = new SysCarAddressDal();
+                dtCarAddress = cad.CarAddress();
+            }
+
+
             bool blnChange = false;
             string strState = "";
             string strCarNo = "";
@@ -224,6 +232,7 @@ namespace THOK.XC.Process.Process_Car
             InsertCarOrder(dt, "04","02_2_C04", CurStation, obj);
             return dt;
         }
+        
         private void InsertCarOrder(DataTable dt, string CarNo, string WriteItem, int CurStation,  int[] obj)
         {
             DataRow dr = dt.NewRow();
@@ -292,8 +301,40 @@ namespace THOK.XC.Process.Process_Car
         {
 
             string CarNo = "";
-            if (Objstate == "0") //空任务
+            if (Objstate == "2") //送货完成
             {
+                int[] obj = (int[])WriteToService("StockPLC_02", CarItem);//读取小车位置
+                DataRow[] drsAddress = dtCarAddress.Select(string.Format("CAR_ADDRESS='{0}'", obj[2]));
+                if (drsAddress.Length > 0)
+                {
+                    string strStationNo = drsAddress[0]["STATION_NO"].ToString();
+                    string strItemName = "";
+                    string strItemState = "02_1_" + obj[3].ToString();
+                    if (strStationNo == "340" || strStationNo == "360")
+                    {
+                        strItemName = "StockOutCarFinishProcess";
+
+                    }
+                    else
+                    {
+                        if (strStationNo == "301" || strStationNo == "305" || strStationNo == "309" || strStationNo == "313" || strStationNo == "317" || strStationNo == "323")
+                        {
+                            strItemName = "PalletToCarStationProcess";
+                        }
+                    }
+
+                    if (strItemName != "")
+                        WriteToProcess("StockPLC_02", strItemName, strItemState);
+                }
+
+
+
+
+
+              
+
+
+
                 DataRow[] drexist = dtCar.Select(string.Format("CARNO='{0}' and STATE=1", CarNo));//获取小车开始执行完毕之后
                 if (drexist.Length > 0)
                 {
@@ -369,7 +410,7 @@ namespace THOK.XC.Process.Process_Car
                 else  //小车空闲，且没任务。
                 {
 
-                    int[] obj = (int[])WriteToService("StockPLC_02", CarItem);//读取小车位置
+                   obj = (int[])WriteToService("StockPLC_02", CarItem);//读取小车位置
                     //判断当前位置
 
                     DataTable dtOrder = GetCarOrder(obj[1]);
@@ -398,7 +439,7 @@ namespace THOK.XC.Process.Process_Car
             }
             else
             {
-                if (Objstate == "2")//烟包接货完成，处理目前位置与目的地之间的空闲小车
+                if (Objstate == "1")//烟包接货完成，处理目前位置与目的地之间的空闲小车
                 {
 
 
@@ -431,9 +472,6 @@ namespace THOK.XC.Process.Process_Car
                     }
 
                 }
-
-
-
             }
 
 

@@ -70,13 +70,13 @@ namespace THOK.XC.Process.Process_01
                 StateDal.UpdateProductCellCode(strValue[0], strValue[4]); //更新Product_State 货位
                 dal.UpdateTaskDetailStation(FromStation, ToStation, "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", strValue[0])); //更新货位申请起始地址及目标地址。
 
-                int [] ServiceW =new int[3];
+                int [] ServiceW =new int[2];
                 ServiceW[0] = int.Parse(strValue[1]); //任务号
                 ServiceW[1] = int.Parse(strValue[2]);//目的地址
-                if (stateItem.ItemName == "01_1_131")
-                    ServiceW[2] = 2;                 //货物类型
-                else
-                    ServiceW[2] = 1;
+                //if (stateItem.ItemName == "01_1_131")
+                //    ServiceW[2] = 2;                 //货物类型
+                //else
+                //    ServiceW[2] = 1;
                 WriteToService("StockPLC_01", writeItem + "1", ServiceW); //PLC写入任务
                 WriteToService("StockPLC_01", writeItem + "2", BarCode); //PLC写入任务
                 WriteToService("StockPLC_01", writeItem + "3", 1); //PLC写入任务
