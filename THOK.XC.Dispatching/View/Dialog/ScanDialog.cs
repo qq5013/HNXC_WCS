@@ -23,7 +23,7 @@ namespace THOK.XC.Dispatching.View
 
         private void ScanDialog_Load(object sender, EventArgs e)
         {
-            pictureBox1.Image = THOK.XC.Process.Util.GraphicsUtil.CreateRandomBitmap(out text);
+            pictureBox1.Image = THOK.XC.Dispatching.Util.GraphicsUtil.CreateRandomBitmap(out text);
         }
 
         public bool IsPass

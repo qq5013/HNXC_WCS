@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace THOK.XC.Process.Util
+namespace THOK.XC.Dispatching.Util
 {
     public class GraphicsUtil
     {

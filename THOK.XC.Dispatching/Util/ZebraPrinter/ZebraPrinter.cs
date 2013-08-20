@@ -3,7 +3,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System;
 
-namespace THOK.XC.Process.Util
+namespace THOK.XC.Dispatching.Util
 {
     public class zebraPrint
     {

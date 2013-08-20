@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using THOK.XC.Process.Dal;
-using THOK.XC.Process.Util;
+using THOK.XC.Dispatching.Util;
 
 namespace THOK.XC.Dispatching.View
 {

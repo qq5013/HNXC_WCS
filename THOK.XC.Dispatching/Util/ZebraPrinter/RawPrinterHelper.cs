@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 using System;
 using System.IO;
 
-namespace THOK.XC.Process.Util
+namespace THOK.XC.Dispatching.Util
 {
 
     public class RawPrinterHelper
