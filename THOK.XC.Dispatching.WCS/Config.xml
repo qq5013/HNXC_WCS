@@ -72,12 +72,12 @@
     </Process>
     <!--二层出库到达小车站台-->
     <Process Name="StockOutToCarStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.StockOutToCarStationProcess">
-      <Item ServiceName="StockPLC_02" ItemName="02_1_303" />
-      <Item ServiceName="StockPLC_02" ItemName="02_1_307" />
-      <Item ServiceName="StockPLC_02" ItemName="02_1_311" />
-      <Item ServiceName="StockPLC_02" ItemName="02_1_315" />
-      <Item ServiceName="StockPLC_02" ItemName="02_1_319" />
-      <Item ServiceName="StockPLC_02" ItemName="02_1_321" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_304_1" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_308_1" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_312_1" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_316_1" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_320_1" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_322_1" />
     </Process>
     <!--二层小车接送货完成-->
     <Process Name="CarProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_Car.CarProcess">
