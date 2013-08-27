@@ -3,7 +3,7 @@
   <OPCServer ConnectionString="OPC.SimaticNET">
     <OPCGroup GroupName="DefaultGroup" GroupString="S7:[@LOCALSERVER]" UpdateRate="350">
       <!--二层入库请求-->
-      <OPCItem ItemName="02_1_359" ClientHandler="1" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_359" ClientHandler="1" OPCItemName="DB1,INT2,1"  ItemType="READ" IsActive="false"/>
       <!--二层入库小车站台读-->
       <OPCItem ItemName="02_1_301" ClientHandler="2" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
       <OPCItem ItemName="02_1_305" ClientHandler="3" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
@@ -30,7 +30,6 @@
       <OPCItem ItemName="02_2_323_1" ClientHandler="23" OPCItemName="DB1,INT0,3"  ItemType="WRITE"/>
       <OPCItem ItemName="02_2_323_2" ClientHandler="24" OPCItemName="DB1,STRING100.100"  ItemType="WRITE"/>
       <OPCItem ItemName="02_2_323_3" ClientHandler="25" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
-
       <!--二层小车读-->
       <OPCItem ItemName="02_1_C01_1" ClientHandler="26" OPCItemName="DB1,INT0,4"  ItemType="READ"/>
       <OPCItem ItemName="02_1_C02_1" ClientHandler="27" OPCItemName="DB1,INT0,4"  ItemType="READ"/>
@@ -109,12 +108,12 @@
       <OPCItem ItemName="02_1_370" ClientHandler="82" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
       <OPCItem ItemName="02_1_390" ClientHandler="83" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
       <!--二层出库进入缓存道-->
-      <OPCItem ItemName="02_1_378" ClientHandler="86" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
-      <OPCItem ItemName="02_1_381" ClientHandler="87" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
-      <OPCItem ItemName="02_1_383" ClientHandler="88" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
-      <OPCItem ItemName="02_1_385" ClientHandler="89" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
-      <OPCItem ItemName="02_1_387" ClientHandler="90" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
-      <OPCItem ItemName="02_1_389" ClientHandler="91" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_378" ClientHandler="86" OPCItemName="DB1,INT0,2"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_381" ClientHandler="87" OPCItemName="DB1,INT0,2"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_383" ClientHandler="88" OPCItemName="DB1,INT0,2"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_385" ClientHandler="89" OPCItemName="DB1,INT0,2"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_387" ClientHandler="90" OPCItemName="DB1,INT0,2"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_389" ClientHandler="91" OPCItemName="DB1,INT0,2"  ItemType="READ"/>
       <OPCItem ItemName="02_2_378" ClientHandler="92" OPCItemName="DB1,INT0,2"  ItemType="WRITE"/>
       <OPCItem ItemName="02_2_381" ClientHandler="93" OPCItemName="DB1,INT0,2"  ItemType="WRITE"/>
       <OPCItem ItemName="02_2_383" ClientHandler="94" OPCItemName="DB1,INT0,2"  ItemType="WRITE"/>
@@ -129,9 +128,9 @@
       <OPCItem ItemName="02_2_440" ClientHandler="93" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
       <OPCItem ItemName="02_2_412" ClientHandler="94" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
       <!--二层出库到达开包线-->
-      <OPCItem ItemName="02_1_250" ClientHandler="86" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
-      <OPCItem ItemName="02_1_251" ClientHandler="87" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
-      <OPCItem ItemName="02_1_252" ClientHandler="88" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_250" ClientHandler="86" OPCItemName="DB1,INT0,2"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_251" ClientHandler="87" OPCItemName="DB1,INT0,2"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_252" ClientHandler="88" OPCItemName="DB1,INT0,2"  ItemType="READ"/>
       <OPCItem ItemName="02_1_253" ClientHandler="86" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
       <OPCItem ItemName="02_1_254" ClientHandler="87" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
       <OPCItem ItemName="02_1_255" ClientHandler="88" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
@@ -141,7 +140,6 @@
       <OPCItem ItemName="02_2_253" ClientHandler="92" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
       <OPCItem ItemName="02_2_254" ClientHandler="93" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
       <OPCItem ItemName="02_2_255" ClientHandler="94" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
-
     </OPCGroup>
   </OPCServer>
 </Config>

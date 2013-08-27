@@ -10,12 +10,12 @@
   </Services>
   <Processes>
     <!--一层入库申请-->
-    <Process Name="StockInRequestProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.StockInRequestProcess">
+    <!--<Process Name="StockInRequestProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.StockInRequestProcess">
       <Item ServiceName="StockPLC_01" ItemName="01_1_218_1" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_110_1" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_126_1" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_131" />
-    </Process>
+    </Process>-->
     <!--一层不合格站台-->
     <Process Name="NotReadBarcodeProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.NotReadBarcodeProcess">
       <Item ServiceName="StockPLC_01" ItemName="01_1_124" />      
@@ -49,9 +49,9 @@
     </Process>
 
     <!--二层空托盘组请求入库-->
-    <Process Name="PalletInRequestProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.PalletInRequestProcess">
+    <!--<Process Name="PalletInRequestProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.PalletInRequestProcess">
       <Item ServiceName="StockPLC_02" ItemName="02_1_359" />
-    </Process>
+    </Process>-->
     <!--二层空托盘组入库到达小车站台-->
     <Process Name="PalletToCarStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.PalletToCarStationProcess">
       <Item ServiceName="StockPLC_02" ItemName="02_1_301" />
