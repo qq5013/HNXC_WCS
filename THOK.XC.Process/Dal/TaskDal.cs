@@ -185,5 +185,19 @@ namespace THOK.XC.Process.Dal
  
         }
 
+        /// <summary>
+        /// 根据单号，返回任务数量
+        /// </summary>
+        /// <param name="BillNo"></param>
+        /// <returns></returns>
+        public int TaskCount(string BillNo)
+        {
+            TaskDao dao = new TaskDao();
+            return dao.TaskCount(BillNo);
+ 
+        }
+
+
+
     }
 }

@@ -16,7 +16,7 @@ namespace THOK.XC.Process.Dal
         /// <returns>TaskID</returns>
         public string CreatePalletInBillTask(bool blnOne)
         {
-            BillDao dao = new BillDao();
+            PalletBillDao dao = new PalletBillDao();
             return dao.CreatePalletInBillTask(blnOne);
         }
 
@@ -25,13 +25,13 @@ namespace THOK.XC.Process.Dal
         /// </summary>
         public string CreatePalletOutBillTask(string TARGET_CODE)
         {
-            BillDao dao = new BillDao();
+            PalletBillDao dao = new PalletBillDao();
             return dao.CreatePalletOutBillTask(TARGET_CODE);
         }
 
         public void UpdateBillMasterFinished(string BillNo)
         {
-            BillDao dao = new BillDao();
+            PalletBillDao dao = new PalletBillDao();
             dao.UpdateBillMasterFinished(BillNo);
         }
     }

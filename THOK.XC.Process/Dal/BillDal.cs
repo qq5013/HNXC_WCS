@@ -10,14 +10,42 @@ namespace THOK.XC.Process.Dal
     {
 
         /// <summary>
-        /// 一楼，二楼空托盘组组盘入库，申请货位时，生成入库单,返回TaskID
+        /// 二楼退库单据，产生任务，任务明细,更新货位错误标志， 返回任务ID。
         /// </summary>
-        /// <param name="blnOne">true,一楼入库</param>
+        ///  
         /// <returns>TaskID</returns>
-        public string CreatePalletInBillTask(bool blnOne)
+        public string  CreateCancelBillInTask(string TaskID,string BillNo,string NewPalletCode)
         {
             BillDao dao = new BillDao();
-            return dao.CreatePalletInBillTask(blnOne);
+            string strTaskID = dao.CreateCancelBillInTask(TaskID, BillNo);
+           
+            TaskDao tdao = new TaskDao();
+            tdao.InsertTaskDetail(strTaskID);
+            tdao.UpdateTaskState(strTaskID, "1");//更新任务开始执行
+            return strTaskID;
+        }
+
+        /// <summary>
+        /// 根据 错误烟包 查找相同入库单据信息，供用户选择入库单号。
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetCancelBillNo(string TaskID)
+        {
+            BillDao dao = new BillDao();
+
+            return dao.GetCancelBillNo(TaskID);
+ 
+        }
+
+         /// <summary>
+        /// 二楼出库托盘校验出错，由用户选定出库的入库单号OutBillNO， 补充生成 出库单。
+        /// </summary>
+        /// <returns>TaskID</returns>
+        public string CreateCancelBillOutTask(string TaskID, string BillNo, string OutBillNO)
+        {
+            BillDao dao = new BillDao();
+            string strTaskID = dao.CreateCancelBillOutTask(TaskID, BillNo, OutBillNO);
+            return strTaskID;
         }
 
          /// <summary>

@@ -20,9 +20,10 @@ namespace THOK.XC.Process.Process_01
         
             string ToStation = "";
             string TaskID = "";
-            int intRequest = (int)stateItem.State;
+            object[] o = ObjectUtil.GetObjects(stateItem.State);
+            int intRequest = (short)o[0];
             string BarCode = ""; //读取PLC，获得产品编码
-            if (intRequest == 0) //申请位为0
+            if (intRequest != 1) //申请位为0
                 return;
             try
             {

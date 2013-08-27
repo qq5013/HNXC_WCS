@@ -35,7 +35,7 @@ namespace THOK.XC.Process.Process_01
                     default:
                         break;
                 }
-                BillDal dal = new BillDal();
+                PalletBillDal dal = new PalletBillDal();
                 string Taskid = dal.CreatePalletOutBillTask(TARGET_CODE);
                 TaskDal task = new TaskDal();
                 DataTable dt = task.CraneOutTask(string.Format("TASK_ID='{0}'", Taskid));

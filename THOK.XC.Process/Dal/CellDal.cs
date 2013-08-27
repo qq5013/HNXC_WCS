@@ -36,6 +36,15 @@ namespace THOK.XC.Process.Dal
             dao.UpdateCellLock(strCell);
         }
 
+        /// <summary>
+        /// 更新货位新的RFID,及出库错误标志。
+        /// </summary>
+        /// <param name="NewPalletCode"></param>
+        public void UpdateCellNewPalletCode(string CellCode, string NewPalletCode)
+        {
+            CellDao dao = new CellDao();
+            dao.UpdateCellNewPalletCode(CellCode, NewPalletCode);
+        }
 
     }
 }
