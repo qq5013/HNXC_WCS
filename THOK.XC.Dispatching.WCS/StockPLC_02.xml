@@ -86,12 +86,18 @@
       <OPCItem ItemName="02_2_321_2" ClientHandler="70" OPCItemName="DB1,STRING100.100"  ItemType="WRITE"/>
       <OPCItem ItemName="02_2_321_3" ClientHandler="71" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
       <!--二层出库小车站台读-->
-      <OPCItem ItemName="02_1_304" ClientHandler="72" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
-      <OPCItem ItemName="02_1_308" ClientHandler="73" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
-      <OPCItem ItemName="02_1_312" ClientHandler="74" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
-      <OPCItem ItemName="02_1_316" ClientHandler="75" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
-      <OPCItem ItemName="02_1_320" ClientHandler="76" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
-      <OPCItem ItemName="02_1_322" ClientHandler="77" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_304_1" ClientHandler="72" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_304_2" ClientHandler="72" OPCItemName="DB1,STRING100.100"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_308_1" ClientHandler="73" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_308_2" ClientHandler="72" OPCItemName="DB1,STRING100.100"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_312_1" ClientHandler="74" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_312_2" ClientHandler="72" OPCItemName="DB1,STRING100.100"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_316_1" ClientHandler="75" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_316_2" ClientHandler="72" OPCItemName="DB1,STRING100.100"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_320_1" ClientHandler="76" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_320_2" ClientHandler="72" OPCItemName="DB1,STRING100.100"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_322_1" ClientHandler="77" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_322_2" ClientHandler="72" OPCItemName="DB1,STRING100.100"  ItemType="READ"/>
       <!--二层出库小车到达站台-->
       <OPCItem ItemName="02_2_340_1" ClientHandler="80" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>
       <OPCItem ItemName="02_2_340_2" ClientHandler="9" OPCItemName="DB1,STRING100.100"  ItemType="WRITE"/>
