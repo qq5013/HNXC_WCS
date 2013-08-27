@@ -36,7 +36,7 @@ namespace THOK.XC.Process.Process_02
                 if (!string.IsNullOrEmpty(strValue[0]))
                 {
                     ChannelDal cdal = new ChannelDal();
-                    string strChannelNo = cdal.InsertChannel(strValue[0]);//分配缓存道
+                    string strChannelNo = cdal.InsertChannel(strValue[0],strValue[1]);//分配缓存道
                     if (strChannelNo != "")
                     {
                         dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEMNO=4", strValue[0]), "2");

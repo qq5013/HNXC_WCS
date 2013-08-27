@@ -57,16 +57,17 @@ namespace THOK.XC.Process.Process_Crane
                       
                         break;
                     case "StockOutToCarStation": //烟包经过扫描，正确烟包更新为3，错误更新为4.
-                        string strdd = (string)stateItem.State;
-                        DataRow[] drs = dtCrane.Select(string.Format("TASK_NO='{0}'", strdd));
+                        string []strdd = (string[])stateItem.State;
+                        DataRow[] drs = dtCrane.Select(string.Format("TASK_ID='{0}'", strdd[0]));
                         if (drs.Length > 0)
                         {
                             TaskDal tdal = new TaskDal();
-                            tdal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=1", drs[0]["TASK_ID"].ToString()), "3");
-
-                            CellDal Cdal = new CellDal();
-                            Cdal.UpdateCellOutUnLock(drs[0]["CELL_CODE"].ToString()); //出库完成，货位解锁
-
+                            tdal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=1", drs[0]["TASK_ID"].ToString()), "2");
+                            if (strdd[1] == "3")
+                            {
+                                CellDal Cdal = new CellDal();
+                                Cdal.UpdateCellOutUnLock(drs[0]["CELL_CODE"].ToString()); //出库完成，货位解锁
+                            }
                             dtCrane.Rows.Remove(drs[0]);
                         }
                         CraneThreadStart(); //更新完成之后，线程调用堆垛机，避免堆垛机因调度原因而是堆垛机没有任务。

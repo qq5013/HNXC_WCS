@@ -22,57 +22,116 @@ namespace THOK.XC.Process.Process_02
           //烟包托盘到达出库站台，根据返回的任务号，判断是否正常烟包：
            // 1、正常烟包，更新原有CranProcess的datatable将状态更改为3，并更改数据库状态。调用WriteToProcess(穿梭车Process).
            // 2、错误烟包，写入移库单，产生任务，调用调用WriteToProcess(穿梭车Process)。写入出库单，产生任务，并下达出库任务。
-
-
-
-            string[] StationState = new string[2];
-            string cigaretteCode = "";
             try
             {
-                object str = State;
-                if (str.ToString() == "1") //正常烟包
+                string ToStation = "";
+                string FromStation = "";
+                string ReadItem2 = "";
+                switch (stateItem.ItemName)
                 {
-                    TaskDal dal = new TaskDal();
-                    dal.UpdateStockOutToStationState("", stateItem.ItemName);//更新Task_Detail  货物到达小车站台 
-                    DataTable dt = dal.TaskCarDetail(""); //获取任务ID
+                    case "02_1_304_1":
+                        FromStation = "303";
+                        ToStation = "304";
+                        ReadItem2 = "02_1_304_2";
+                        break;
+                    case "02_1_308_1":
+                        FromStation = "307";
+                        ToStation = "308";
+                        ReadItem2 = "02_1_308_2";
+                        break;
+                    case "02_1_312_1":
+                        FromStation = "311";
+                        ToStation = "313";
+                        ReadItem2 = "02_1_312_2";
+                        break;
+                    case "02_1_316_1":
+                        FromStation = "315";
+                        ToStation = "316";
+                        ReadItem2 = "02_1_316_2";
+                        break;
+                    case "02_1_320_1":
+                        FromStation = "319";
+                        ToStation = "320";
+                        ReadItem2 = "02_1_320_2";
+                        break;
+                    case "02_1_322_1":
+                        FromStation = "321";
+                        ToStation = "322";
+                        ReadItem2 = "02_1_322_2";
+                        break;
 
-                    StationState[0] = "3";
-                    StationState[1] = "";//任务号;
+                }
+
+
+                object[] obj = ObjectUtil.GetObjects(stateItem.State);
+                string NewPalletCode = (string)WriteToService("StockPLC_02", ReadItem2);
+                string[] StationState = new string[2];
+
+                TaskDal dal = new TaskDal();
+                string[] strTask = dal.GetTaskInfo(obj[0].ToString().PadLeft(4, '0'));
+
+                dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=2", strTask[0]), "2");
+
+
+                DataTable dtTask = dal.TaskInfo(string.Format("TASK_ID='{0}'", strTask[0]));
+                string CellCode = dtTask.Rows[0]["CELL_CODE"].ToString();
+                CellDal Celldal = new CellDal(); //更新货位，新托盘RFID，错误标志。
+
+                if (obj[1].ToString() == "1") //正常烟包
+                {
+                    StationState[0] = strTask[0];//任务号;
+                    StationState[1] = "3";
                     WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为3.
-                    //解除货位锁定。
+                    Celldal.UpdateCellOutUnLock(CellCode);//解除货位锁定
 
+                    DataTable dt = dal.TaskCarDetail(string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=3", strTask[0])); //获取任务ID
+                    WriteToProcess("CarProcess", "CarOutRequest", dt);  //调度小车；
 
-
-                    WriteToProcess("CarProcess", "CarOutRequest", dt);
-                    //调度小车；
                 }
                 else //错误烟包
                 {
 
-                    TaskDal dal = new TaskDal();
-                    dal.UpdateStockOutToStationState("", stateItem.ItemName);//更新Task_Detail  货物到达小车站台 
-                    DataTable dt = dal.TaskCarDetail(""); //获取任务ID
-
-                    DataTable dtCraneOut = dal.TaskOutToDetail();
-
-                    DataTable[] dtSend = new DataTable[2];
-                    dtSend[0] = dt;
-                    WriteToProcess("CraneProcess", "StockOutRequest", dtSend); // 出库任务调用。
-
-                    WriteToProcess("CarProcess", "CarOutRequest", dt); //调用堆垛机。
-                   
 
 
-                    StationState[0] = "4";
-                    StationState[1] = "";//TaskID;
-                    WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为4.
-                    //产生新的入库单，并生成入库任务。Task_Detail.
-                    //生成新的出库单，并生成Task。
-
-                   
+                    //生成二楼退库单
+                    BillDal bdal = new BillDal();
+                    string CancelTaskID = bdal.CreateCancelBillInTask(strTask[0], strTask[1], NewPalletCode);//产生退库单，并生成明细。
+                    Celldal.UpdateCellNewPalletCode(CellCode, NewPalletCode);//更新货位错误标志。
 
 
- 
+                    dal.UpdateTaskDetailStation(FromStation, ToStation, "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", CancelTaskID)); //更新申请货位完成。
+
+                    dal.UpdateTaskState(strTask[0], "2");//更新出库任务完成
+
+                    string strWhere = string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=2", CancelTaskID);
+                    DataTable dt = dal.TaskCarDetail(strWhere);
+                    WriteToProcess("CarProcess", "CarInRequest", dt);//调度穿梭车入库。
+
+
+                    View.CannelBillSelect frm = new View.CannelBillSelect(strTask[0]);
+                    frm.strBadCode = "";
+
+
+
+
+
+                    if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    {
+                        string strNewBillNo = frm.strBillNo;
+
+                        string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo);
+                        DataTable dtOutTask = dal.CraneOutTask(string.Format("TASK.TASK_ID='{0}'", strOutTaskID));
+
+                        WriteToProcess("CraneProcess", "PalletOutRequest", dtOutTask);
+
+
+                      
+                        StationState[0] = strTask[0];//TaskID;
+                        StationState[1] = "4";
+                        WriteToProcess("CraneProcess", "StockOutRequest", StationState); //更新堆垛机Process 状态为4.
+                    }
+
+
                 }
             }
             catch (Exception e)

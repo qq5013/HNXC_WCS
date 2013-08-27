@@ -15,7 +15,7 @@ namespace THOK.XC.Process.Dal
         /// </summary>
         /// <param name="TaskID"></param>
         /// <returns></returns>
-        public string InsertChannel(string TaskID)
+        public string InsertChannel(string TaskID,string Bill_No)
         {
             string strChannel_No = "";
             TaskDao dao = new TaskDao();
@@ -28,28 +28,326 @@ namespace THOK.XC.Process.Dal
             switch (Line_No)
             {
                 case "01":
-                    if (dt.Rows[0][""].ToString() == "0")
+                     DataRow dr011=dt.Rows[0];
+                    DataRow dr012=dt.Rows[1];
+                    DataRow dr013 = dt.Rows[2];
+                    if (dr011["QTY"].ToString() == "0")
                     {
-                        strChannel_No = dt.Rows[0][""].ToString();
-                    }
-                    else
-                    {
-                        if (dt.Rows[1][""].ToString() == "0")
+                        if (dr012["QTY"].ToString() == "0")
                         {
-                            strChannel_No = dt.Rows[0][""].ToString();
+                            if (dr013["QTY"].ToString() == "0")
+                            {
+                                strChannel_No = dr011["CHANNEL_NO"].ToString();
+                            }
+                            else if (int.Parse(dr013["CACHE_QTY"].ToString()) - int.Parse(dr013["QTY"].ToString()) > 0)
+                            {
+                                DataTable dt013 = Cdao.ChannelProductInfo(dr013["CHANNEL_NO"].ToString());
+                                if (dt013.Rows.Count > 0)
+                                {
+                                    if (dt013.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                    {
+                                        strChannel_No = dr013["CHANNEL_NO"].ToString();
+                                    }
+                                    else
+                                    {
+                                        strChannel_No = dr011["CHANNEL_NO"].ToString();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                strChannel_No = dr011["CHANNEL_NO"].ToString();
+                            }
+                        }
+                        else if (int.Parse(dr012["CACHE_QTY"].ToString()) - int.Parse(dr012["QTY"].ToString()) > 0)
+                        {
+                            DataTable dt012 = Cdao.ChannelProductInfo(dr012["CHANNEL_NO"].ToString());
+                            if (dt012.Rows.Count > 0)
+                            {
+                                if (dt012.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                {
+                                    strChannel_No = dr012["CHANNEL_NO"].ToString();
+                                }
+                                else
+                                {
+                                    if (dr013["QTY"].ToString() == "0")
+                                    {
+                                        strChannel_No = dr011["CHANNEL_NO"].ToString();
+                                    }
+                                    else if (int.Parse(dr013["CACHE_QTY"].ToString()) - int.Parse(dr013["QTY"].ToString()) > 0)
+                                    {
+                                        DataTable dt013 = Cdao.ChannelProductInfo(dr013["CHANNEL_NO"].ToString());
+                                        if (dt013.Rows.Count > 0)
+                                        {
+                                            if (dt013.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                            {
+                                                strChannel_No = dr013["CHANNEL_NO"].ToString();
+                                            }
+                                            else
+                                            {
+                                                strChannel_No = dr011["CHANNEL_NO"].ToString();
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        strChannel_No = dr011["CHANNEL_NO"].ToString();
+                                    }
+                                }
+                            }
 
                         }
                         else
                         {
-                            if (dt.Rows[2][""].ToString() == "0")
+                            if (dr013["QTY"].ToString() == "0")
                             {
-                                strChannel_No = dt.Rows[1][""].ToString();
+                                strChannel_No = dr011["CHANNEL_NO"].ToString();
+                            }
+                            else if (int.Parse(dr013["CACHE_QTY"].ToString()) - int.Parse(dr013["QTY"].ToString()) > 0)
+                            {
+                                DataTable dt013 = Cdao.ChannelProductInfo(dr013["CHANNEL_NO"].ToString());
+                                if (dt013.Rows.Count > 0)
+                                {
+                                    if (dt013.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                    {
+                                        strChannel_No = dr013["CHANNEL_NO"].ToString();
+                                    }
+                                    else
+                                    {
+                                        strChannel_No = dr011["CHANNEL_NO"].ToString();
+                                    }
+                                }
                             }
                             else
                             {
- 
+                                strChannel_No = dr011["CHANNEL_NO"].ToString();
                             }
- 
+                        }
+
+                        
+                    }
+                    else if (int.Parse(dr011["CACHE_QTY"].ToString()) - int.Parse(dr011["QTY"].ToString()) > 0)
+                    {
+                        DataTable dt011 = Cdao.ChannelProductInfo(dr011["CHANNEL_NO"].ToString());
+                        if (dt011.Rows.Count > 0)
+                        {
+                            if (dt011.Rows[0]["BILL_NO"].ToString() == BillNo)
+                            {
+                                strChannel_No = dr011["CHANNEL_NO"].ToString();
+                            }
+                            else
+                            {
+                                if (dr012["QTY"].ToString() == "0")
+                                {
+                                    if (dr013["QTY"].ToString() == "0")
+                                    {
+                                        strChannel_No = dr012["CHANNEL_NO"].ToString();
+                                    }
+                                    else if (int.Parse(dr013["CACHE_QTY"].ToString()) - int.Parse(dr013["QTY"].ToString()) > 0)
+                                    {
+                                        DataTable dt013 = Cdao.ChannelProductInfo(dr013["CHANNEL_NO"].ToString());
+                                        if (dt013.Rows.Count > 0)
+                                        {
+                                            if (dt013.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                            {
+                                                strChannel_No = dr013["CHANNEL_NO"].ToString();
+                                            }
+                                            else
+                                            {
+                                                strChannel_No = dr012["CHANNEL_NO"].ToString();
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        strChannel_No = dr012["CHANNEL_NO"].ToString();
+                                    }
+                                }
+                                else if (int.Parse(dr012["CACHE_QTY"].ToString()) - int.Parse(dr012["QTY"].ToString()) > 0)
+                                {
+                                    DataTable dt012 = Cdao.ChannelProductInfo(dr012["CHANNEL_NO"].ToString());
+                                    if (dt012.Rows.Count > 0)
+                                    {
+                                        if (dt012.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                        {
+                                            strChannel_No = dr012["CHANNEL_NO"].ToString();
+                                        }
+                                        else
+                                        {
+                                            if (dr013["QTY"].ToString() == "0")
+                                            {
+                                                strChannel_No = dr013["CHANNEL_NO"].ToString();
+                                            }
+                                            else if (int.Parse(dr013["CACHE_QTY"].ToString()) - int.Parse(dr013["QTY"].ToString()) > 0)
+                                            {
+                                                DataTable dt013 = Cdao.ChannelProductInfo(dr013["CHANNEL_NO"].ToString());
+                                                if (dt013.Rows.Count > 0)
+                                                {
+                                                    if (dt013.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                                    {
+                                                        strChannel_No = dr013["CHANNEL_NO"].ToString();
+                                                    }
+                                                }
+                                            }
+
+                                        }
+                                    }
+
+                                }
+                                else
+                                {
+                                    if (dr013["QTY"].ToString() == "0")
+                                    {
+                                        strChannel_No = dr013["CHANNEL_NO"].ToString();
+                                    }
+                                    else if (int.Parse(dr013["CACHE_QTY"].ToString()) - int.Parse(dr013["QTY"].ToString()) > 0)
+                                    {
+                                        DataTable dt013 = Cdao.ChannelProductInfo(dr013["CHANNEL_NO"].ToString());
+                                        if (dt013.Rows.Count > 0)
+                                        {
+                                            if (dt013.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                            {
+                                                strChannel_No = dr013["CHANNEL_NO"].ToString();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (dr012["QTY"].ToString() == "0")
+                        {
+                            if (dr013["QTY"].ToString() == "0")
+                            {
+                                strChannel_No = dr012["CHANNEL_NO"].ToString();
+                            }
+                            else if (int.Parse(dr013["CACHE_QTY"].ToString()) - int.Parse(dr013["QTY"].ToString()) > 0)
+                            {
+                                DataTable dt013 = Cdao.ChannelProductInfo(dr013["CHANNEL_NO"].ToString());
+                                if (dt013.Rows.Count > 0)
+                                {
+                                    if (dt013.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                    {
+                                        strChannel_No = dr013["CHANNEL_NO"].ToString();
+                                    }
+                                    else
+                                    {
+                                        strChannel_No = dr012["CHANNEL_NO"].ToString();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                strChannel_No = dr012["CHANNEL_NO"].ToString();
+                            }
+                        }
+                        else if (int.Parse(dr012["CACHE_QTY"].ToString()) - int.Parse(dr012["QTY"].ToString()) > 0)
+                        {
+                            DataTable dt012 = Cdao.ChannelProductInfo(dr012["CHANNEL_NO"].ToString());
+                            if (dt012.Rows.Count > 0)
+                            {
+                                if (dt012.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                {
+                                    strChannel_No = dr012["CHANNEL_NO"].ToString();
+                                }
+                                else
+                                {
+                                    if (dr013["QTY"].ToString() == "0")
+                                    {
+                                        strChannel_No = dr013["CHANNEL_NO"].ToString();
+                                    }
+                                    else if (int.Parse(dr013["CACHE_QTY"].ToString()) - int.Parse(dr013["QTY"].ToString()) > 0)
+                                    {
+                                        DataTable dt013 = Cdao.ChannelProductInfo(dr013["CHANNEL_NO"].ToString());
+                                        if (dt013.Rows.Count > 0)
+                                        {
+                                            if (dt013.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                            {
+                                                strChannel_No = dr013["CHANNEL_NO"].ToString();
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+
+                        }
+                        else if (dr012["QTY"].ToString() == "0")
+                        {
+                            if (dr013["QTY"].ToString() == "0")
+                            {
+                                strChannel_No = dr012["CHANNEL_NO"].ToString();
+                            }
+                            else if (int.Parse(dr013["CACHE_QTY"].ToString()) - int.Parse(dr013["QTY"].ToString()) > 0)
+                            {
+                                DataTable dt013 = Cdao.ChannelProductInfo(dr013["CHANNEL_NO"].ToString());
+                                if (dt013.Rows.Count > 0)
+                                {
+                                    if (dt013.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                    {
+                                        strChannel_No = dr013["CHANNEL_NO"].ToString();
+                                    }
+                                    else
+                                    {
+                                        strChannel_No = dr012["CHANNEL_NO"].ToString();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                strChannel_No = dr012["CHANNEL_NO"].ToString();
+                            }
+                        }
+                        else if (int.Parse(dr012["CACHE_QTY"].ToString()) - int.Parse(dr012["QTY"].ToString()) > 0)
+                        {
+                            DataTable dt012 = Cdao.ChannelProductInfo(dr012["CHANNEL_NO"].ToString());
+                            if (dt012.Rows.Count > 0)
+                            {
+                                if (dt012.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                {
+                                    strChannel_No = dr012["CHANNEL_NO"].ToString();
+                                }
+                                else
+                                {
+                                    if (dr013["QTY"].ToString() == "0")
+                                    {
+                                        strChannel_No = dr013["CHANNEL_NO"].ToString();
+                                    }
+                                    else if (int.Parse(dr013["CACHE_QTY"].ToString()) - int.Parse(dr013["QTY"].ToString()) > 0)
+                                    {
+                                        DataTable dt013 = Cdao.ChannelProductInfo(dr013["CHANNEL_NO"].ToString());
+                                        if (dt013.Rows.Count > 0)
+                                        {
+                                            if (dt013.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                            {
+                                                strChannel_No = dr013["CHANNEL_NO"].ToString();
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+
+                        }
+                        else
+                        {
+                            if (dr013["QTY"].ToString() == "0")
+                            {
+                                strChannel_No = dr013["CHANNEL_NO"].ToString();
+                            }
+                            else if (int.Parse(dr013["CACHE_QTY"].ToString()) - int.Parse(dr013["QTY"].ToString()) > 0)
+                            {
+                                DataTable dt013 = Cdao.ChannelProductInfo(dr013["CHANNEL_NO"].ToString());
+                                if (dt013.Rows.Count > 0)
+                                {
+                                    if (dt013.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                    {
+                                        strChannel_No = dr013["CHANNEL_NO"].ToString();
+                                    }
+                                }
+                            }
                         }
                     }
 
@@ -63,102 +361,113 @@ namespace THOK.XC.Process.Dal
                         {
                             strChannel_No = dr021["CHANNEL_NO"].ToString();
                         }
-                        else
+                        else if (int.Parse(dr022["CACHE_QTY"].ToString()) - int.Parse(dr022["QTY"].ToString()) > 0)
                         {
-                            if (int.Parse(dr022["CACHE_QTY"].ToString()) - int.Parse(dr022["QTY"].ToString()) > 0)
+                            DataTable dt022 = Cdao.ChannelProductInfo(dr022["CHANNEL_NO"].ToString());
+                            if (dt022.Rows.Count > 0)
                             {
-                                DataTable dt022 = Cdao.ChannelProductInfo(dr022["CHANNEL_NO"].ToString());
-                                if (dt022.Rows.Count > 0)
+                                if (dt022.Rows[0]["BILL_NO"].ToString() == BillNo)
                                 {
-                                    if (dt022.Rows[0]["BILL_NO"].ToString() == BillNo)
-                                    {
-                                        strChannel_No = dr022["CHANNEL_NO"].ToString();
-                                    }
-                                    else
-                                    {
-                                        strChannel_No = dr021["CHANNEL_NO"].ToString();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                strChannel_No = dr021["CHANNEL_NO"].ToString();
-                            }
-                        }
-                    }
-                    else
-                    {
-
-                        if (int.Parse(dr021["CACHE_QTY"].ToString()) - int.Parse(dr021["QTY"].ToString()) > 0)
-                        {
-                            if (int.Parse(dr022["QTY"].ToString()) == 0)
-                            {
-                                strChannel_No = dr021["CHANNEL_NO"].ToString();
-                            }
-                            else
-                            {
-                                if (int.Parse(dr022["CACHE_QTY"].ToString()) - int.Parse(dr022["QTY"].ToString()) > 0)
-                                {
-                                    DataTable dt021 = Cdao.ChannelProductInfo(dr021["CHANNEL_NO"].ToString());
-                                    DataTable dt022 = Cdao.ChannelProductInfo(dr022["CHANNEL_NO"].ToString());
-
-                                    if (dt021.Rows[0]["BILL_NO"].ToString() == BillNo)
-                                    {
-                                        if (dt022.Rows[0]["BILL_NO"].ToString() == BillNo)
-                                        {
-                                            if (int.Parse(dr021[""].ToString()) > int.Parse(dr022[""].ToString()))
-                                            {
-                                                strChannel_No = dr021["CHANNEL_NO"].ToString();
-                                            }
-                                            else
-                                            {
-                                                strChannel_No = dr022["CHANNEL_NO"].ToString();
-                                            }
-                                        }
-                                        else
-                                        {
-                                            strChannel_No = dr021["CHANNEL_NO"].ToString();
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (dt022.Rows[0]["BILL_NO"].ToString() == BillNo)
-                                        {
-                                            strChannel_No = dr022["CHANNEL_NO"].ToString();
-                                        }
-                                        else
-                                        {
-                                            strChannel_No = dr021["CHANNEL_NO"].ToString();
-                                        }
-                                    }
+                                    strChannel_No = dr022["CHANNEL_NO"].ToString();
                                 }
                                 else
                                 {
                                     strChannel_No = dr021["CHANNEL_NO"].ToString();
                                 }
                             }
+                        }
 
+                        else
+                        {
+                            strChannel_No = dr021["CHANNEL_NO"].ToString();
+                        }
+
+                    }
+                    else if (int.Parse(dr021["CACHE_QTY"].ToString()) - int.Parse(dr021["QTY"].ToString()) > 0)
+                    {
+                        DataTable dt021 = Cdao.ChannelProductInfo(dr021["CHANNEL_NO"].ToString());
+                        DataTable dt022 = Cdao.ChannelProductInfo(dr022["CHANNEL_NO"].ToString());
+
+                        if (dt021.Rows.Count > 0)
+                        {
+                            if (dt021.Rows[0]["BILL_NO"].ToString() == BillNo)
+                            {
+                                strChannel_No = dr021["CHANNEL_NO"].ToString();
+                            }
+                            else
+                            {
+                                if (int.Parse(dr022["QTY"].ToString()) == 0)
+                                {
+                                    strChannel_No = dr022["CHANNEL_NO"].ToString();
+                                }
+                                else
+                                {
+                                    if (int.Parse(dr022["CACHE_QTY"].ToString()) - int.Parse(dr022["QTY"].ToString()) > 0)
+                                    {
+                                        if (dt022.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                        {
+                                            strChannel_No = dr022["CHANNEL_NO"].ToString();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        DataTable dt022 = Cdao.ChannelProductInfo(dr022["CHANNEL_NO"].ToString());
+                        if (int.Parse(dr022["QTY"].ToString()) == 0)
+                        {
+                            strChannel_No = dr022["CHANNEL_NO"].ToString();
                         }
                         else
                         {
                             if (int.Parse(dr022["CACHE_QTY"].ToString()) - int.Parse(dr022["QTY"].ToString()) > 0)
                             {
-                                strChannel_No = dr022["CHANNEL_NO"].ToString();
+                                if (dt022.Rows[0]["BILL_NO"].ToString() == BillNo)
+                                {
+                                    strChannel_No = dr022["CHANNEL_NO"].ToString();
+                                }
                             }
-                        } 
+                        }
                     }
+                    
 
                     break;
                 case "03":
-                    if (int.Parse(dt.Rows[0]["CACHE_QTY"].ToString()) - int.Parse(dt.Rows[0]["QTY"].ToString()) > 0)
+                    if (int.Parse(dt.Rows[0]["CACHE_QTY"].ToString()) - int.Parse(dt.Rows[0]["QTY"].ToString()) > 15)
                     {
                         strChannel_No = dt.Rows[0]["CHANNEL_NO"].ToString();
                     }
                     break;
             }
 
+            if (strChannel_No != "")
+            {
+                Cdao.InsertChannel(TaskID,Bill_No, strChannel_No);
+            }
 
-            return "";
+            return strChannel_No;
+        }
+
+        /// <summary>
+        /// 更新进入缓存道时间，及ORDER_NO     
+        /// </summary>
+        /// <returns></returns>
+        public int  UpdateInChannelTime(string TaskID, string Bill_No, string ChannelNo)
+        {
+            int strValue = 0;
+            ChannelDao dao = new ChannelDao();
+            int count = dao.ProductCount(Bill_No);
+            TaskDao tdao=new TaskDao();
+
+            int taskCount = tdao.TaskCount(Bill_No);
+            if (count == 0)
+                strValue = 1;
+            if (count == taskCount - 1)
+                strValue = 2;
+            dao.UpdateInChannelTime(TaskID, Bill_No, ChannelNo);
+            return strValue;
         }
        
     }

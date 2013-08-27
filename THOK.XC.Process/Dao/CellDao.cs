@@ -39,5 +39,12 @@ namespace THOK.XC.Process.Dao
             string strSQL = string.Format("UPDATE CMD_CELL SET IS_LOCK='1' WHERE CELL_CODE='{0}' ", strCell);
             ExecuteNonQuery(strSQL);
         }
+
+
+        public void UpdateCellNewPalletCode(string CellCode, string NewPalletCode)
+        {
+            string strSQL = string.Format("UPDATE CMD_CELL SET NEW_PALLET_CODE ='{0}',ERROR_FLAG='1' WHERE CELL_CODE='{1}' ", NewPalletCode, CellCode);
+            ExecuteNonQuery(strSQL);
+        }
     }
 }

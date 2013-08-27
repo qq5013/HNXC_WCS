@@ -35,7 +35,7 @@ namespace THOK.XC.Process.Process_01
                     dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=2", strInfo[0]), "2");
                     dal.UpdateTaskState(strInfo[0], "2");
 
-                    BillDal billdal = new BillDal();
+                    PalletBillDal billdal = new PalletBillDal();
                     billdal.UpdateBillMasterFinished(strInfo[1]);
                     WriteToService("StockPLC_01", writeItem, 1); //通知电控，空托盘组到达158,200       
                 }

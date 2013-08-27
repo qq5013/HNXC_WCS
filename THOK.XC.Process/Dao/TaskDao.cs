@@ -41,26 +41,35 @@ namespace THOK.XC.Process.Dao
             return dtCraneTask;
         }
         /// <summary>
-        /// 出入库，插入明细。 返回TaskNo
+        /// 出入库，插入明细。如果明细已经存在则不进行重新插入， 返回TaskNo
         /// </summary>
         /// <param name="task_id"></param>
         /// <returns></returns>
-        public string InsertTaskDetail(string strWhere)
+        public string InsertTaskDetail(string TaskID)
         {
-            string strTaskDetailNo = GetTaskDetailNo();
-            using (PersistentManager pm = new PersistentManager())
+            string strTaskDetailNo = "";
+
+            string strSQL = string.Format("SELECT TASK_NO FROM  WCS_TASK_DETAIL WHERE TASK_ID='{0}' ", TaskID);
+            DataTable dt = ExecuteQuery(strSQL).Tables[0];
+            if (dt.Rows.Count > 0)
             {
-                string where = strWhere;
-                if (strWhere.Trim() == "")
-                    where = "1=1";
-                string strSQL = string.Format("INSERT INTO WCS_TASK_DETAIL(TASK_ID,ITEM_NO,TASK_NO,ASSIGNMENT_ID,STATE,DESCRIPTION,BILL_NO) " +
-                         "SELECT  WCS_TASK.TASK_ID,SYS_TASK_ROUTE.ITEM_NO,'{1}','{2}','0'," +
-                         "SYS_TASK_ROUTE.DESCRIPTION,WCS_TASK.BILL_NO " +
-                         "FROM WCS_TASK  " +
-                         "LEFT JOIN SYS_TASK_ROUTE ON WCS_TASK.TASK_TYPE=SYS_TASK_ROUTE.TASK_TYPE " +
-                         "WHERE {0} AND WCS_TASK.STATE='0' " +
-                         "ORDER BY SYS_TASK_ROUTE.ITEM_NO ", where, strTaskDetailNo, "0000" + strTaskDetailNo);
-                ExecuteNonQuery(strSQL);
+                strTaskDetailNo = dt.Rows[0][0].ToString();
+            }
+            else
+            {
+                strTaskDetailNo = GetTaskDetailNo();
+                using (PersistentManager pm = new PersistentManager())
+                {
+
+                    strSQL = string.Format("INSERT INTO WCS_TASK_DETAIL(TASK_ID,ITEM_NO,TASK_NO,ASSIGNMENT_ID,STATE,DESCRIPTION,BILL_NO) " +
+                             "SELECT  WCS_TASK.TASK_ID,SYS_TASK_ROUTE.ITEM_NO,'{1}','{2}','0'," +
+                             "SYS_TASK_ROUTE.DESCRIPTION,WCS_TASK.BILL_NO " +
+                             "FROM WCS_TASK  " +
+                             "LEFT JOIN SYS_TASK_ROUTE ON WCS_TASK.TASK_TYPE=SYS_TASK_ROUTE.TASK_TYPE " +
+                             "WHERE TASK_ID='{0}' " +
+                             "ORDER BY SYS_TASK_ROUTE.ITEM_NO ", TaskID, strTaskDetailNo, "0000" + strTaskDetailNo);
+                    ExecuteNonQuery(strSQL);
+                }
             }
             return strTaskDetailNo;
         }
@@ -310,7 +319,7 @@ namespace THOK.XC.Process.Dao
 
 
              ;
-            string TaskNo = InsertTaskDetail(strWhere);
+             string TaskNo = InsertTaskDetail(TaskID);
 
             strValue[0] = TaskID;
             strValue[1] = TaskNo;
@@ -370,7 +379,7 @@ namespace THOK.XC.Process.Dao
             strSQL = string.Format("UPDATE WCS_TASK SET CELL_CODE='{0}' WHERE {1}", VCell, where);
             ExecuteNonQuery(strSQL);
 
-            InsertTaskDetail(strWhere);
+            InsertTaskDetail(TaskID);
 
             TaskDao dao = new TaskDao();
             dao.UpdateTaskState(TaskID, "1");//更新任务开始执行
@@ -393,7 +402,19 @@ namespace THOK.XC.Process.Dao
 
             return ExecuteQuery(strSQL).Tables[0];
         }
-       
+
+        /// <summary>
+        /// 根据单号，返回任务数量
+        /// </summary>
+        /// <param name="BillNo"></param>
+        /// <returns></returns>
+        public int TaskCount(string BillNo)
+        {
+
+            string strSQL = string.Format("SELECT COUNT(*) FROM WCS_TASK WHERE BILL_NO='{0}'", BillNo);
+            DataTable dt=ExecuteQuery(strSQL).Tables[0];
+            return int.Parse(dt.Rows[0][0].ToString());
+        }
 
     }
 }
