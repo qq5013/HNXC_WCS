@@ -21,5 +21,14 @@ namespace THOK.XC.Process.Dao
             string strSQL = string.Format("UPDATE WMS_PRODUCT_STATE SET CELL_CODE='{0}' WHERE BILLNO='{1}' AND ITEM_NO='{2}'", strCell, BillNo, ItemNo);
             ExecuteNonQuery(strSQL);
         }
+        /// <summary>
+        /// 根据条码返回烟包信息。
+        /// </summary>
+        /// <param name="BarCode"></param>
+        /// <returns></returns>
+        public DataTable  GetProductInfo(string BarCode)
+        {
+            return null;
+        }
     }
 }

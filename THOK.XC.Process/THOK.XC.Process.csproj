@@ -54,6 +54,7 @@
     <Compile Include="Dal\StockInDal.cs" />
     <Compile Include="Dal\SupplyDal.cs" />
     <Compile Include="Dal\SysCarAddressDal.cs" />
+    <Compile Include="Dal\SysStationDal.cs" />
     <Compile Include="Dal\TaskDal.cs" />
     <Compile Include="Dao\BillDao.cs" />
     <Compile Include="Dao\CellDao.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="Dao\StockOutDao.cs" />
     <Compile Include="Dao\SupplyDao.cs" />
     <Compile Include="Dao\SysCarAddressDao.cs" />
+    <Compile Include="Dao\SysStationDao.cs" />
     <Compile Include="Dao\TaskDao.cs" />
     <Compile Include="Process_01\StockOutToStationProcess.cs" />
     <Compile Include="Process_01\PalletOutRequestProcess.cs" />
@@ -95,6 +97,12 @@
     <Compile Include="View\CannelBillSelect.Designer.cs">
       <DependentUpon>CannelBillSelect.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\ReadBarcode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\ReadBarcode.Designer.cs">
+      <DependentUpon>ReadBarcode.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\THOK.CRANE\THOK.CRANE.csproj">
@@ -118,6 +126,9 @@
   <ItemGroup>
     <EmbeddedResource Include="View\CannelBillSelect.resx">
       <DependentUpon>CannelBillSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\ReadBarcode.resx">
+      <DependentUpon>ReadBarcode.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

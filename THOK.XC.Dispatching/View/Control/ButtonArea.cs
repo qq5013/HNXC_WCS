@@ -54,29 +54,9 @@ namespace THOK.XC.Dispatching.View
             }
         }
 
-        private void btnDownload_Click(object sender, EventArgs e)
-        {
-            DownloadData();
-            try
-            {
-                Context.ProcessDispatcher.WriteToProcess("LEDProcess", "Refresh", null);
-                Context.ProcessDispatcher.WriteToProcess("LedStateProcess", "Refresh", null);
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex.Message);
-            }
-        }
+       
 
-        private void btnUpload_Click(object sender, EventArgs e)
-        {
-            string text = "手工更新卷烟条码信息！";
-            string cigaretteCode = "";
-            string barcode = "";
-
-            Scan(text, cigaretteCode, barcode);
-        }
-
+       
         private void btnStart_Click(object sender, EventArgs e)
         {
             try
@@ -108,7 +88,7 @@ namespace THOK.XC.Dispatching.View
 
         private void SwitchStatus(bool isStart)
         {
-            btnWarningHandle.Enabled = !isStart;
+            btnCheck.Enabled = !isStart;
             btnPalletIn.Enabled = !isStart;
             btnStart.Enabled = !isStart;
             btnStop.Enabled = isStart;
@@ -127,15 +107,6 @@ namespace THOK.XC.Dispatching.View
                 Logger.Error("清除PLC未扫码件烟信息处理失败，原因：" + ee.Message);
             }
         }
-
-        /// <summary>
-        /// 下载数据 最后修改日期 2010-10-30
-        /// </summary>
-        private void DownloadData()
-        {
-           
-        }
-
         private void timer1_Tick(object sender, EventArgs e)
         {
             TaskDal taskDal = new TaskDal();
@@ -155,82 +126,116 @@ namespace THOK.XC.Dispatching.View
             Context.ProcessDispatcher.WriteToProcess("CraneProcess", "StockOutRequest", dtSend);
             IndexStar++;
         }
-
-
-        public delegate void ProcessStateInMainThread(StateItem stateItem);
-        private void ProcessState(StateItem stateItem)
+        /// <summary>
+        /// 盘点入库
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnCheck_Click(object sender, EventArgs e) 
         {
-            switch (stateItem.ItemName)
+            string strTaskNo = (string)Context.ProcessDispatcher.WriteToService("StockPLC_01", "01_1_195");
+
+            TaskDal dal = new TaskDal();
+            string[] strValue = dal.GetTaskInfo(strTaskNo);
+            DataTable dt = dal.TaskInfo(string.Format("TASK_ID='{0}'", strValue[0]));
+            if (dt.Rows.Count > 0)
             {
-                case "SimulateDialog":
-                    string scannerCode = stateItem.State.ToString();
-                    THOK.XC.Dispatching.View.SimulateDialog simulateDialog = new THOK.XC.Dispatching.View.SimulateDialog();
-                    simulateDialog.Text = scannerCode + " 号扫码器手工扫码！";
-                    if (simulateDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        Dictionary<string, string>  parameters = new Dictionary<string, string>();
-                        parameters.Add("barcode", simulateDialog.Barcode);                        
-                        Context.ProcessDispatcher.WriteToProcess("ScanProcess", scannerCode, parameters);
-                    }
-                    Context.ProcessDispatcher.WriteToProcess("ScanProcess","ErrReset", "01");
-                    break;
-                case "ScanDialog":
-                    Dictionary<string, string> scanParam = (Dictionary<string, string>)stateItem.State;
-                    Scan(scanParam["text"], scanParam["cigaretteCode"], scanParam["barcode"]);
-                    break;
-                case "MessageBox":
-                    Dictionary<string, object> msgParam = (Dictionary<string, object>)stateItem.State;
-                    MessageBox.Show((string)msgParam["msg"], (string)msgParam["title"], (MessageBoxButtons)msgParam["messageBoxButtons"], (MessageBoxIcon)msgParam["messageBoxIcon"]);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        public void Scan(string text, string cigaretteCode, string barcode)
-        {
-            using (PersistentManager pm = new PersistentManager())
-            {
-                StockOutDal outDal = new StockOutDal();
-                SupplyDal supplyDal = new SupplyDal();
-
-                if (barcode != string.Empty && supplyDal.Exist(barcode))
-                    return;
-
-                DataTable table = supplyDal.FindCigaretteAll(cigaretteCode);
-
-                if (table.Rows.Count > 0)
+                DataRow dr = dt.Rows[0];
+                if (dr["TASK_TYPE"].ToString() == "13")
                 {
-                    THOK.XC.Dispatching.View.ScanDialog scanDialog = new THOK.XC.Dispatching.View.ScanDialog(table);
-                    scanDialog.setInformation(text, barcode);
-                    if (scanDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        if (scanDialog.IsPass && scanDialog.Barcode.Length == 6)
-                        {
-                            cigaretteCode = scanDialog.SelectedCigaretteCode;
-                            barcode = scanDialog.Barcode;
+                    SysStationDal sysdal = new SysStationDal();
+                    DataTable dtstation = sysdal.GetSationInfo(dr["CELL_CODE"].ToString(), "11");
 
-                            using (PersistentManager pmServer = new PersistentManager("ServerConnection"))
-                            {
-                                ServerDal serverDal = new ServerDal();
-                                serverDal.SetPersistentManager(pmServer);
-                                serverDal.UpdateCigaretteToServer(barcode, cigaretteCode);
-                            }
-                            outDal.UpdateCigarette(barcode, cigaretteCode);
-                        }
-                        else
-                        {
-                            MessageBox.Show("验证码错误！", "消息", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        }
-                    }
+                    string writeItem = "01_2_195_";
+                    int[] ServiceW = new int[3];
+                    ServiceW[0] = int.Parse(strValue[1]); //任务号
+                    ServiceW[1] = int.Parse(dtstation.Rows[0]["STATION_NO"].ToString());//目的地址
+                    ServiceW[2] = 1;
+
+                    Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "1", ServiceW); //PLC写入任务
+                    Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "3", 1); //PLC写入任务
+
+                    dal.UpdateTaskDetailStation("195", dtstation.Rows[0]["STATION_NO"].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=3", strValue[0]));//更新货位到达入库站台，
+                    dal.UpdateTaskDetailCrane(dtstation.Rows[0]["STATION_NO"].ToString(), dr["CELL_CODE"].ToString(), "0", dtstation.Rows[0]["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO=4", strValue[0]));//更新调度堆垛机的其实位置及目标地址。
                 }
             }
         }
-
-        public override void Process(StateItem stateItem)
+        /// <summary>
+        /// 托盘入库方式
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnPalletIn_Click(object sender, EventArgs e)
         {
-            base.Process(stateItem);
-            this.BeginInvoke(new ProcessStateInMainThread(ProcessState), stateItem);
+             PalletSelect frm = new PalletSelect();
+             if (frm.ShowDialog() == DialogResult.OK)
+             {
+                 if (frm.Flag == 1) //单托盘入库
+                 {
+                     string writeItem = "01_2_122_";
+                     int[] ServiceW = new int[3];
+                     ServiceW[0] =9999; //任务号
+                     ServiceW[1] = 131;//目的地址
+                     ServiceW[2] = 4;
+
+
+                     Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "1", ServiceW); //PLC写入任务
+                     Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "3", 1); //PLC写入任务
+                 }
+                 else if (frm.Flag == 2)
+                 {
+                     PalletBillDal Billdal = new PalletBillDal();
+                     string TaskID = Billdal.CreatePalletInBillTask(true); //空托盘组入库单，生成Task.
+                     string FromStation = "122";
+                     string ToStation = "122";
+                     string writeItem = "01_2_122_";
+
+
+                     string strWhere = string.Format("TASK_ID='{0}'", TaskID);
+                     TaskDal dal = new TaskDal();
+                     string[] strValue = dal.AssignCell(strWhere);//货位申请
+
+                     dal.UpdateTaskState(strValue[0], "1");//更新任务开始执行
+                     ProductStateDal StateDal = new ProductStateDal();
+                     StateDal.UpdateProductCellCode(strValue[0], strValue[4]); //更新Product_State 货位
+                     dal.UpdateTaskDetailStation(FromStation, ToStation, "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", strValue[0])); //更新货位申请起始地址及目标地址。
+
+                     int[] ServiceW = new int[3];
+                     ServiceW[0] = int.Parse(strValue[1]); //任务号
+                     ServiceW[1] = int.Parse(strValue[2]);//目的地址
+                     ServiceW[2] = 2;
+                    
+
+                     Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "1", ServiceW); //PLC写入任务
+                     Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "3", 1); //PLC写入任务
+
+                     dal.UpdateTaskDetailStation(ToStation, strValue[2], "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", strValue[0]));//更新货位到达入库站台，
+                     dal.UpdateTaskDetailCrane(strValue[3], "30" + strValue[4], "0", strValue[5], string.Format("TASK_ID='{0}' AND ITEM_NO=3", strValue[0]));//更新调度堆垛机的其实位置及目标地址。
+                 }
+             }
+
+        }
+        /// <summary>
+        /// 抽检，补料托盘入库；
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnSpotCheck_Click(object sender, EventArgs e)
+        {
+            string writeItem = "01_2_195_";
+            Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "1", 1); //PLC写入任务
+
+
+            string strTaskNo = (string)Context.ProcessDispatcher.WriteToService("StockPLC_01", "01_1_195");
+
+            TaskDal dal = new TaskDal();
+            string[] strValue = dal.GetTaskInfo(strTaskNo);
+
+            dal.UpdateTaskState(strValue[0], "2");
+
+            BillDal billdal = new BillDal();
+            billdal.UpdateBillMasterFinished(strValue[1]);
+
         }
     }
 }

@@ -32,12 +32,11 @@
             this.pnlTitle = new System.Windows.Forms.Panel();
             this.lblTitle = new System.Windows.Forms.Label();
             this.pnlMain = new System.Windows.Forms.Panel();
-            this.monitorView = new THOK.MCP.View.MonitorView();
             this.pnlBottom = new System.Windows.Forms.Panel();
             this.scBottom = new System.Windows.Forms.SplitContainer();
             this.lbLog = new System.Windows.Forms.ListBox();
+            this.monitorView = new THOK.MCP.View.MonitorView();
             this.buttonArea = new THOK.XC.Dispatching.View.ButtonArea();
-            this.pnlTitle.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.pnlBottom.SuspendLayout();
             this.scBottom.Panel1.SuspendLayout();
@@ -47,7 +46,6 @@
             // 
             // pnlTitle
             // 
-            this.pnlTitle.Controls.Add(this.lblTitle);
             this.pnlTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTitle.Location = new System.Drawing.Point(0, 0);
             this.pnlTitle.Name = "pnlTitle";
@@ -57,9 +55,9 @@
             // lblTitle
             // 
             this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new System.Drawing.Font("宋体", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblTitle.Font = new System.Drawing.Font("SimSun", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            this.lblTitle.Location = new System.Drawing.Point(405, 12);
+            this.lblTitle.Location = new System.Drawing.Point(326, 9);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(375, 35);
             this.lblTitle.TabIndex = 0;
@@ -73,17 +71,6 @@
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(1024, 580);
             this.pnlMain.TabIndex = 2;
-            // 
-            // monitorView
-            // 
-            this.monitorView.BackColor = System.Drawing.SystemColors.Highlight;
-            this.monitorView.BackgroundImage = global::THOK.XC.Dispatching.WCS.Properties.Resources.S1_0002;
-            this.monitorView.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.monitorView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.monitorView.Location = new System.Drawing.Point(0, 0);
-            this.monitorView.Name = "monitorView";
-            this.monitorView.Size = new System.Drawing.Size(1024, 580);
-            this.monitorView.TabIndex = 0;
             // 
             // pnlBottom
             // 
@@ -116,13 +103,24 @@
             // lbLog
             // 
             this.lbLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbLog.Font = new System.Drawing.Font("宋体", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lbLog.Font = new System.Drawing.Font("SimSun", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lbLog.FormattingEnabled = true;
             this.lbLog.HorizontalScrollbar = true;
             this.lbLog.Location = new System.Drawing.Point(0, 0);
             this.lbLog.Name = "lbLog";
             this.lbLog.Size = new System.Drawing.Size(522, 130);
             this.lbLog.TabIndex = 1;
+            // 
+            // monitorView
+            // 
+            this.monitorView.BackColor = System.Drawing.SystemColors.Highlight;
+            this.monitorView.BackgroundImage = global::THOK.XC.Dispatching.WCS.Properties.Resources.S1_0002;
+            this.monitorView.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.monitorView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.monitorView.Location = new System.Drawing.Point(0, 0);
+            this.monitorView.Name = "monitorView";
+            this.monitorView.Size = new System.Drawing.Size(1024, 580);
+            this.monitorView.TabIndex = 0;
             // 
             // buttonArea
             // 
@@ -138,6 +136,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1024, 768);
             this.ControlBox = false;
+            this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlBottom);
             this.Controls.Add(this.pnlTitle);
@@ -152,14 +151,13 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
-            this.pnlTitle.ResumeLayout(false);
-            this.pnlTitle.PerformLayout();
             this.pnlMain.ResumeLayout(false);
             this.pnlBottom.ResumeLayout(false);
             this.scBottom.Panel1.ResumeLayout(false);
             this.scBottom.Panel2.ResumeLayout(false);
             this.scBottom.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 

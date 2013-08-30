@@ -32,17 +32,17 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ButtonArea));
             this.imgList = new System.Windows.Forms.ImageList(this.components);
             this.pnlButton = new System.Windows.Forms.TableLayoutPanel();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.btnMoveOut = new System.Windows.Forms.Button();
-            this.btnWarningHandle = new System.Windows.Forms.Button();
             this.btnPalletIn = new System.Windows.Forms.Button();
-            this.btnCheck = new System.Windows.Forms.Button();
+            this.btnSpotCheck = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
             this.btnStart = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnSimulate = new System.Windows.Forms.Button();
+            this.btnCheck = new System.Windows.Forms.Button();
             this.btnHelp = new System.Windows.Forms.Button();
             this.btnOperate = new System.Windows.Forms.Button();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pnlButton.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -71,15 +71,15 @@
             this.pnlButton.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 118F));
             this.pnlButton.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.pnlButton.Controls.Add(this.btnMoveOut, 0, 1);
-            this.pnlButton.Controls.Add(this.btnWarningHandle, 3, 0);
             this.pnlButton.Controls.Add(this.btnPalletIn, 2, 1);
-            this.pnlButton.Controls.Add(this.btnCheck, 0, 1);
+            this.pnlButton.Controls.Add(this.btnSpotCheck, 0, 1);
             this.pnlButton.Controls.Add(this.btnExit, 4, 1);
             this.pnlButton.Controls.Add(this.btnStart, 0, 0);
             this.pnlButton.Controls.Add(this.btnStop, 1, 0);
             this.pnlButton.Controls.Add(this.btnSimulate, 2, 0);
+            this.pnlButton.Controls.Add(this.btnCheck, 3, 1);
             this.pnlButton.Controls.Add(this.btnHelp, 4, 0);
-            this.pnlButton.Controls.Add(this.btnOperate, 3, 1);
+            this.pnlButton.Controls.Add(this.btnOperate, 3, 0);
             this.pnlButton.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlButton.Location = new System.Drawing.Point(0, 0);
             this.pnlButton.Name = "pnlButton";
@@ -89,15 +89,10 @@
             this.pnlButton.Size = new System.Drawing.Size(545, 130);
             this.pnlButton.TabIndex = 0;
             // 
-            // timer1
-            // 
-            this.timer1.Interval = 300000;
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
             // btnMoveOut
             // 
             this.btnMoveOut.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnMoveOut.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnMoveOut.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnMoveOut.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnMoveOut.ImageIndex = 5;
             this.btnMoveOut.ImageList = this.imgList;
@@ -109,26 +104,10 @@
             this.btnMoveOut.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnMoveOut.UseVisualStyleBackColor = true;
             // 
-            // btnWarningHandle
-            // 
-            this.btnWarningHandle.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnWarningHandle.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnWarningHandle.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnWarningHandle.ImageIndex = 5;
-            this.btnWarningHandle.ImageList = this.imgList;
-            this.btnWarningHandle.Location = new System.Drawing.Point(321, 3);
-            this.btnWarningHandle.Name = "btnWarningHandle";
-            this.btnWarningHandle.Size = new System.Drawing.Size(112, 59);
-            this.btnWarningHandle.TabIndex = 2;
-            this.btnWarningHandle.Text = "故障处理";
-            this.btnWarningHandle.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnWarningHandle.UseVisualStyleBackColor = true;
-            this.btnWarningHandle.Click += new System.EventHandler(this.btnDownload_Click);
-            // 
             // btnPalletIn
             // 
             this.btnPalletIn.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnPalletIn.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnPalletIn.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnPalletIn.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnPalletIn.ImageIndex = 6;
             this.btnPalletIn.ImageList = this.imgList;
@@ -139,27 +118,28 @@
             this.btnPalletIn.Text = "托盘入库";
             this.btnPalletIn.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnPalletIn.UseVisualStyleBackColor = true;
-            this.btnPalletIn.Click += new System.EventHandler(this.btnUpload_Click);
+            this.btnPalletIn.Click += new System.EventHandler(this.btnPalletIn_Click);
             // 
-            // btnCheck
+            // btnSpotCheck
             // 
-            this.btnCheck.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnCheck.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.btnCheck.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnCheck.ImageIndex = 5;
-            this.btnCheck.ImageList = this.imgList;
-            this.btnCheck.Location = new System.Drawing.Point(107, 68);
-            this.btnCheck.Name = "btnCheck";
-            this.btnCheck.Size = new System.Drawing.Size(97, 59);
-            this.btnCheck.TabIndex = 16;
-            this.btnCheck.Text = "抽检盘点";
-            this.btnCheck.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnCheck.UseVisualStyleBackColor = true;
+            this.btnSpotCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnSpotCheck.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnSpotCheck.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnSpotCheck.ImageIndex = 5;
+            this.btnSpotCheck.ImageList = this.imgList;
+            this.btnSpotCheck.Location = new System.Drawing.Point(107, 68);
+            this.btnSpotCheck.Name = "btnSpotCheck";
+            this.btnSpotCheck.Size = new System.Drawing.Size(97, 59);
+            this.btnSpotCheck.TabIndex = 16;
+            this.btnSpotCheck.Text = "抽检补料";
+            this.btnSpotCheck.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnSpotCheck.UseVisualStyleBackColor = true;
+            this.btnSpotCheck.Click += new System.EventHandler(this.btnSpotCheck_Click);
             // 
             // btnExit
             // 
             this.btnExit.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnExit.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnExit.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnExit.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnExit.ImageIndex = 4;
             this.btnExit.ImageList = this.imgList;
@@ -175,7 +155,7 @@
             // btnStart
             // 
             this.btnStart.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnStart.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnStart.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnStart.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnStart.ImageIndex = 0;
             this.btnStart.ImageList = this.imgList;
@@ -192,7 +172,7 @@
             // 
             this.btnStop.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnStop.Enabled = false;
-            this.btnStop.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnStop.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnStop.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnStop.ImageIndex = 1;
             this.btnStop.ImageList = this.imgList;
@@ -208,7 +188,7 @@
             // btnSimulate
             // 
             this.btnSimulate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnSimulate.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnSimulate.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnSimulate.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnSimulate.ImageIndex = 9;
             this.btnSimulate.ImageList = this.imgList;
@@ -221,10 +201,26 @@
             this.btnSimulate.UseVisualStyleBackColor = true;
             this.btnSimulate.Click += new System.EventHandler(this.btnSimulate_Click);
             // 
+            // btnCheck
+            // 
+            this.btnCheck.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnCheck.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnCheck.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnCheck.ImageIndex = 5;
+            this.btnCheck.ImageList = this.imgList;
+            this.btnCheck.Location = new System.Drawing.Point(321, 68);
+            this.btnCheck.Name = "btnCheck";
+            this.btnCheck.Size = new System.Drawing.Size(112, 59);
+            this.btnCheck.TabIndex = 2;
+            this.btnCheck.Text = "盘点";
+            this.btnCheck.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnCheck.UseVisualStyleBackColor = true;
+            this.btnCheck.Click += new System.EventHandler(this.btnCheck_Click);
+            // 
             // btnHelp
             // 
             this.btnHelp.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnHelp.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnHelp.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnHelp.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnHelp.ImageIndex = 7;
             this.btnHelp.ImageList = this.imgList;
@@ -240,11 +236,11 @@
             // btnOperate
             // 
             this.btnOperate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnOperate.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnOperate.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnOperate.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnOperate.ImageIndex = 3;
             this.btnOperate.ImageList = this.imgList;
-            this.btnOperate.Location = new System.Drawing.Point(321, 68);
+            this.btnOperate.Location = new System.Drawing.Point(321, 3);
             this.btnOperate.Name = "btnOperate";
             this.btnOperate.Size = new System.Drawing.Size(112, 59);
             this.btnOperate.TabIndex = 13;
@@ -252,6 +248,11 @@
             this.btnOperate.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnOperate.UseVisualStyleBackColor = true;
             this.btnOperate.Click += new System.EventHandler(this.btnOperate_Click);
+            // 
+            // timer1
+            // 
+            this.timer1.Interval = 300000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // ButtonArea
             // 
@@ -269,7 +270,7 @@
 
         private System.Windows.Forms.ImageList imgList;
         private System.Windows.Forms.TableLayoutPanel pnlButton;
-        private System.Windows.Forms.Button btnWarningHandle;
+        private System.Windows.Forms.Button btnCheck;
         private System.Windows.Forms.Button btnPalletIn;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.Button btnStop;
@@ -279,6 +280,6 @@
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Button btnMoveOut;
-        private System.Windows.Forms.Button btnCheck;
+        private System.Windows.Forms.Button btnSpotCheck;
     }
 }

@@ -311,11 +311,10 @@ namespace THOK.XC.Process.Dao
             strSQL = string.Format("UPDATE WCS_TASK SET CELL_CODE='{0}' WHERE {1}", VCell, where);
             ExecuteNonQuery(strSQL);
 
-            strSQL = string.Format("SELECT SYS_STATION.STATION_NO,CMD_SHELF.CRANE_NO,SYS_STATION.CRANE_POSITION FROM CMD_CELL " +
-                     "LEFT JOIN CMD_SHELF ON CMD_CELL.SHELF_CODE=CMD_SHELF.SHELF_CODE " +
-                     "LEFT JOIN SYS_STATION ON CMD_SHELF.CRANE_NO=SYS_STATION.CRANE_NO " +
-                     "WHERE CELL_CODE='{0}' AND  SYS_STATION.STATION_TYPE='11' ", VCell);
-            dt = ExecuteQuery(strSQL).Tables[0];
+
+            SysStationDao sysdao = new SysStationDao();
+
+            dt = sysdao.GetSationInfo(VCell, "11");
 
 
              ;

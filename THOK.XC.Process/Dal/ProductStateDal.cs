@@ -18,5 +18,14 @@ namespace THOK.XC.Process.Dal
             ProductStateDao dao = new ProductStateDao();
             dao.UpdateProductCellCode(TaskID, strCell);
         }
+        /// <summary>
+        /// 根据条码返回条码信息。
+        /// </summary>
+        /// <param name="BarCode"></param>
+        /// <returns></returns>
+        public string  GetProductInfo(string BarCode)
+        {
+            return "";
+        }
     }
 }

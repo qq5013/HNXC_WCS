@@ -107,83 +107,11 @@
     <Compile Include="View\Control\ButtonArea.Designer.cs">
       <DependentUpon>ButtonArea.cs</DependentUpon>
     </Compile>
-    <Compile Include="View\Dialog\ChannelDialog.cs">
+    <Compile Include="View\PalletSelect.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="View\Dialog\ChannelDialog.designer.cs">
-      <DependentUpon>ChannelDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\Dialog\StateQueryDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\Dialog\StateQueryDialog.Designer.cs">
-      <DependentUpon>StateQueryDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\Form\ChannelForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\Form\ChannelForm.Designer.cs">
-      <DependentUpon>ChannelForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\Form\ChannelQueryForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\Form\ChannelQueryForm.designer.cs">
-      <DependentUpon>ChannelQueryForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\Form\OrderStateForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\Form\OrderStateForm.Designer.cs">
-      <DependentUpon>OrderStateForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\Form\ParameterForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\Form\ParameterForm.designer.cs">
-      <DependentUpon>ParameterForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\Dialog\ScanDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\Dialog\ScanDialog.Designer.cs">
-      <DependentUpon>ScanDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\Dialog\SimulateDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\Dialog\SimulateDialog.Designer.cs">
-      <DependentUpon>SimulateDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\Form\StockOutForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\Form\StockOutForm.Designer.cs">
-      <DependentUpon>StockOutForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\Form\StockOutTaskForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\Form\StockOutTaskForm.Designer.cs">
-      <DependentUpon>StockOutTaskForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\Dialog\PrintSelectDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\Dialog\PrintSelectDialog.designer.cs">
-      <DependentUpon>PrintSelectDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\Form\StockInTaskForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\Form\StockInTaskForm.Designer.cs">
-      <DependentUpon>StockInTaskForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="View\Form\StockInForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="View\Form\StockInForm.Designer.cs">
-      <DependentUpon>StockInForm.cs</DependentUpon>
+    <Compile Include="View\PalletSelect.Designer.cs">
+      <DependentUpon>PalletSelect.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -196,57 +124,8 @@
       <SubType>Designer</SubType>
       <DependentUpon>ButtonArea.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="View\Dialog\ChannelDialog.resx">
-      <DependentUpon>ChannelDialog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\Dialog\StateQueryDialog.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>StateQueryDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\Form\ChannelForm.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>ChannelForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\Form\ChannelQueryForm.resx">
-      <DependentUpon>ChannelQueryForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\Form\OrderStateForm.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>OrderStateForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\Form\ParameterForm.resx">
-      <DependentUpon>ParameterForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\Dialog\ScanDialog.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>ScanDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\Dialog\SimulateDialog.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>SimulateDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\Form\StockOutForm.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>StockOutForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\Form\StockOutTaskForm.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>StockOutTaskForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\Dialog\PrintSelectDialog.resx">
-      <DependentUpon>PrintSelectDialog.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\Form\StockInTaskForm.resx">
-      <DependentUpon>StockInTaskForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="View\Form\StockInForm.resx">
-      <DependentUpon>StockInForm.cs</DependentUpon>
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="View\PalletSelect.resx">
+      <DependentUpon>PalletSelect.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -31,6 +31,7 @@ namespace THOK.XC.Process.Process_Crane
              *  stateItem.State ：参数 - 请求的卷烟编码。        
             */
 
+           
           
             if (strMaxSQuenceNo == "")
             {
@@ -78,11 +79,6 @@ namespace THOK.XC.Process.Process_Crane
                         DataTable dtInCrane = (DataTable)stateItem.State;
                         InsertCraneQuene(dtInCrane);
                         SendTelegram(dtInCrane.Rows[0]["CRANE_NO"].ToString(), dtInCrane.Rows[0]);
-                        break;
-                    case "PalletOutRequest":
-                        DataTable PalletOutCrane = (DataTable)stateItem.State;
-                        InsertCraneQuene(PalletOutCrane);
-                        SendTelegram(PalletOutCrane.Rows[0]["CRANE_NO"].ToString(), PalletOutCrane.Rows[0]);
                         break;
                     case "ACP":
                         ACP(stateItem.State);

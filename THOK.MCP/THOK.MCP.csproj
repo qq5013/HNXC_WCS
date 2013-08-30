@@ -70,6 +70,7 @@
     <Compile Include="Config\ResourceConfig.cs" />
     <Compile Include="Config\ResourceConfiguration.cs" />
     <Compile Include="Config\ServiceConfig.cs" />
+    <Compile Include="FormDialog.cs" />
     <Compile Include="IProtocolParse.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="ObjectFactory.cs" />

@@ -47,7 +47,7 @@ namespace THOK.XC.Process.Process_02
                     if (dt.Rows.Count > 0)
                     {
                         DataRow dr = dt.Rows[0];
-                        dal.UpdateTaskDetailCrane(dr["FROM_STATION"].ToString(), dr["TO_STATION"].ToString(), "0", dr["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO='5'", strValue[0]));
+                        dal.UpdateTaskDetailCrane(dr["FROM_STATION"].ToString(), dr["TO_STATION"].ToString(), "0", dr["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO='4'", strValue[0]));
                         dt = dal.TaskCraneDetail(string.Format("TASK_ID='{0}'", strValue[0]));
                         WriteToProcess("CraneProcess", "CraneInRequest", dt);
                     }

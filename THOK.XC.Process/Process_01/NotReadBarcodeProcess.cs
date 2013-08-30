@@ -12,41 +12,37 @@ namespace THOK.XC.Process.Process_01
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
         {
             /*  处理事项：
-             * 货物到达指定位置
+             * 一楼入库烟包处理
             */
 
             try
             {
 
-                switch (stateItem.ItemName)
+                string strBadFlag = "";
+                int obj = (short)ObjectUtil.GetObject(stateItem.State);
+                switch (obj)
                 {
-                    case "01_1_158_2":
-
+                    case 1:
+                        strBadFlag = "左边条码无法读取";
                         break;
-                    case "01_1_200_2":
-
+                    case 2:
+                        strBadFlag = "右边条码无法读取";
                         break;
-                    case "01_1_195":
-
+                    case 3:
+                        strBadFlag = "两边条码无法读取";
                         break;
-                    case "01_1_122":
-
-                        break;
-                    default:
+                    case 4:
+                        strBadFlag = "两边条码不一致";
                         break;
                 }
-                object sta = "";
 
-                TaskDal dal = new TaskDal(); //更具任务号，获取TaskID及BILL_NO
-                string[] strInfo = dal.GetTaskInfo(sta.ToString());
-                dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=2", strInfo[0]), "2");
-                dal.UpdateTaskState(strInfo[0], "2");
-
-                BillDal billdal = new BillDal();
-                billdal.UpdateBillMasterFinished(strInfo[1]);
-
-
-                //更新Bill_Master
+                View.ReadBarcode frm = new View.ReadBarcode();
+                frm.strBadFlag = strBadFlag;
+                if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    WriteToProcess("StockPLC_01", "01_2_124_1", frm.strBarCode); //写入条码
+                    WriteToProcess("StockPLC_01", "01_2_124_2", 1);//写入标识。
+                }
             }
             catch (Exception e)
             {

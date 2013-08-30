@@ -122,7 +122,7 @@ namespace THOK.XC.Process.Process_02
                         string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo);
                         DataTable dtOutTask = dal.CraneOutTask(string.Format("TASK.TASK_ID='{0}'", strOutTaskID));
 
-                        WriteToProcess("CraneProcess", "PalletOutRequest", dtOutTask);
+                        WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
 
 
                       

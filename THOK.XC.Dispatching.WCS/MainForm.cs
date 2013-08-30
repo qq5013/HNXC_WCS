@@ -83,7 +83,7 @@ namespace THOK.XC.Dispatching.WCS
             try
             {
                 Logger.OnLog += new LogEventHandler(Logger_OnLog);
-
+                FormDialog.OnDialog += new DialogEventHandler(FormDialog_OnDialog);
                 context = new Context();
 
                 ContextInitialize initialize = new ContextInitialize();
@@ -97,6 +97,22 @@ namespace THOK.XC.Dispatching.WCS
             {
                 Logger.Error("初始化处理失败请检查配置，原因：" + ee.Message);
             }
+        }
+
+        string FormDialog_OnDialog(DialogEventArgs args)
+        {
+            if (InvokeRequired)
+            {
+                return (string)this.Invoke(new DialogEventHandler(FormDialog_OnDialog), args);
+            }
+            else
+            {
+                 
+                   
+                 
+                
+            }
+            return "";
         }
     }
 }
