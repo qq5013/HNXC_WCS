@@ -88,7 +88,7 @@ namespace THOK.XC.Dispatching.View
 
         private void SwitchStatus(bool isStart)
         {
-            btnCheck.Enabled = !isStart;
+            btnCheckScan.Enabled = !isStart;
             btnPalletIn.Enabled = !isStart;
             btnStart.Enabled = !isStart;
             btnStop.Enabled = isStart;
