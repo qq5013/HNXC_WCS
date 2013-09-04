@@ -83,6 +83,7 @@ namespace THOK.XC.Dispatching.WCS
             try
             {
                 Logger.OnLog += new LogEventHandler(Logger_OnLog);
+                
                 FormDialog.OnDialog += new DialogEventHandler(FormDialog_OnDialog);
                 context = new Context();
 
@@ -101,18 +102,56 @@ namespace THOK.XC.Dispatching.WCS
 
         string FormDialog_OnDialog(DialogEventArgs args)
         {
+            string strValue = "";
             if (InvokeRequired)
             {
                 return (string)this.Invoke(new DialogEventHandler(FormDialog_OnDialog), args);
             }
             else
             {
-                 
+                //1:补料，2、抽检,4:倒库
+                if (args.Message[0] == "1"||args.Message[0] == "2"  || args.Message[0] == "4")
+                {
+                    THOK.XC.Dispatching.View.StockToStation frm = new View.StockToStation(int.Parse(args.Message[0]), args.dtInfo);
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+
+                        strValue = frm.strValue;
+                    }
+
+                }
+                else if (args.Message[0] == "2")//盘点
+                {
+                    THOK.XC.Dispatching.View.CheckScan frm = new THOK.XC.Dispatching.View.CheckScan(int.Parse(args.Message[0]), args.dtInfo);
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        strValue = frm.strValue;
+                    }
+
+                }
+                else if (args.Message[0] == "3")  //烟包条码问题
+                {
+                    THOK.XC.Dispatching.View.ReadBarcode frm = new THOK.XC.Dispatching.View.ReadBarcode(args.Message[1]);
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        strValue = frm.strBarCode;
+                    }
+
+                }
+                else if (args.Message[0] == "5")  //
+                {
+                    THOK.XC.Dispatching.View.CannelBillSelect frm = new THOK.XC.Dispatching.View.CannelBillSelect(args.Message[1], args.Message[2], args.dtInfo);
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        strValue = frm.strBillNo;
+                    }
+                }
+                
                    
                  
                 
             }
-            return "";
+            return strValue;
         }
     }
 }

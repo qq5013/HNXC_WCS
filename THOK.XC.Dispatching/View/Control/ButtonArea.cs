@@ -126,40 +126,7 @@ namespace THOK.XC.Dispatching.View
             Context.ProcessDispatcher.WriteToProcess("CraneProcess", "StockOutRequest", dtSend);
             IndexStar++;
         }
-        /// <summary>
-        /// 盘点入库
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnCheck_Click(object sender, EventArgs e) 
-        {
-            string strTaskNo = (string)Context.ProcessDispatcher.WriteToService("StockPLC_01", "01_1_195");
-
-            TaskDal dal = new TaskDal();
-            string[] strValue = dal.GetTaskInfo(strTaskNo);
-            DataTable dt = dal.TaskInfo(string.Format("TASK_ID='{0}'", strValue[0]));
-            if (dt.Rows.Count > 0)
-            {
-                DataRow dr = dt.Rows[0];
-                if (dr["TASK_TYPE"].ToString() == "13")
-                {
-                    SysStationDal sysdal = new SysStationDal();
-                    DataTable dtstation = sysdal.GetSationInfo(dr["CELL_CODE"].ToString(), "11");
-
-                    string writeItem = "01_2_195_";
-                    int[] ServiceW = new int[3];
-                    ServiceW[0] = int.Parse(strValue[1]); //任务号
-                    ServiceW[1] = int.Parse(dtstation.Rows[0]["STATION_NO"].ToString());//目的地址
-                    ServiceW[2] = 1;
-
-                    Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "1", ServiceW); //PLC写入任务
-                    Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "3", 1); //PLC写入任务
-
-                    dal.UpdateTaskDetailStation("195", dtstation.Rows[0]["STATION_NO"].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=3", strValue[0]));//更新货位到达入库站台，
-                    dal.UpdateTaskDetailCrane(dtstation.Rows[0]["STATION_NO"].ToString(), dr["CELL_CODE"].ToString(), "0", dtstation.Rows[0]["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO=4", strValue[0]));//更新调度堆垛机的其实位置及目标地址。
-                }
-            }
-        }
+        
         /// <summary>
         /// 托盘入库方式
         /// </summary>
@@ -222,20 +189,93 @@ namespace THOK.XC.Dispatching.View
         /// <param name="e"></param>
         private void btnSpotCheck_Click(object sender, EventArgs e)
         {
-            string writeItem = "01_2_195_";
-            Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "1", 1); //PLC写入任务
+ 
+             string strTaskNo = ((string)Context.ProcessDispatcher.WriteToService("StockPLC_01", "01_1_195")).PadLeft(4,'0');
+
+            string[] str = new string[3];
+            if (int.Parse(strTaskNo) >= 9000 && int.Parse(strTaskNo) <= 9299) //补料
+                str[0] = "1";
+            else if (int.Parse(strTaskNo) >= 9300 && int.Parse(strTaskNo) <= 9499)//抽检
+                str[0] = "2";
+            
+            str[1] = "";
+            str[2] = "";
+            TaskDal dal = new TaskDal(); //更具任务号，获取TaskID及BILL_NO
+            string[] strInfo = dal.GetTaskInfo(strTaskNo);
+            DataTable dt = dal.TaskInfo(string.Format("TASK_ID='{0}'", strInfo[0]));
+            DataTable dtProductInfo = dal.GetProductInfoByTaskID(strInfo[0]);
+            this.Stop(); //线程停止
+            string strValue = "";
+            while ((strValue = FormDialog.ShowDialog(str, dtProductInfo)) != "")
+            {
+                dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=2", strInfo[0]), "2");
+                string writeItem = "01_2_195_";
+                if (str[0] == "1" || str[0] == "2")  //抽检，补料
+                {
+                    dal.UpdateTaskState(strInfo[0], "2");
+
+                    BillDal billdal = new BillDal();
+                    billdal.UpdateBillMasterFinished(strInfo[1]);
+                    Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "1", 1); //PLC写入任务
+                }
+                break;
+            }
+            this.Resume();
+
+        }
+        /// <summary>
+        /// 盘点
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnCheckScan_Click(object sender, EventArgs e)
+        {
+            string strTaskNo = ((string)Context.ProcessDispatcher.WriteToService("StockPLC_01", "01_1_195")).PadLeft(4, '0');
+
+            string[] str = new string[3];
+           
+            str[0] = "4";
+           
+
+            str[1] = "";
+            str[2] = "";
+            TaskDal dal = new TaskDal(); //更具任务号，获取TaskID及BILL_NO
+            string[] strInfo = dal.GetTaskInfo(strTaskNo);
+            DataTable dt = dal.TaskInfo(string.Format("TASK_ID='{0}'", strInfo[0]));
+            DataTable dtProductInfo = dal.GetProductInfoByTaskID(strInfo[0]);
+            this.Stop(); //线程停止
+            string strValue = "";
+            while ((strValue = FormDialog.ShowDialog(str, dtProductInfo)) != "")
+            {
+                dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=2", strInfo[0]), "2");
+                string writeItem = "01_2_195_";
+
+                DataTable dtTask = dal.TaskInfo(string.Format("TASK_ID='{0}'", strInfo[0]));
+
+                DataRow dr = dtTask.Rows[0];
+                SysStationDal sysdal = new SysStationDal();
+                DataTable dtstation = sysdal.GetSationInfo(dr["CELL_CODE"].ToString(), "11");
+
+                if (strValue != "1")
+                {
+                    CellDal celldal = new CellDal();
+                    celldal.UpdateCellNewPalletCode(dr["CELL_CODE"].ToString(), strValue);
+                }
 
 
-            string strTaskNo = (string)Context.ProcessDispatcher.WriteToService("StockPLC_01", "01_1_195");
+                int[] ServiceW = new int[3];
+                ServiceW[0] = int.Parse(strInfo[1]); //任务号
+                ServiceW[1] = int.Parse(dtstation.Rows[0]["STATION_NO"].ToString());//目的地址
+                ServiceW[2] = 1;
 
-            TaskDal dal = new TaskDal();
-            string[] strValue = dal.GetTaskInfo(strTaskNo);
+                Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "1", ServiceW); //PLC写入任务
+                Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "3", 1); //PLC写入任务
 
-            dal.UpdateTaskState(strValue[0], "2");
-
-            BillDal billdal = new BillDal();
-            billdal.UpdateBillMasterFinished(strValue[1]);
-
+                dal.UpdateTaskDetailStation("195", dtstation.Rows[0]["STATION_NO"].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=3", strInfo[0]));//更新货位到达入库站台，
+                dal.UpdateTaskDetailCrane(dtstation.Rows[0]["STATION_NO"].ToString(), dr["CELL_CODE"].ToString(), "0", dtstation.Rows[0]["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO=4", strInfo[0]));//更新调度堆垛机的其实位置及目标地址。
+                break;
+            }
+            this.Resume();
         }
     }
 }

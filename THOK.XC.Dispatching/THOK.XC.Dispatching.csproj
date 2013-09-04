@@ -101,6 +101,18 @@
     <Compile Include="Util\ZebraPrinter\Character.cs" />
     <Compile Include="Util\ZebraPrinter\RawPrinterHelper.cs" />
     <Compile Include="Util\ZebraPrinter\ZebraPrinter.cs" />
+    <Compile Include="View\CannelBillSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\CannelBillSelect.Designer.cs">
+      <DependentUpon>CannelBillSelect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\CheckScan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\CheckScan.Designer.cs">
+      <DependentUpon>CheckScan.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\Control\ButtonArea.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -113,6 +125,18 @@
     <Compile Include="View\PalletSelect.Designer.cs">
       <DependentUpon>PalletSelect.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\ReadBarcode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\ReadBarcode.Designer.cs">
+      <DependentUpon>ReadBarcode.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\StockToStation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\StockToStation.Designer.cs">
+      <DependentUpon>StockToStation.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -120,12 +144,24 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\CannelBillSelect.resx">
+      <DependentUpon>CannelBillSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\CheckScan.resx">
+      <DependentUpon>CheckScan.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="View\Control\ButtonArea.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ButtonArea.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\PalletSelect.resx">
       <DependentUpon>PalletSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\ReadBarcode.resx">
+      <DependentUpon>ReadBarcode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\StockToStation.resx">
+      <DependentUpon>StockToStation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

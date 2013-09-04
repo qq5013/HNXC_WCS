@@ -26,9 +26,16 @@ namespace THOK.XC.Process.Dao
         /// </summary>
         /// <param name="BarCode"></param>
         /// <returns></returns>
-        public DataTable  GetProductInfo(string BarCode)
+        public DataTable GetProductInfo(string BarCode)
         {
-            return null;
+            string strSQL = string.Format("SELECT  T.PRODUCT_CODE,T.PRODUCT_BARCODE,T.BILL_NO,P.*,CIGARETTE_NAME,G.GRADE_NAME,O.ORIGINAL_NAME,S.STYLE_NAME " +
+                            "FROM  WMS_PRODUCT_STATE T LEFT JOIN CMD_PRODUCT P ON T.PRODUCT_CODE=P.PRODUCT_CODE " +
+                            "LEFT JOIN WMS_BILL_MASTER M ON T.BILL_NO=M.BILL_NO " +
+                            "LEFT JOIN CMD_CIGARETTE C ON C.CIGARETTE_CODE=M.CIGARETTE_CODE " +
+                            "LEFT JOIN CMD_PRODUCT_ORIGINAL O ON O.ORIGINAL_CODE=P.ORIGINAL_CODE " +
+                            "LEFT JOIN CMD_PRODUCT_GRADE G ON G.GRADE_CODE=P.GRADE_CODE " +
+                            "LEFT JOIN CMD_PRODUCT_STYLE S ON S.STYLE_NO=P.STYLE_NO WHERE PRODUCT_BARCODE='{0}'", BarCode);
+            return ExecuteQuery(strSQL).Tables[0];
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Data;
 
 namespace THOK.MCP
 {
@@ -8,20 +9,28 @@ namespace THOK.MCP
     public class DialogEventArgs
     {
        
-        private string message;
-
+        private string[] message;
+        private DataTable dtinfo;
        
-        public string Message
+        public string[] Message
         {
             get
             {
                 return message;
             }
         }
+        public DataTable dtInfo
+        {
+            get
+            {
+                return dtinfo;
+            }
+        }
 
-        public DialogEventArgs(string message)
+        public DialogEventArgs(string[] message,DataTable dt)
         {
             this.message = message;
+            this.dtinfo = dt;
         }
     }
     public class FormDialog
@@ -33,11 +42,11 @@ namespace THOK.MCP
         private FormDialog()
         {
         }
-        public static string ShowDialog(string message)
+        public static string ShowDialog(string[] message,DataTable dt)
         {
             if (OnDialog != null)
             {
-                return OnDialog(new DialogEventArgs(message));
+                return OnDialog(new DialogEventArgs(message, dt));
             }
             return "";
         }

@@ -4,7 +4,7 @@
     <OPCGroup GroupName="DefaultGroup" GroupString="S7:[@LOCALSERVER]" UpdateRate="350">
       <OPCItem ItemName="01_1_218_1" ClientHandler="1" OPCItemName="DB1,INT0,1" ItemType="READ" IsActive="false" />
       <!--一层入库请求-->
-      <OPCItem ItemName="01_1_218_1" ClientHandler="1" OPCItemName="DB1,INT0,1"  ItemType="READ"/>
+   
       <OPCItem ItemName="01_1_218_2" ClientHandler="2" OPCItemName="DB1,STRING0.100"  ItemType="READ"/>
       <OPCItem ItemName="01_1_110_1" ClientHandler="3" OPCItemName="DB1,INT2,1"  ItemType="READ"/>
       <OPCItem ItemName="01_1_110_2" ClientHandler="4" OPCItemName="DB1,STRING100.100"  ItemType="READ"/>

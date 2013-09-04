@@ -103,21 +103,23 @@ namespace THOK.XC.Process.Process_02
 
                     dal.UpdateTaskState(strTask[0], "2");//更新出库任务完成
 
+                    DataTable dtProductInfo = dal.GetProductInfoByTaskID(strTask[0]);
+
                     string strWhere = string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=2", CancelTaskID);
                     DataTable dt = dal.TaskCarDetail(strWhere);
                     WriteToProcess("CarProcess", "CarInRequest", dt);//调度穿梭车入库。
 
 
-                    View.CannelBillSelect frm = new View.CannelBillSelect(strTask[0]);
-                    frm.strBadCode = "";
-
-
-
-
-
-                    if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                    string strBillNo = "";
+                    string[] strMessage = new string[3];
+                    strMessage[0] = "5";
+                    strMessage[1] = strTask[0];
+                    strMessage[2] = NewPalletCode;
+                   
+                    this.Stop();
+                    while ((strBillNo = FormDialog.ShowDialog(strMessage,dtProductInfo)) != "")
                     {
-                        string strNewBillNo = frm.strBillNo;
+                        string strNewBillNo = strBillNo;
 
                         string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo);
                         DataTable dtOutTask = dal.CraneOutTask(string.Format("TASK.TASK_ID='{0}'", strOutTaskID));
@@ -125,11 +127,13 @@ namespace THOK.XC.Process.Process_02
                         WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
 
 
-                      
+
                         StationState[0] = strTask[0];//TaskID;
                         StationState[1] = "4";
                         WriteToProcess("CraneProcess", "StockOutRequest", StationState); //更新堆垛机Process 状态为4.
+                        break;
                     }
+                    this.Resume();
 
 
                 }
@@ -139,41 +143,5 @@ namespace THOK.XC.Process.Process_02
                 Logger.Error("入库任务请求批次生成处理失败，原因：" + e.Message);
             }
         }
-
-        private DataTable dtCarInfo(string str)
-        {
-            //根据位置获取小车信息，位置小于当前位置的，加上总长度。按照 位置 desc 排序
-            return null;
-        }
-
-        private string GetCarNo()
-        {
-            DataTable dt = dtCarInfo("");//已经按照位置顺序排序
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                bool blnB = false;//true：忙碌，false：空闲
-                int Curd=0;//当前申请小车位置
-                int intd;//位置
-                if (blnB)
-                {
-                    intd = 0;//目的地
-                }
-                else
-                {
-                    intd = 0;//当前位置
-                }
-                if (Math.Abs(Curd - intd) > 100)
-                {
-                    //获取当前小车
-                    break;
-                }
-
-                
-                 
-            }
-            return "";
-        }
-
-        
     }
 }
