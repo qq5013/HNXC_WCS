@@ -63,6 +63,9 @@
             this.imgList.Images.SetKeyName(8, "swap32.gif");
             this.imgList.Images.SetKeyName(9, "down32.gif");
             this.imgList.Images.SetKeyName(10, "setup32.gif");
+            this.imgList.Images.SetKeyName(11, "05.ico");
+            this.imgList.Images.SetKeyName(12, "pic.png");
+            this.imgList.Images.SetKeyName(13, "开始出库.BMP");
             // 
             // pnlButton
             // 
@@ -130,7 +133,7 @@
             this.btnStart.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnStart.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnStart.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnStart.ImageIndex = 0;
+            this.btnStart.ImageIndex = 12;
             this.btnStart.ImageList = this.imgList;
             this.btnStart.Location = new System.Drawing.Point(3, 3);
             this.btnStart.Name = "btnStart";
@@ -259,7 +262,7 @@
             this.btnVerficate.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnVerficate.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnVerficate.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnVerficate.ImageIndex = 7;
+            this.btnVerficate.ImageIndex = 11;
             this.btnVerficate.ImageList = this.imgList;
             this.btnVerficate.Location = new System.Drawing.Point(441, 3);
             this.btnVerficate.Name = "btnVerficate";
