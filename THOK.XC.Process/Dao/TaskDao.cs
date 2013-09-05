@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using THOK.Util;
+using System.Data.OracleClient;
 
 namespace THOK.XC.Process.Dao
 {
@@ -277,7 +278,7 @@ namespace THOK.XC.Process.Dao
         /// 分配货位,返回 0:TaskID，1:任务号，2:货物到达入库站台的目的地址--平面号,3:堆垛机入库站台，4:货位，5:堆垛机编号
         /// </summary>
         /// <param name="strWhere"></param>
-        public string [] AssignCell(string strWhere)
+        public string [] AssignCell(string strWhere,string ApplyStation)
         {
             string[] strValue = new string[6];
             string where = "1=1";
@@ -295,9 +296,13 @@ namespace THOK.XC.Process.Dao
                 StoredProcParameter parameters = new StoredProcParameter();
                 parameters.AddParameter("VBILLNO", billNo);
                 parameters.AddParameter("VPRODUCTCODE", ProductCode);
-                parameters.AddParameter("VCELL", "", DbType.String, ParameterDirection.Output);
-                ExecuteNonQuery("APPLYCELL", parameters);
+                parameters.AddParameter("VCELL", "00000000", DbType.String, ParameterDirection.Output);
+                if (ApplyStation == "131")
+                    ExecuteNonQuery("APPLYPALLETCELL", parameters);
+                else
+                    ExecuteNonQuery("APPLYCELL", parameters);
                 VCell = parameters["VCELL"].ToString();
+
             }
             else
             {

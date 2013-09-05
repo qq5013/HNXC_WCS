@@ -16,6 +16,10 @@ namespace THOK.XC.Process.Process_01
             */
             try
             {
+                int obj = (short)ObjectUtil.GetObject(stateItem.State);
+                if (obj == null || obj == 0)
+                    return;
+
                 switch (stateItem.ItemName)
                 {
                     case "01_1_136":
@@ -31,7 +35,7 @@ namespace THOK.XC.Process.Process_01
                     case "01_1_186":
                         break;
                 }
-                string TaskNo = ((int)stateItem.State).ToString().PadLeft(4, '0'); //读取PLC任务号。
+                string TaskNo = obj.ToString().PadLeft(4, '0'); //读取PLC任务号。
                 TaskDal taskDal = new TaskDal();
                 taskDal.UpdateTaskDetailState(string.Format("TASK_NO='{0}' AND ITEM_NO='2'", TaskNo), "2");
                 string strWhere = string.Format("TASK_NO='{0}'AND DETAIL.STATE='0' and ITEM_NO='3'", TaskNo);
@@ -41,7 +45,7 @@ namespace THOK.XC.Process.Process_01
             }
             catch (Exception e)
             {
-                Logger.Error("入库任务请求批次生成处理失败，原因：" + e.Message);
+                Logger.Error("THOK.XC.Process.Process_01.StockInStationProcess：" + e.Message);
             }
         }
     }

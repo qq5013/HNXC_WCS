@@ -17,13 +17,14 @@ namespace THOK.XC.Process.Process_01
              *  
             */
 
-            int intRequest = (int)stateItem.State;
-          
-            if (intRequest == 0) //申请位为0
-                return;
-            string TARGET_CODE = "";
+
             try
             {
+                int intRequest = (short)ObjectUtil.GetObject(stateItem.State);
+
+                if (intRequest == 0) //申请位为0
+                    return;
+                string TARGET_CODE = "";
                 switch (stateItem.ItemName)
                 {
                     case "01_1_158_1":
@@ -44,7 +45,7 @@ namespace THOK.XC.Process.Process_01
             }
             catch (Exception e)
             {
-                Logger.Error("入库任务请求批次生成处理失败，原因：" + e.Message);
+                Logger.Error("THOK.XC.Process.Process_01.PalletOutRequestProcess：" + e.Message);
             }
         }
     }

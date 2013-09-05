@@ -16,8 +16,11 @@ namespace THOK.XC.Process.Dal
         /// <returns>TaskID</returns>
         public string CreatePalletInBillTask(bool blnOne)
         {
-            PalletBillDao dao = new PalletBillDao();
-            return dao.CreatePalletInBillTask(blnOne);
+            using (PersistentManager pm = new PersistentManager())
+            {
+                PalletBillDao dao = new PalletBillDao();
+                return dao.CreatePalletInBillTask(blnOne);
+            }
         }
 
          /// <summary>
@@ -25,14 +28,20 @@ namespace THOK.XC.Process.Dal
         /// </summary>
         public string CreatePalletOutBillTask(string TARGET_CODE)
         {
-            PalletBillDao dao = new PalletBillDao();
-            return dao.CreatePalletOutBillTask(TARGET_CODE);
+            using (PersistentManager pm = new PersistentManager())
+            {
+                PalletBillDao dao = new PalletBillDao();
+                return dao.CreatePalletOutBillTask(TARGET_CODE);
+            }
         }
 
         public void UpdateBillMasterFinished(string BillNo)
         {
-            PalletBillDao dao = new PalletBillDao();
-            dao.UpdateBillMasterFinished(BillNo);
+            using (PersistentManager pm = new PersistentManager())
+            {
+                PalletBillDao dao = new PalletBillDao();
+                dao.UpdateBillMasterFinished(BillNo);
+            }
         }
     }
 }

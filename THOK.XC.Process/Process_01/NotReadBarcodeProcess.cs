@@ -20,6 +20,8 @@ namespace THOK.XC.Process.Process_01
 
                 string strBadFlag = "";
                 int obj = (short)ObjectUtil.GetObject(stateItem.State);
+                if (obj == 0)
+                    return;
                 switch (obj)
                 {
                     case 1:
@@ -50,7 +52,7 @@ namespace THOK.XC.Process.Process_01
             }
             catch (Exception e)
             {
-                Logger.Error("入库任务请求批次生成处理失败，原因：" + e.Message);
+                Logger.Error("THOK.XC.Process.Process_01.NotReadBarcodeProcess:" + e.Message);
             }
         }
     }

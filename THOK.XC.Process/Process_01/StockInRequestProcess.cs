@@ -11,22 +11,23 @@ namespace THOK.XC.Process.Process_01
     {
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
         {
-           
-           /* 
-            * 一楼入库货位申请
-            */ 
-            string FromStation = "";
-            string writeItem = "";
-        
-            string ToStation = "";
-            string TaskID = "";
-            object[] o = ObjectUtil.GetObjects(stateItem.State);
-            int intRequest = (short)o[0];
-            string BarCode = ""; //读取PLC，获得产品编码
-            if (intRequest != 1) //申请位为0
-                return;
+
+            /* 
+             * 一楼入库货位申请
+             */
             try
             {
+                string FromStation = "";
+                string writeItem = "";
+
+                string ToStation = "";
+                string TaskID = "";
+                object[] o = ObjectUtil.GetObjects(stateItem.State);
+                int intRequest = (short)o[0];
+                string BarCode = ""; //读取PLC，获得产品编码
+                if (intRequest != 1) //申请位为0
+                    return;
+
                 switch (stateItem.ItemName)
                 {
                     case "01_1_218_1":
@@ -57,21 +58,21 @@ namespace THOK.XC.Process.Process_01
                     case "PllateInRequest":
                         break;
                 }
-                
+
                 string strWhere = "";
                 if (TaskID == "")
                     strWhere = string.Format("PRODUCT_BARCODE='{0}'", BarCode);
                 else
                     strWhere = string.Format("TASK_ID='{0}'", TaskID);
                 TaskDal dal = new TaskDal();
-                string[] strValue = dal.AssignCell(strWhere);//货位申请
-              
+                string[] strValue = dal.AssignCell(strWhere, ToStation);//货位申请
+
                 dal.UpdateTaskState(strValue[0], "1");//更新任务开始执行
                 ProductStateDal StateDal = new ProductStateDal();
                 StateDal.UpdateProductCellCode(strValue[0], strValue[4]); //更新Product_State 货位
                 dal.UpdateTaskDetailStation(FromStation, ToStation, "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", strValue[0])); //更新货位申请起始地址及目标地址。
 
-                int [] ServiceW =new int[2];
+                int[] ServiceW = new int[2];
                 ServiceW[0] = int.Parse(strValue[1]); //任务号
                 ServiceW[1] = int.Parse(strValue[2]);//目的地址
                 //if (stateItem.ItemName == "01_1_131")
@@ -87,7 +88,7 @@ namespace THOK.XC.Process.Process_01
             }
             catch (Exception e)
             {
-                Logger.Error("入库任务请求批次生成处理失败，原因：" + e.Message);
+                Logger.Error("THOK.XC.Process.Process_01.StockInRequestProcess：" + e.Message);
             }
         }
     }

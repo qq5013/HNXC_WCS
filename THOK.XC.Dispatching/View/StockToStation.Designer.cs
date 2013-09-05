@@ -232,6 +232,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "StockToStation";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "StockToStation";
             this.Load += new System.EventHandler(this.StockToStation_Load);
             this.groupBox1.ResumeLayout(false);

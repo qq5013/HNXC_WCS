@@ -393,6 +393,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "CheckScan";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "CheckScan";
             this.Activated += new System.EventHandler(this.CheckScan_Activated);
             this.Load += new System.EventHandler(this.CheckScan_Load);
