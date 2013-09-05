@@ -4,12 +4,12 @@
     <OPCGroup GroupName="DefaultGroup" GroupString="S7:[@LOCALSERVER]" UpdateRate="350">
       <!--一层入库请求-->      
       <OPCItem ItemName="01_1_110_1" ClientHandler="1" OPCItemName="DB1,INT40,1"  ItemType="READ"/>
-      <OPCItem ItemName="01_1_110_2" ClientHandler="2" OPCItemName="DB1,CHAR0,40"  ItemType="READ"/>
+      <OPCItem ItemName="01_1_110_2" ClientHandler="2" OPCItemName="DB1,CHAR0,40"  ItemType="READ" IsActive="false"/>
       <OPCItem ItemName="01_1_126_1" ClientHandler="3" OPCItemName="DB1,INT110,1"  ItemType="READ"/>
-      <OPCItem ItemName="01_1_126_2" ClientHandler="4" OPCItemName="DB1,CHAR70,40"  ItemType="READ"/>
+      <OPCItem ItemName="01_1_126_2" ClientHandler="4" OPCItemName="DB1,CHAR70,40"  ItemType="READ" IsActive="false"/>
       <OPCItem ItemName="01_1_131" ClientHandler="5" OPCItemName="DB1,INT120,1"  ItemType="READ"/>
       <OPCItem ItemName="01_1_218_1" ClientHandler="6" OPCItemName="DB1,INT280,1"  ItemType="READ"/>
-      <OPCItem ItemName="01_1_218_2" ClientHandler="7" OPCItemName="DB1,CHAR240,40"  ItemType="READ"/>      
+      <OPCItem ItemName="01_1_218_2" ClientHandler="7" OPCItemName="DB1,CHAR240,40"  ItemType="READ" IsActive="false"/>      
       <OPCItem ItemName="01_2_110_1" ClientHandler="8" OPCItemName="DB1,INT900,3"  ItemType="WRITE"/>
       <OPCItem ItemName="01_2_110_2" ClientHandler="9" OPCItemName="DB1,CHAR948,50"  ItemType="WRITE"/>
       <OPCItem ItemName="01_2_110_3" ClientHandler="10" OPCItemName="DB1,INT998,1"  ItemType="WRITE"/>
@@ -36,12 +36,12 @@
       <OPCItem ItemName="01_1_158_1" ClientHandler="28" OPCItemName="DB1,INT160,1"  ItemType="READ"/>
       <OPCItem ItemName="01_1_200_1" ClientHandler="29" OPCItemName="DB1,INT220,1"  ItemType="READ"/>
       <!--一层出库站台读-->
-      <OPCItem ItemName="01_1_138" ClientHandler="30" OPCItemName="DB1,INT3700,1"  ItemType="READ"/>
-      <OPCItem ItemName="01_1_142" ClientHandler="31" OPCItemName="DB1,INT4100,1"  ItemType="READ"/>
-      <OPCItem ItemName="01_1_154" ClientHandler="32" OPCItemName="DB1,INT5300,1"  ItemType="READ"/>
-      <OPCItem ItemName="01_1_172" ClientHandler="33" OPCItemName="DB1,INT7100,1"  ItemType="READ"/>
-      <OPCItem ItemName="01_1_180" ClientHandler="34" OPCItemName="DB1,INT7900,1"  ItemType="READ"/>
-      <OPCItem ItemName="01_1_188" ClientHandler="35" OPCItemName="DB1,INT8700,1"  ItemType="READ"/>
+      <OPCItem ItemName="01_1_138" ClientHandler="30" OPCItemName="DB1,INT3700,1"  ItemType="READ" IsActive="false"/>
+      <OPCItem ItemName="01_1_142" ClientHandler="31" OPCItemName="DB1,INT4100,1"  ItemType="READ" IsActive="false"/>
+      <OPCItem ItemName="01_1_154" ClientHandler="32" OPCItemName="DB1,INT5300,1"  ItemType="READ" IsActive="false"/>
+      <OPCItem ItemName="01_1_172" ClientHandler="33" OPCItemName="DB1,INT7100,1"  ItemType="READ" IsActive="false"/>
+      <OPCItem ItemName="01_1_180" ClientHandler="34" OPCItemName="DB1,INT7900,1"  ItemType="READ" IsActive="false"/>
+      <OPCItem ItemName="01_1_188" ClientHandler="35" OPCItemName="DB1,INT8700,1"  ItemType="READ" IsActive="false"/>
       <!--一层出库站台写-->
       <OPCItem ItemName="01_2_138_1" ClientHandler="36" OPCItemName="DB1,INT3700,3"  ItemType="WRITE"/>
       <OPCItem ItemName="01_2_138_2" ClientHandler="37" OPCItemName="DB1,CHAR3708,90"  ItemType="WRITE"/>
