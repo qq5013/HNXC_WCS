@@ -80,8 +80,15 @@ namespace THOK.XC.Process.Process_01
                 //else
                 //    ServiceW[2] = 1;
                 WriteToService("StockPLC_01", writeItem + "1", ServiceW); //PLC写入任务
-                WriteToService("StockPLC_01", writeItem + "2", BarCode); //PLC写入任务
-                WriteToService("StockPLC_01", writeItem + "3", 1); //PLC写入任务
+                if (stateItem.ItemName == "01_1_131")
+                {
+                    WriteToService("StockPLC_01", writeItem + "2", 1);
+                }
+                else
+                {
+                    WriteToService("StockPLC_01", writeItem + "2", BarCode); //PLC写入任务
+                    WriteToService("StockPLC_01", writeItem + "3", 1); //PLC写入任务
+                }
                 dal.UpdateTaskDetailStation(ToStation, strValue[2], "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", strValue[0]));//更新货位到达入库站台，
                 dal.UpdateTaskDetailCrane(strValue[3], "30" + strValue[4], "0", strValue[5], string.Format("TASK_ID='{0}' AND ITEM_NO=3", strValue[0]));//更新调度堆垛机的其实位置及目标地址。
 

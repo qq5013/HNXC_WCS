@@ -59,18 +59,15 @@ namespace THOK.XC.Process.Dao
             else
             {
                 strTaskDetailNo = GetTaskDetailNo();
-                using (PersistentManager pm = new PersistentManager())
-                {
 
-                    strSQL = string.Format("INSERT INTO WCS_TASK_DETAIL(TASK_ID,ITEM_NO,TASK_NO,ASSIGNMENT_ID,STATE,DESCRIPTION,BILL_NO) " +
-                             "SELECT  WCS_TASK.TASK_ID,SYS_TASK_ROUTE.ITEM_NO,'{1}','{2}','0'," +
-                             "SYS_TASK_ROUTE.DESCRIPTION,WCS_TASK.BILL_NO " +
-                             "FROM WCS_TASK  " +
-                             "LEFT JOIN SYS_TASK_ROUTE ON WCS_TASK.TASK_TYPE=SYS_TASK_ROUTE.TASK_TYPE " +
-                             "WHERE TASK_ID='{0}' " +
-                             "ORDER BY SYS_TASK_ROUTE.ITEM_NO ", TaskID, strTaskDetailNo, "0000" + strTaskDetailNo);
-                    ExecuteNonQuery(strSQL);
-                }
+                strSQL = string.Format("INSERT INTO WCS_TASK_DETAIL(TASK_ID,ITEM_NO,TASK_NO,ASSIGNMENT_ID,STATE,DESCRIPTION,BILL_NO) " +
+                         "SELECT  WCS_TASK.TASK_ID,SYS_TASK_ROUTE.ITEM_NO,'{1}','{2}','0'," +
+                         "SYS_TASK_ROUTE.DESCRIPTION,WCS_TASK.BILL_NO " +
+                         "FROM WCS_TASK  " +
+                         "LEFT JOIN SYS_TASK_ROUTE ON WCS_TASK.TASK_TYPE=SYS_TASK_ROUTE.TASK_TYPE " +
+                         "WHERE TASK_ID='{0}' " +
+                         "ORDER BY SYS_TASK_ROUTE.ITEM_NO ", TaskID, strTaskDetailNo, "0000" + strTaskDetailNo);
+                ExecuteNonQuery(strSQL);
             }
             return strTaskDetailNo;
         }
