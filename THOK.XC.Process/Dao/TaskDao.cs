@@ -415,5 +415,22 @@ namespace THOK.XC.Process.Dao
             return int.Parse(dt.Rows[0][0].ToString());
         }
 
+        /// <summary>
+        /// 根据任务号，返回产品信息。
+        /// </summary>
+        /// <param name="TaskID"></param>
+        /// <returns></returns>
+        public DataTable GetProductInfoByTaskID(string TaskID)
+        {
+            string strSQL = string.Format("SELECT T.PRODUCT_CODE,T.PRODUCT_BARCODE,T.BILL_NO,P.*,CIGARETTE_NAME,G.GRADE_NAME,O.ORIGINAL_NAME,S.STYLE_NAME FROM WCS_TASK T LEFT JOIN CMD_PRODUCT P ON T.PRODUCT_CODE=P.PRODUCT_CODE " +
+                            "LEFT JOIN WMS_BILL_MASTER M ON T.BILL_NO=M.BILL_NO " +
+                            "LEFT JOIN CMD_CIGARETTE C ON C.CIGARETTE_CODE=M.CIGARETTE_CODE " +
+                            "LEFT JOIN CMD_PRODUCT_ORIGINAL O ON O.ORIGINAL_CODE=P.ORIGINAL_CODE " +
+                            "LEFT JOIN CMD_PRODUCT_GRADE G ON G.GRADE_CODE=P.GRADE_CODE " +
+                            "LEFT JOIN CMD_PRODUCT_STYLE S ON S.STYLE_NO=P.STYLE_NO WHERE  TASK_ID='{0}'", TaskID);
+            return ExecuteQuery(strSQL).Tables[0];
+        }
+
+
     }
 }

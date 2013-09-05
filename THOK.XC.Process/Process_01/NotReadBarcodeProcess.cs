@@ -35,14 +35,18 @@ namespace THOK.XC.Process.Process_01
                         strBadFlag = "两边条码不一致";
                         break;
                 }
-
-                View.ReadBarcode frm = new View.ReadBarcode();
-                frm.strBadFlag = strBadFlag;
-                if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    WriteToProcess("StockPLC_01", "01_2_124_1", frm.strBarCode); //写入条码
-                    WriteToProcess("StockPLC_01", "01_2_124_2", 1);//写入标识。
-                }
+                string strBarCode;
+               string[]  strMessage=new string[3];
+               strMessage[0] = "3";
+               strMessage[1] = strBadFlag;
+               while ((strBarCode = FormDialog.ShowDialog(strMessage,null)) != "")
+               {
+                   this.Stop();
+                   WriteToProcess("StockPLC_01", "01_2_124_1", strBarCode); //写入条码
+                   WriteToProcess("StockPLC_01", "01_2_124_2", 1);//写入标识。
+                   break;
+               }
+               this.Resume();
             }
             catch (Exception e)
             {

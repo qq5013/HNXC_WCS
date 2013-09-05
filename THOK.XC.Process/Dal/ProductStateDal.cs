@@ -23,9 +23,10 @@ namespace THOK.XC.Process.Dal
         /// </summary>
         /// <param name="BarCode"></param>
         /// <returns></returns>
-        public string  GetProductInfo(string BarCode)
+        public DataTable  GetProductInfoByBarCode(string BarCode)
         {
-            return "";
+            ProductStateDao dao = new ProductStateDao();
+            return dao.GetProductInfo(BarCode);
         }
     }
 }

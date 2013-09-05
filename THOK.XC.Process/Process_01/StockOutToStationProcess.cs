@@ -18,18 +18,7 @@ namespace THOK.XC.Process.Process_01
             try
             {
 
-                switch (stateItem.ItemName)
-                {
-                  
-                    case "01_1_195":
-
-                        break;
-                    case "01_1_122":
-
-                        break;
-                    default:
-                        break;
-                }
+               
                 object sta = "";
 
                 TaskDal dal = new TaskDal(); //更具任务号，获取TaskID及BILL_NO

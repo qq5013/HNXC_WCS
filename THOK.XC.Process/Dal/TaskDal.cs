@@ -196,6 +196,16 @@ namespace THOK.XC.Process.Dal
             return dao.TaskCount(BillNo);
  
         }
+         /// <summary>
+        /// 根据任务号，返回产品信息。
+        /// </summary>
+        /// <param name="TaskID"></param>
+        /// <returns></returns>
+        public DataTable GetProductInfoByTaskID(string TaskID)
+        {
+            TaskDao dao = new TaskDao();
+            return dao.GetProductInfoByTaskID(TaskID);
+        }
 
 
 
