@@ -54,13 +54,13 @@
             this.txtSTYLE_NAME = new System.Windows.Forms.TextBox();
             this.txtORIGINAL_NAME = new System.Windows.Forms.TextBox();
             this.txtCIGARETTE_NAME = new System.Windows.Forms.TextBox();
+            this.txtProductBarCode = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.txtProductBarCode = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.label16 = new System.Windows.Forms.Label();
@@ -319,6 +319,14 @@
             this.txtCIGARETTE_NAME.Size = new System.Drawing.Size(123, 21);
             this.txtCIGARETTE_NAME.TabIndex = 8;
             // 
+            // txtProductBarCode
+            // 
+            this.txtProductBarCode.Location = new System.Drawing.Point(68, 24);
+            this.txtProductBarCode.Name = "txtProductBarCode";
+            this.txtProductBarCode.ReadOnly = true;
+            this.txtProductBarCode.Size = new System.Drawing.Size(334, 21);
+            this.txtProductBarCode.TabIndex = 7;
+            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -373,14 +381,6 @@
             this.label3.TabIndex = 1;
             this.label3.Text = "牌    号：";
             // 
-            // txtProductBarCode
-            // 
-            this.txtProductBarCode.Location = new System.Drawing.Point(68, 24);
-            this.txtProductBarCode.Name = "txtProductBarCode";
-            this.txtProductBarCode.ReadOnly = true;
-            this.txtProductBarCode.Size = new System.Drawing.Size(334, 21);
-            this.txtProductBarCode.TabIndex = 7;
-            // 
             // label2
             // 
             this.label2.AutoSize = true;
@@ -434,7 +434,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ReadBarcode";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "错误条码处理";
             this.Activated += new System.EventHandler(this.ReadBarcode_Activated);
             this.Load += new System.EventHandler(this.ReadBarcode_Load);

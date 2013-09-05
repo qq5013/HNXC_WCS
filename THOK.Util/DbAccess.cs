@@ -6,6 +6,7 @@
     using System.Data.Common;
     using System.Data.SqlClient;
     using System.Xml;
+    
 
     public class DbAccess
     {
@@ -387,7 +388,14 @@
                     parameter2.Value = parameter.ParameterValue;
                     parameter2.DbType = parameter.ParameterType;
                     parameter2.Direction = parameter.ParameterDirectioin;
+                    if (dbCommand is System.Data.OracleClient.OracleCommand && parameter.ParameterDirectioin == ParameterDirection.Output && parameter.ParameterType == System.Data.DbType.String)
+                    {
+                        parameter2.Size = parameter.ParameterValue.ToString().Length;
+                    }
                     dbCommand.Parameters.Add(parameter2);
+                   
+                    
+                   
                 }
             }
         }

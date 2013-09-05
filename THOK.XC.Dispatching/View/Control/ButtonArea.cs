@@ -160,7 +160,7 @@ namespace THOK.XC.Dispatching.View
 
                      string strWhere = string.Format("TASK_ID='{0}'", TaskID);
                      TaskDal dal = new TaskDal();
-                     string[] strValue = dal.AssignCell(strWhere);//货位申请
+                     string[] strValue = dal.AssignCell(strWhere,"122");//货位申请
 
                      dal.UpdateTaskState(strValue[0], "1");//更新任务开始执行
                      ProductStateDal StateDal = new ProductStateDal();

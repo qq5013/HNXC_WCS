@@ -16,7 +16,7 @@ namespace THOK.XC.Process.Dao
         /// <returns>TaskID</returns>
         public string CreatePalletInBillTask(bool blnOne)
         {
-            string strBillNo = GetBillNo("TK");
+            string strBillNo = GetBillNo("PIS");
 
             string strSQL = string.Format("INSERT INTO WMS_PALLET_MASTER (BILL_NO,BILL_DATE,BTYPE_CODE,WAREHOUSE_CODE,STATUS,STATE,OPERATER,OPERATE_DATE,TASKER,TASK_DATE)" +
                 "values ('{0}',SYSDATE,'{1}','001','1','3','000001',SYSDATE,'000001',SYSDATE)", strBillNo, blnOne ? "010" : "011");
@@ -54,7 +54,10 @@ namespace THOK.XC.Process.Dao
             if (dt.Rows.Count > 0)
             {
                 string value = dt.Rows[0][0].ToString();
-                strNew = PreCode + (int.Parse(value.Substring(PreCode.Length, int.Parse(dr["SERIAL_LENGTH"].ToString()))) + 1).ToString().PadLeft(int.Parse(dr["SERIAL_LENGTH"].ToString()), '0');
+                if (string.IsNullOrEmpty(value))
+                    strNew = PreCode + "1".PadLeft(int.Parse(dr["SERIAL_LENGTH"].ToString()), '0');
+                else
+                    strNew = PreCode + (int.Parse(value.Substring(PreCode.Length, int.Parse(dr["SERIAL_LENGTH"].ToString()))) + 1).ToString().PadLeft(int.Parse(dr["SERIAL_LENGTH"].ToString()), '0');
             }
             else
             {
