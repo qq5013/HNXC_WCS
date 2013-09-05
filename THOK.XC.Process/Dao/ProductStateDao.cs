@@ -18,7 +18,7 @@ namespace THOK.XC.Process.Dao
             string BillNo = TaskID.Substring(0,TaskID.Length-2);
             string ItemNo = int.Parse(TaskID.Substring(TaskID.Length - 2)).ToString();
 
-            string strSQL = string.Format("UPDATE WMS_PRODUCT_STATE SET CELL_CODE='{0}' WHERE BILLNO='{1}' AND ITEM_NO='{2}'", strCell, BillNo, ItemNo);
+            string strSQL = string.Format("UPDATE WMS_PRODUCT_STATE SET CELL_CODE='{0}' WHERE BILL_NO='{1}' AND ITEM_NO='{2}'", strCell, BillNo, ItemNo);
             ExecuteNonQuery(strSQL);
         }
         /// <summary>

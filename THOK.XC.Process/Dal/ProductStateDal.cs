@@ -15,8 +15,11 @@ namespace THOK.XC.Process.Dal
         /// <param name="state"></param>
         public void UpdateProductCellCode(string TaskID, string strCell)
         {
-            ProductStateDao dao = new ProductStateDao();
-            dao.UpdateProductCellCode(TaskID, strCell);
+            using (PersistentManager pm = new PersistentManager())
+            {
+                ProductStateDao dao = new ProductStateDao();
+                dao.UpdateProductCellCode(TaskID, strCell);
+            }
         }
         /// <summary>
         /// 根据条码返回条码信息。
@@ -25,8 +28,11 @@ namespace THOK.XC.Process.Dal
         /// <returns></returns>
         public DataTable  GetProductInfoByBarCode(string BarCode)
         {
-            ProductStateDao dao = new ProductStateDao();
-            return dao.GetProductInfo(BarCode);
+            using (PersistentManager pm = new PersistentManager())
+            {
+                ProductStateDao dao = new ProductStateDao();
+                return dao.GetProductInfo(BarCode);
+            }
         }
     }
 }
