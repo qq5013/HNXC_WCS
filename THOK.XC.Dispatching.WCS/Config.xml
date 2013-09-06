@@ -9,6 +9,9 @@
     <Service Name="Crane" Type="THOK.MCP.Service.TCP.dll, THOK.MCP.Service.TCP.TCPService" ConfigFile="Crane.xml" />
   </Services>
   <Processes>
+    <!--堆垛机Process-->
+    <Process Name="CraneProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_Crane.CraneProcess">      
+    </Process>
     <!--一层入库申请-->
     <Process Name="StockInRequestProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.StockInRequestProcess">
       <Item ServiceName="StockPLC_01" ItemName="01_1_218_1" />
