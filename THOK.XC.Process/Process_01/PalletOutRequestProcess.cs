@@ -20,10 +20,10 @@ namespace THOK.XC.Process.Process_01
 
             try
             {
-                int intRequest = (short)ObjectUtil.GetObject(stateItem.State);
-
-                if (intRequest == 0) //申请位为0
+                object obj = ObjectUtil.GetObject(stateItem.State);
+                if (obj == null || obj.ToString() == "0")
                     return;
+               
                 string TARGET_CODE = "";
                 switch (stateItem.ItemName)
                 {
