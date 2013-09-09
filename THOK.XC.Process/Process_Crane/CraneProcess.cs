@@ -16,6 +16,36 @@ namespace THOK.XC.Process.Process_Crane
 
         private string strMaxSQuenceNo = "";
         private DataTable dtSendCRQ;
+        private DataTable dtErrMesage;
+        
+        public override void Initialize(Context context)
+        {
+            try
+            {
+                base.Initialize(context);
+               
+                if (strMaxSQuenceNo == "")
+                {
+                    TaskDal dal = new TaskDal();
+                    strMaxSQuenceNo = dal.GetMaxSQUENCENO();
+                }
+                if (strMaxSQuenceNo == "")
+                {
+                    strMaxSQuenceNo = DateTime.Now.ToString("yyyyMMdd") + "0000";
+                }
+
+                CraneErrMessageDal errDal = new CraneErrMessageDal();
+                dtErrMesage = errDal.GetErrMessageList();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("THOK.XC.Process.Process_Crane.CraneProcess堆垛机初始化出错，原因：" + ex.Message);
+            }
+
+        }
+
+
+      
         
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
         {
@@ -33,15 +63,7 @@ namespace THOK.XC.Process.Process_Crane
 
            
           
-            if (strMaxSQuenceNo == "")
-            {
-                TaskDal dal = new TaskDal();
-                strMaxSQuenceNo = dal.GetMaxSQUENCENO();
-            }
-            if (strMaxSQuenceNo == "")
-            {
-                strMaxSQuenceNo = DateTime.Now.ToString("yyyyMMdd") + "0000";
-            }
+           
 
             try
             {
@@ -105,7 +127,7 @@ namespace THOK.XC.Process.Process_Crane
             }
             catch (Exception e)
             {
-                Logger.Error("入库任务请求批次生成处理失败，原因：" + e.Message);
+                Logger.Error("THOK.XC.Process.Process_Crane.CraneProcess，原因：" + e.Message);
             }
         }
 
@@ -162,8 +184,8 @@ namespace THOK.XC.Process.Process_Crane
                 {
                     if (drTaskCrane["TASK_TYPE"].ToString() == "22" || drTaskCrane["TASK_TYPE"].ToString() == "12")
                     {
-                        object t = WriteToService(drTaskCrane["SERVICE_NAME"].ToString(), drTaskCrane["ITEM_NAME_1"].ToString());//读取当前出库站台是否有货位
-                        if (t != null)
+                        object t = ObjectUtil.GetObject(WriteToService(drTaskCrane["SERVICE_NAME"].ToString(), drTaskCrane["ITEM_NAME_1"].ToString()));//读取当前出库站台是否有货位
+                        if (t.ToString() != "0")
                         {
                             blnSend = false;
                             return blnSend;
@@ -322,7 +344,7 @@ namespace THOK.XC.Process.Process_Crane
             {
                 dtCrane = dt.Clone();
             }
-            DataRow[] drs = dt.Select("", "TASK_LEVEL desc,TASK_DATE,BILL_NO,ISMIX,SORT_LEVEL,PRODUCT_CODE,TASK_ID");
+            DataRow[] drs = dt.Select("", "TASK_LEVEL desc,IS_MIX,SORT_LEVEL,PRODUCT_CODE,TASK_ID");
             object[] obj = new object[dt.Columns.Count]; 
             for (int i = 0; i < drs.Length; i++)
             {
@@ -336,13 +358,13 @@ namespace THOK.XC.Process.Process_Crane
             dtCrane.AcceptChanges();
             if (drs.Length > 0) //重新排序
             {
-                DataTable dtOrder = dtCrane.DefaultView.ToTable(true, new string[] {"TASK_TYPE", "TASK_LEVEL", "TASK_DATE", "ISMIX", "SORT_LEVEL", "PRODUCT_CODE" });
+                DataTable dtOrder = dtCrane.DefaultView.ToTable(true, new string[] {"TASK_TYPE", "TASK_LEVEL", "IS_MIX", "SORT_LEVEL", "PRODUCT_CODE" });
                 dtOrderCrane = new DataTable();
                 dtOrderCrane = dtOrder.Clone();
                 DataColumn dc = new DataColumn("Index", Type.GetType("System.Int32"));
                 dtOrderCrane.Columns.Add(dc);
 
-                drs = dtOrder.Select("TASK_TYPE=22", "TASK_LEVEL desc,TASK_DATE,ISMIX,SORT_LEVEL,PRODUCT_CODE");
+                drs = dtOrder.Select("TASK_TYPE=22", "TASK_LEVEL desc,IS_MIX,SORT_LEVEL,PRODUCT_CODE");
                 obj = new object[dtOrderCrane.Columns.Count];
                 for (int i = 0; i < drs.Length; i++)
                 {
@@ -468,7 +490,11 @@ namespace THOK.XC.Process.Process_Crane
                 {
                     dCraneState[msg["CraneNo"]] = "1";
                 }
-                Logger.Error(string.Format("堆垛机{0}返回错误代码{1}{2}", msg["CraneNo"], msg["ReturnCode"], ""));
+                string strMessage = "";
+                DataRow[] drs = dtErrMesage.Select(string.Format("CODE='{0}'", msg["ReturnCode"]));
+                if (drs.Length > 0)
+                    strMessage = drs[0]["DESCRIPTION"].ToString();
+                Logger.Error(string.Format("堆垛机{0}返回错误代码{1}:{2}", msg["CraneNo"], msg["ReturnCode"], strMessage));
             }
         }
         /// <summary>
@@ -535,7 +561,7 @@ namespace THOK.XC.Process.Process_Crane
             Dictionary<string, string> msg = (Dictionary<string, string>)state;
             if (msg["FaultIndicator"] == "1") //序列号出错，重新发送报文
             {
-                DataRow[] drs = dtCrane.Select(string.Format("substring(SQUENCE_NO,9,4)='0003'", msg["SequenceNo"]));
+                DataRow[] drs = dtCrane.Select(string.Format("substring(SQUENCE_NO,9,4)='{0}'", msg["SequenceNo"]));
                 if (drs.Length > 0)
                 {
                     lock (dCraneState)
@@ -546,7 +572,7 @@ namespace THOK.XC.Process.Process_Crane
                 }
                 else
                 {
-                    drs = dtSendCRQ.Select(string.Format("substring(SQUENCE_NO,9,4)='0003'", msg["SequenceNo"]));
+                    drs = dtSendCRQ.Select(string.Format("substring(SQUENCE_NO,9,4)='{0}'", msg["SequenceNo"]));
                     if (drs.Length > 0)
                     {
                         SendTelegramCRQ(drs[0]["CRANE_NO"].ToString());

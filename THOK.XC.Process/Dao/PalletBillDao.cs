@@ -79,13 +79,13 @@ namespace THOK.XC.Process.Dao
             {
 
                 StoredProcParameter parameters = new StoredProcParameter();
-                parameters.AddParameter("VCELL", "", DbType.String, ParameterDirection.Output);
+                parameters.AddParameter("VCELL", "00000000", DbType.String, ParameterDirection.Output);
                 ExecuteNonQuery("APPLYPALLETOUTCELL", parameters);
                 string VCell = parameters["VCELL"].ToString();
 
                 if (VCell != "-1")
                 {
-                    string strBillNo = GetBillNo("PK");
+                    string strBillNo = GetBillNo("POS");
 
                     strSQL = string.Format("INSERT INTO WMS_PALLET_MASTER (BILL_NO,BILL_DATE,BTYPE_CODE,WAREHOUSE_CODE,STATUS,STATE,OPERATER,OPERATE_DATE,TASKER,TASK_DATE)" +
                                            "values ('{0}',SYSDATE,'012','001','1','3','000001',SYSDATE,'000001',SYSDATE)", strBillNo);

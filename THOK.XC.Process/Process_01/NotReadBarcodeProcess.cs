@@ -18,22 +18,25 @@ namespace THOK.XC.Process.Process_01
             try
             {
 
-                string strBadFlag = "";
-                int obj = (short)ObjectUtil.GetObject(stateItem.State);
-                if (obj == 0)
+                object obj = ObjectUtil.GetObject(stateItem.State);
+                if (obj == null || obj.ToString() == "0")
                     return;
-                switch (obj)
+               
+
+                string strBadFlag = "";
+              
+                switch (obj.ToString())
                 {
-                    case 1:
+                    case "1":
                         strBadFlag = "左边条码无法读取";
                         break;
-                    case 2:
+                    case "2":
                         strBadFlag = "右边条码无法读取";
                         break;
-                    case 3:
+                    case "3":
                         strBadFlag = "两边条码无法读取";
                         break;
-                    case 4:
+                    case "4":
                         strBadFlag = "两边条码不一致";
                         break;
                 }

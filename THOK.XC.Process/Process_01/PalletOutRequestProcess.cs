@@ -20,10 +20,10 @@ namespace THOK.XC.Process.Process_01
 
             try
             {
-                int intRequest = (short)ObjectUtil.GetObject(stateItem.State);
-
-                if (intRequest == 0) //申请位为0
+                object obj = ObjectUtil.GetObject(stateItem.State);
+                if (obj == null || obj.ToString() == "0")
                     return;
+               
                 string TARGET_CODE = "";
                 switch (stateItem.ItemName)
                 {
@@ -40,7 +40,8 @@ namespace THOK.XC.Process.Process_01
                 string Taskid = dal.CreatePalletOutBillTask(TARGET_CODE);
                 TaskDal task = new TaskDal();
                 DataTable dt = task.CraneOutTask(string.Format("TASK_ID='{0}'", Taskid));
-                WriteToProcess("CraneProcess", "CraneInRequest", dt);
+                if (dt.Rows.Count > 0)
+                    WriteToProcess("CraneProcess", "CraneInRequest", dt);
 
             }
             catch (Exception e)

@@ -58,7 +58,7 @@ namespace THOK.XC.Process.Dao
             }
             else
             {
-                strTaskDetailNo = GetTaskDetailNo();
+                strTaskDetailNo = GetTaskDetailNo(TaskID);
 
                 strSQL = string.Format("INSERT INTO WCS_TASK_DETAIL(TASK_ID,ITEM_NO,TASK_NO,ASSIGNMENT_ID,STATE,DESCRIPTION,BILL_NO) " +
                          "SELECT  WCS_TASK.TASK_ID,SYS_TASK_ROUTE.ITEM_NO,'{1}','{2}','0'," +
@@ -139,9 +139,88 @@ namespace THOK.XC.Process.Dao
             return ExecuteQuery(strSQL).Tables[0];
         }
 
-        private string GetTaskDetailNo()
+        private string GetTaskDetailNo(string TaskID)
         {
-            return "";
+            string strValue = "";
+            string strSQL = string.Format("SELECT TASK_ID,TASK.BILL_NO,BILL.BTYPE_CODE,BTYPE.BILL_TYPE||BTYPE.TARGET_CODE AS TASKNOTYPE FROM WCS_TASK TASK LEFT JOIN VBILLMASTER BILL ON BILL.BILL_NO=TASK.BILL_NO " +
+                            "LEFT JOIN CMD_BILL_TYPE BTYPE ON BTYPE.BTYPE_CODE=BILL.BTYPE_CODE " +
+                            "WHERE TASK_ID='{0}'", TaskID);
+            DataTable dt = ExecuteQuery(strSQL).Tables[0];
+            if (dt.Rows.Count > 0)
+            {
+                string strWhere = "";
+                string BType = dt.Rows[0]["TASKNOTYPE"].ToString();
+                int StarNo = 0;
+                int Count = 0;
+
+                switch (BType)
+                {
+                    case "2002"://紧急补料单  9000-9299
+                        strWhere = "TASK_NO BETWEEN '9000' AND '9299'";
+                        Count = 300;
+                        StarNo = 9000;
+                        break;
+                    case "3002"://抽检        9300-9499 
+                        strWhere = "TASK_NO BETWEEN '9300' AND '9499'";
+                        Count = 200;
+                        StarNo = 9300;
+                        break;
+                    case "2003"://倒库        9500-9799
+                        strWhere = "TASK_NO BETWEEN '9500' AND '9799'";
+                        Count = 300;
+                        StarNo = 9500;
+                        break;
+                    case "4002": //盘点单     9800--9998
+                        strWhere = "TASK_NO BETWEEN '9800' AND '9998'";
+                        Count = 1999;
+                        StarNo = 9800;
+                        break;
+                    default:
+                        strWhere = "TASK_NO BETWEEN '0001' AND '8999'";
+                        Count = 8999;
+                        StarNo = 1;
+                        break;
+
+                }
+                strSQL = "SELECT MAX(TASK_NO) AS MAXTASKNO  ,COUNT(*) AS TASKCOUNT FROM WCS_TASK_DETAIL WHERE " + strWhere;
+                dt = ExecuteQuery(strSQL).Tables[0];
+                if (dt.Rows[0]["MAXTASKNO"].ToString() == "")
+                {
+                    strValue = StarNo.ToString().PadLeft(4, '0');
+                }
+                else
+                {
+                    int NewTaskNo = 0;
+                    int maxTaskNo = int.Parse(dt.Rows[0]["MAXTASKNO"].ToString());
+                    int TaskCount = int.Parse(dt.Rows[0]["TASKCOUNT"].ToString());
+                    if (maxTaskNo == StarNo + Count - 1)
+                    {
+                        NewTaskNo = maxTaskNo + TaskCount - Count;
+                    }
+                    else
+                    {
+                        NewTaskNo = maxTaskNo + 1;
+                    }
+                    bool blnvalue = false;
+                    while (!blnvalue)
+                    {
+                        strSQL = string.Format("SELECT * FROM WCS_TASK_DETAIL WHERE TASK_NO='{0}'", NewTaskNo.ToString().PadLeft(4, '0'));
+                        DataTable dtNew = ExecuteQuery(strSQL).Tables[0];
+                        if (dtNew.Rows.Count > 0)
+                        {
+                            NewTaskNo++;
+                            if (NewTaskNo > StarNo + Count - 1)
+                                NewTaskNo = StarNo;
+
+                        }
+                        else
+                            blnvalue = true;
+
+                    }
+                    strValue = NewTaskNo.ToString().PadLeft(4, '0');
+                }
+            }
+            return strValue;
         }
 
         
@@ -162,18 +241,11 @@ namespace THOK.XC.Process.Dao
         /// <param name="Squenceno"></param>
         public void UpdateCraneQuenceNo(string TaskID, string Squenceno)
         {
-
+            string strSQL = string.Format("UPDATE WCS_TASK_DETAIL SET SQUENCE_NO='{0}' WHERE TASK_ID='{1}'", Squenceno, TaskID);
+            ExecuteNonQuery(strSQL);
         }
 
-        /// <summary>
-        /// 更新 货物到达小车站台 完成标志。 起始地址，目的地址
-        /// </summary>
-        /// <param name="TaskID"></param>
-        public void UpdateStockOutToStationState(string TaskID,string ItemName)
-        {
-            
- 
-        }
+        
         /// <summary>
         /// 根据条件，返回小车任务明细。
         /// </summary>
@@ -207,7 +279,12 @@ namespace THOK.XC.Process.Dao
         /// <returns></returns>
         public string GetMaxSQUENCENO()
         {
-            return "";
+            string strValue="";
+            string strSQL = "SELECT MAX(SQUENCE_NO)  FROM WCS_TASK_DETAIL ";
+            DataTable dt = ExecuteQuery(strSQL).Tables[0];
+            if (dt.Rows.Count > 0)
+                strValue = dt.Rows[0][0].ToString();
+            return strValue;
         }
 
        
@@ -275,7 +352,7 @@ namespace THOK.XC.Process.Dao
         /// 分配货位,返回 0:TaskID，1:任务号，2:货物到达入库站台的目的地址--平面号,3:堆垛机入库站台，4:货位，5:堆垛机编号
         /// </summary>
         /// <param name="strWhere"></param>
-        public string [] AssignCell(string strWhere,string ApplyStation)
+        public string[] AssignCell(string strWhere, string ApplyStation)
         {
             string[] strValue = new string[6];
             string where = "1=1";
@@ -283,8 +360,12 @@ namespace THOK.XC.Process.Dao
                 where = strWhere;
             string strSQL = "SELECT * FROM WCS_TASK WHERE " + where;
             DataTable dt = ExecuteQuery(strSQL).Tables[0];
+            if (dt.Rows.Count == 0)
+            {
+                throw new Exception("找不到相关的入库单号。");
+            }
             string TaskID = dt.Rows[0]["TASK_ID"].ToString();
-           
+
             string billNo = dt.Rows[0]["BILL_NO"].ToString();
             string ProductCode = dt.Rows[0]["PRODUCT_CODE"].ToString();
             string VCell = "";
@@ -317,10 +398,7 @@ namespace THOK.XC.Process.Dao
             SysStationDao sysdao = new SysStationDao();
 
             dt = sysdao.GetSationInfo(VCell, "11");
-
-
-             ;
-             string TaskNo = InsertTaskDetail(TaskID);
+            string TaskNo = InsertTaskDetail(TaskID);
 
             strValue[0] = TaskID;
             strValue[1] = TaskNo;
@@ -328,6 +406,7 @@ namespace THOK.XC.Process.Dao
             strValue[3] = dt.Rows[0]["CRANE_POSITION"].ToString();
             strValue[4] = VCell;
             strValue[5] = dt.Rows[0]["CRANE_NO"].ToString();
+
 
             return strValue;
 
@@ -432,6 +511,8 @@ namespace THOK.XC.Process.Dao
                             "LEFT JOIN CMD_PRODUCT_STYLE S ON S.STYLE_NO=P.STYLE_NO WHERE  TASK_ID='{0}'", TaskID);
             return ExecuteQuery(strSQL).Tables[0];
         }
+        
+       
 
 
     }

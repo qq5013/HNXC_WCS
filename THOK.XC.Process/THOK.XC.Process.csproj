@@ -41,34 +41,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\ConvertStringChar.cs" />
     <Compile Include="Dal\BaseDal.cs" />
     <Compile Include="Dal\BillDal.cs" />
     <Compile Include="Dal\CellDal.cs" />
     <Compile Include="Dal\ChannelDal.cs" />
+    <Compile Include="Dal\CraneErrMessageDal.cs" />
     <Compile Include="Dal\PalletBillDal.cs" />
     <Compile Include="Dal\ProductStateDal.cs" />
-    <Compile Include="Dal\ServerDal.cs" />
-    <Compile Include="Dal\StockInBatchDal.cs" />
-    <Compile Include="Dal\StockOutDal.cs" />
-    <Compile Include="Dal\StockOutBatchDal.cs" />
-    <Compile Include="Dal\StateDal.cs" />
-    <Compile Include="Dal\StockInDal.cs" />
-    <Compile Include="Dal\SupplyDal.cs" />
     <Compile Include="Dal\SysCarAddressDal.cs" />
     <Compile Include="Dal\SysStationDal.cs" />
     <Compile Include="Dal\TaskDal.cs" />
     <Compile Include="Dao\BillDao.cs" />
     <Compile Include="Dao\CellDao.cs" />
     <Compile Include="Dao\ChannelDao.cs" />
+    <Compile Include="Dao\CraneErrMessageDao.cs" />
     <Compile Include="Dao\PalletBillDao.cs" />
     <Compile Include="Dao\ProductStateDao.cs" />
-    <Compile Include="Dao\ServerDao.cs" />
-    <Compile Include="Dao\StateDao.cs" />
-    <Compile Include="Dao\StockInBatchDao.cs" />
-    <Compile Include="Dao\StockInDao.cs" />
-    <Compile Include="Dao\StockOutBatchDao.cs" />
-    <Compile Include="Dao\StockOutDao.cs" />
-    <Compile Include="Dao\SupplyDao.cs" />
     <Compile Include="Dao\SysCarAddressDao.cs" />
     <Compile Include="Dao\SysStationDao.cs" />
     <Compile Include="Dao\TaskDao.cs" />

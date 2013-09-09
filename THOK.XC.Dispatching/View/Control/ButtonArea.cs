@@ -99,8 +99,7 @@ namespace THOK.XC.Dispatching.View
         {            
             try
             {
-                StockOutDal dal = new StockOutDal();
-                dal.ClearNoScanData();
+               
             }
             catch (Exception ee)
             {
