@@ -16,6 +16,11 @@ namespace THOK.XC.Process.Process_01
         {
             try
             {
+
+                object obj = ObjectUtil.GetObject(stateItem.State);
+                if (obj == null || obj.ToString() == "0")
+                    return;
+
                 string writeItem = "";
                 switch (stateItem.ItemName)
                 {
@@ -26,7 +31,7 @@ namespace THOK.XC.Process.Process_01
                         writeItem = "01_1_200_3";
                         break;
                 }
-                string TaskNo = ((int)stateItem.State).ToString().PadLeft(4, '0');
+                string TaskNo = ((short)obj).ToString().PadLeft(4, '0');
                 
                 TaskDal dal = new TaskDal(); //更具任务号，获取TaskID及BILL_NO
                 string[] strInfo = dal.GetTaskInfo(TaskNo);

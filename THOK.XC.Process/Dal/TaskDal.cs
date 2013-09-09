@@ -91,19 +91,7 @@ namespace THOK.XC.Process.Dal
             }
         }
 
-        /// <summary>
-        /// 更新 货物到达小车站台 完成标志。 起始地址，目的地址
-        /// </summary>
-        /// <param name="TaskID"></param>
-        public void UpdateStockOutToStationState(string TaskID, string ItemName)
-        {
-            using (PersistentManager pm = new PersistentManager())
-            {
-                TaskDao dao = new TaskDao();
-                dao.UpdateStockOutToStationState(TaskID, ItemName);
-            }
-
-        }
+      
         /// <summary>
         /// 根据条件，返回小车任务明细。
         /// </summary>

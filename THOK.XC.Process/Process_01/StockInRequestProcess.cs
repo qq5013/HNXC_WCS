@@ -22,11 +22,13 @@ namespace THOK.XC.Process.Process_01
 
                 string ToStation = "";
                 string TaskID = "";
-                object[] o = ObjectUtil.GetObjects(stateItem.State);
-                int intRequest = (short)o[0];
-                string BarCode = ""; //读取PLC，获得产品编码
-                if (intRequest != 1) //申请位为0
+                object obj = ObjectUtil.GetObject(stateItem.State);
+                if (obj == null || obj.ToString() == "0")
                     return;
+                
+
+                string BarCode = ""; //读取PLC，获得产品编码
+               
 
                 switch (stateItem.ItemName)
                 {
@@ -34,19 +36,19 @@ namespace THOK.XC.Process.Process_01
                         FromStation = "210";
                         ToStation = "218";
                         writeItem = "01_2_218_";
-                        BarCode = (string)WriteToService("StockPLC_01", "01_1_218_2");
+                        BarCode = Common.ConvertStringChar.BytesToString(ObjectUtil.GetObjects(WriteToService("StockPLC_01", "01_1_218_2")));
                         break;
                     case "01_1_110_1":
                         FromStation = "101";
                         ToStation = "110";
                         writeItem = "01_2_110_";
-                        BarCode = (string)WriteToService("StockPLC_01", "01_1_110_2");
+                        BarCode = Common.ConvertStringChar.BytesToString(ObjectUtil.GetObjects(WriteToService("StockPLC_01", "01_1_110_2")));
                         break;
                     case "01_1_126_1":
                         FromStation = "124";
                         ToStation = "126";
                         writeItem = "01_2_126_";
-                        BarCode = (string)WriteToService("StockPLC_01", "01_1_126_2");
+                        BarCode = Common.ConvertStringChar.BytesToString(ObjectUtil.GetObjects(WriteToService("StockPLC_01", "01_1_126_2")));
                         break;
                     case "01_1_131": //空托盘组盘入
                         PalletBillDal Billdal = new PalletBillDal();
@@ -65,6 +67,7 @@ namespace THOK.XC.Process.Process_01
                 else
                     strWhere = string.Format("TASK_ID='{0}'", TaskID);
                 TaskDal dal = new TaskDal();
+               
                 string[] strValue = dal.AssignCell(strWhere, ToStation);//货位申请
 
                 dal.UpdateTaskState(strValue[0], "1");//更新任务开始执行

@@ -16,8 +16,8 @@ namespace THOK.XC.Process.Process_01
             */
             try
             {
-                int obj = (short)ObjectUtil.GetObject(stateItem.State);
-                if (obj == null || obj == 0)
+                object obj =  ObjectUtil.GetObject(stateItem.State);
+                if (obj == null || obj.ToString() == "0")
                     return;
 
                 switch (stateItem.ItemName)
