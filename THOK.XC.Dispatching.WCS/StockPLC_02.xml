@@ -3,7 +3,7 @@
   <OPCServer ConnectionString="OPC.SimaticNET">
     <OPCGroup GroupName="DefaultGroup" GroupString="S7:[@LOCALSERVER]" UpdateRate="350">
       <!--二层入库请求-->
-      <OPCItem ItemName="02_1_359" ClientHandler="1" OPCItemName="DB1,INT530,1"  ItemType="READ" IsActive="false"/>
+      <OPCItem ItemName="02_1_359" ClientHandler="1" OPCItemName="DB1,INT530,2"  ItemType="READ"/>
       <!--二层入库小车站台写-->
       <OPCItem ItemName="02_2_301_1" ClientHandler="2" OPCItemName="DB1,INT0,3"  ItemType="WRITE"/>
       <OPCItem ItemName="02_2_301_2" ClientHandler="3" OPCItemName="DB1,CHAR8,90"  ItemType="WRITE"/>
