@@ -89,6 +89,11 @@
       <Item ServiceName="StockPLC_02" ItemName="02_1_C03_2" />
       <Item ServiceName="StockPLC_02" ItemName="02_1_C04_2" />
     </Process>
+    <!--二层校验完成-->
+    <Process Name="CheckProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.CheckProcess">
+      <Item ServiceName="StockPLC_02" ItemName="02_1_340_1" />
+      <Item ServiceName="StockPLC_02" ItemName="02_1_360_1" />
+    </Process>
     <!--二层出库拆盘完成-->
     <Process Name="StockOutSeparateProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.StockOutSeparateProcess">
       <Item ServiceName="StockPLC_02" ItemName="02_1_372" />
