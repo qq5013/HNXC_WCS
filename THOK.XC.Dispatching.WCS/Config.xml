@@ -89,6 +89,9 @@
       <Item ServiceName="StockPLC_02" ItemName="02_1_C03_2" />
       <Item ServiceName="StockPLC_02" ItemName="02_1_C04_2" />
     </Process>
+    <!--二楼出库送货完成，340,360-->
+    <Process Name="StockOutCarFinishProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.StockOutCarFinishProcess">
+    </Process>
     <!--二层校验完成-->
     <Process Name="CheckProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.CheckProcess">
       <Item ServiceName="StockPLC_02" ItemName="02_1_340_1" />
