@@ -52,9 +52,9 @@
     </Process>
 
     <!--二层空托盘组请求入库-->
-    <!--<Process Name="PalletInRequestProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.PalletInRequestProcess">
+    <Process Name="PalletInRequestProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.PalletInRequestProcess">
       <Item ServiceName="StockPLC_02" ItemName="02_1_359" />
-    </Process>-->
+    </Process>
     <!--二层空托盘组入库到达小车站台-->
     <Process Name="PalletToCarStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.PalletToCarStationProcess">
       <Item ServiceName="StockPLC_02" ItemName="02_1_301" />
