@@ -16,6 +16,11 @@ namespace THOK.XC.Process.Process_02
             *         
            */
 
+            object obj = ObjectUtil.GetObject(stateItem.State);
+
+            if (obj == null || obj.ToString() == "0")
+                return;
+
             string[] StationState = new string[2];
             try
             {
@@ -23,7 +28,7 @@ namespace THOK.XC.Process.Process_02
             }
             catch (Exception e)
             {
-                Logger.Error("入库任务请求批次生成处理失败，原因：" + e.Message);
+                Logger.Error("THOK.XC.Process.Process_02.StockOutToUnpackLineProcess，原因：" + e.Message);
             }
         }
     }

@@ -421,10 +421,10 @@ namespace THOK.XC.Process.Dao
             return str;
         }
         /// <summary>
-        /// 二楼分配货位,返回 table 
+        /// 分配货位,返回 0:TaskID，1:任务号，2:货物到达入库站台的目的地址--平面号,3:堆垛机入库站台，4:货位，5:堆垛机编号,6:小车站台
         /// </summary>
         /// <param name="strWhere"></param>
-        public void AssignCellTwo(string strWhere) //
+        public string[] AssignCellTwo(string strWhere) //
         {
             string where = "1=1";
             if (!string.IsNullOrEmpty(strWhere))
@@ -457,13 +457,20 @@ namespace THOK.XC.Process.Dao
             strSQL = string.Format("UPDATE WCS_TASK SET CELL_CODE='{0}' WHERE {1}", VCell, where);
             ExecuteNonQuery(strSQL);
 
-            InsertTaskDetail(TaskID);
+            SysStationDao sysdao = new SysStationDao();
+            dt = sysdao.GetSationInfo(VCell, "21");
 
-            TaskDao dao = new TaskDao();
-            dao.UpdateTaskState(TaskID, "1");//更新任务开始执行
-            ProductStateDao StateDao = new ProductStateDao();
-            StateDao.UpdateProductCellCode(TaskID, VCell); //更新Product_State 货位
-            dao.UpdateTaskDetailStation("", "359", "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", TaskID)); //更新货位申请起始地址及目标地址。
+            string TaskNo = InsertTaskDetail(TaskID);
+         
+            string[] strValue = new string[7];
+            strValue[0] = TaskID;
+            strValue[1] = TaskNo;
+            strValue[2] = dt.Rows[0]["STATION_NO"].ToString();
+            strValue[3] = dt.Rows[0]["CRANE_POSITION"].ToString();
+            strValue[4] = VCell;
+            strValue[5] = dt.Rows[0]["CRANE_NO"].ToString();
+            strValue[6] = dt.Rows[0]["CAR_STATION"].ToString();
+            return strValue;
         }
         /// <summary>
         /// 返回任务信息

@@ -18,6 +18,11 @@ namespace THOK.XC.Process.Process_02
              *  空托盘组，从小车站台到达入库站台。
              *  stateItem.State ：参数 - 任务号。        
             */
+            object obj = ObjectUtil.GetObject(stateItem.State);
+            if (obj == null || obj.ToString() == "0")
+                return;
+
+
             string TaskNo = ((int)stateItem.State).ToString().PadLeft(4, '0');
             try
             {
@@ -55,7 +60,7 @@ namespace THOK.XC.Process.Process_02
             }
             catch (Exception e)
             {
-                Logger.Error("入库任务请求批次生成处理失败，原因：" + e.Message);
+                Logger.Error("THOK.XC.Process.Process_02.PalletToStationProcess, 原因：" + e.Message);
             }
         }
     }

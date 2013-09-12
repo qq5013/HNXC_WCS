@@ -22,6 +22,10 @@ namespace THOK.XC.Process.Process_02
           //烟包托盘到达出库站台，根据返回的任务号，判断是否正常烟包：
            // 1、正常烟包，更新原有CranProcess的datatable将状态更改为3，并更改数据库状态。调用WriteToProcess(穿梭车Process).
            // 2、错误烟包，写入移库单，产生任务，调用调用WriteToProcess(穿梭车Process)。写入出库单，产生任务，并下达出库任务。
+            object[] obj = ObjectUtil.GetObjects(stateItem.State);
+            if (obj == null || obj.ToString() == "0")
+                return;
+
             try
             {
                 string ToStation = "";
@@ -63,7 +67,7 @@ namespace THOK.XC.Process.Process_02
                 }
 
 
-                object[] obj = ObjectUtil.GetObjects(stateItem.State);
+                
                 string NewPalletCode = (string)WriteToService("StockPLC_02", ReadItem2);
                 string[] StationState = new string[2];
 
@@ -142,7 +146,7 @@ namespace THOK.XC.Process.Process_02
             }
             catch (Exception e)
             {
-                Logger.Error("入库任务请求批次生成处理失败，原因：" + e.Message);
+                Logger.Error("THOK.XC.Process.Process_02.StockOutToCarStationProcess，原因：" + e.Message);
             }
         }
     }

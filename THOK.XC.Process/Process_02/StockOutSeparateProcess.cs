@@ -15,6 +15,13 @@ namespace THOK.XC.Process.Process_02
              * 二层出库拆盘完成
              *  stateItem.State ：参数 - 请求的卷烟编码。        
             */
+
+            object obj = ObjectUtil.GetObject(stateItem.State);
+
+            if (obj == null || obj.ToString() == "0")
+                return;
+
+
             string WriteItem="";
             string FromStation = "";
             try
@@ -58,7 +65,7 @@ namespace THOK.XC.Process.Process_02
             }
             catch (Exception e)
             {
-                Logger.Error("入库任务请求批次生成处理失败，原因：" + e.Message);
+                Logger.Error("THOK.XC.Process.Process_02.StockOutSeparateProcess，原因：" + e.Message);
             }
         }
     }

@@ -16,7 +16,7 @@ namespace THOK.XC.Process.Dao
         /// <returns></returns>
         public DataTable GetSationInfo(string CellCode, string TaskType)
         {
-            string strSQL = string.Format("SELECT CELL_CODE, SYS_STATION.STATION_NO,CMD_SHELF.CRANE_NO,SYS_STATION.CRANE_POSITION FROM CMD_CELL " +
+            string strSQL = string.Format("SELECT CELL_CODE, SYS_STATION.STATION_NO,CMD_SHELF.CRANE_NO,SYS_STATION.CRANE_POSITION,MEMO AS CAR_STATION FROM CMD_CELL " +
                    "LEFT JOIN CMD_SHELF ON CMD_CELL.SHELF_CODE=CMD_SHELF.SHELF_CODE " +
                    "LEFT JOIN SYS_STATION ON CMD_SHELF.CRANE_NO=SYS_STATION.CRANE_NO " +
                    "WHERE CELL_CODE='{0}' AND  SYS_STATION.STATION_TYPE='{1}' ", CellCode, TaskType);
