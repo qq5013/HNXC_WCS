@@ -61,7 +61,6 @@
     <Compile Include="Dao\SysCarAddressDao.cs" />
     <Compile Include="Dao\SysStationDao.cs" />
     <Compile Include="Dao\TaskDao.cs" />
-    <Compile Include="Process_01\StockOutToStationProcess.cs" />
     <Compile Include="Process_01\PalletOutRequestProcess.cs" />
     <Compile Include="Process_01\StockInStationProcess.cs" />
     <Compile Include="Process_01\StockInRequestProcess.cs" />

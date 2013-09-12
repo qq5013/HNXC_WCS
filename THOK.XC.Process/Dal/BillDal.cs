@@ -57,10 +57,13 @@ namespace THOK.XC.Process.Dal
             return dao.CreatePalletOutBillTask(TARGET_CODE);
         }
 
-        public void UpdateBillMasterFinished(string BillNo)
+        public void UpdateBillMasterFinished(string BillNo,string IsBill)
         {
-            BillDao dao = new BillDao();
-            dao.UpdateBillMasterFinished(BillNo);
+            using (PersistentManager pm = new PersistentManager())
+            {
+                BillDao dao = new BillDao();
+                dao.UpdateBillMasterFinished(BillNo,IsBill);
+            }
         }
     }
 }

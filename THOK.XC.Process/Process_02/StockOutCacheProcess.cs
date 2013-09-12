@@ -47,8 +47,7 @@ namespace THOK.XC.Process.Process_02
                     dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEMNO=5", strValue[0]), "2"); //更新
                     dal.UpdateTaskState(strValue[0], "2"); //更新任务
 
-                    BillDal bdal = new BillDal(); //更新出库单号
-                    bdal.UpdateBillMasterFinished(strValue[1]);
+                 
 
                     WriteToService("StockPLC_02", WriteItem, 1);
                 }

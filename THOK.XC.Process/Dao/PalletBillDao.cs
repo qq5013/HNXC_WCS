@@ -111,17 +111,7 @@ namespace THOK.XC.Process.Dao
             
 
         }
-       /// <summary>
-       /// 更新单号完成标志。
-        /// </summary>
-        /// <param name="BillNo"></param>
-         public void UpdateBillMasterFinished(string BillNo)
-         {
-             StoredProcParameter parameters = new StoredProcParameter();
-             parameters.AddParameter("VBILLNO", BillNo);
-             ExecuteNonQuery("CONFIRMBILLFINSHED", parameters);
-
-         }
+      
 
     }
 }

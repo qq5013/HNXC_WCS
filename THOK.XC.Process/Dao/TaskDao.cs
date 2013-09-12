@@ -16,16 +16,16 @@ namespace THOK.XC.Process.Dao
         public DataTable TaskOutToDetail()
         {
             //处理一楼出库，生成Task_Detail。
-            DataTable dtCraneTask = CraneOutTask("TASK_TYPE=12");
+            DataTable dtCraneTask = CraneOutTask("TASK.TASK_TYPE IN('12','13')");
 
             string strBillNo = "";
             string strSQL = "SELECT * FROM WCS_TASK_DETAIL LEFT JOIN WCS_TASK ON WCS_TASK_DETAIL.TASK_ID=WCS_TASK.TASK_ID WHERE TASK_TYPE=22 AND CRANE_NO IS NOT NULL AND WCS_TASK_DETAIL.STATE IN (1,2)";
             DataTable dt = ExecuteQuery(strSQL).Tables[0];
             if (dt.Rows.Count == 0)
             {
-                strSQL = "SELECT top 1 WCS_TASK.BILL_NO  FROM WCS_TASK " +
+                strSQL = "SELECT  DISTINCT WMS_BILL_MASTER.SCHEDULE_NO,WMS_BILL_MASTER.SCHEDULE_ITEMNO,WCS_TASK.TASK_LEVEL, WCS_TASK.TASK_DATE,WCS_TASK.BILL_NO  FROM WCS_TASK " +
                          "INNER JOIN WMS_BILL_MASTER  ON WCS_TASK.BILL_NO=WMS_BILL_MASTER.BILL_NO " +
-                         "WHERE WMS_BILL_MASTER.STATE=3  and WCS_TASK.STATE=0 " +
+                         "WHERE WMS_BILL_MASTER.STATE=3  AND WCS_TASK.STATE=0 AND WCS_TASK.TASK_TYPE='22' " +
                          "ORDER BY WMS_BILL_MASTER.SCHEDULE_NO,WMS_BILL_MASTER.SCHEDULE_ITEMNO,WCS_TASK.TASK_LEVEL, WCS_TASK.TASK_DATE,WCS_TASK.BILL_NO ";
 
                 dt = ExecuteQuery(strSQL).Tables[0];
@@ -33,12 +33,10 @@ namespace THOK.XC.Process.Dao
             if (dt.Rows.Count > 0)
             {
                 strBillNo = dt.Rows[0]["BILL_NO"].ToString();
+                string strWhere = string.Format("PRODUCT_CODE<>'0000' and TASK.TASK_TYPE='22' and TASK.BILL_NO ='{0}'", "22", strBillNo);
+                dt = CraneOutTask(strWhere);
+                dtCraneTask.Merge(dt);
             }
-
-
-            string strWhere = string.Format("PRODUCT_CODE<>'0000' and TASK_TYPE=22 and BILL_NO ='{1}'", "22", strBillNo);
-            dt = CraneOutTask(strWhere);
-            dtCraneTask.Merge(dt);
             return dtCraneTask;
         }
         /// <summary>
@@ -83,15 +81,15 @@ namespace THOK.XC.Process.Dao
             string where = strWhere;
             if (strWhere.Trim() == "")
                 where = "1=1";
-            string strSQL = "SELECT TASK.TASK_ID,'' AS TASK_NO,SYS_TASK_ROUTE.ITEM_NO，''AS  ASSIGNMENT_ID,CMD_SHELF.CRANE_NO, '30'||TASK.cell_code||'01' AS FROM_STATION,SYS_STATION.CRANE_POSITION TO_STATION ,SYS_TASK_ROUTE.ITEM_NO ,'0' AS STATE,TASK.BILL_NO," +
+            string strSQL = "SELECT TASK.TASK_ID,'' AS TASK_NO,DETAIL.ITEM_NO，''AS  ASSIGNMENT_ID,DETAIL.CRANE_NO, '30'||TASK.CELL_CODE||'01' AS FROM_STATION,SYS_STATION.CRANE_POSITION TO_STATION ,DETAIL.STATE,TASK.BILL_NO," +
                            "TASK.PRODUCT_CODE,TASK.CELL_CODE,TASK.TASK_TYPE,TASK.TASK_LEVEL,TASK.TASK_DATE,STYLE.SORT_LEVEL,TASK.IS_MIX,PRODUCT.STYLE_NO,SYS_STATION.SERVICE_NAME,SYS_STATION.ITEM_NAME_1," +
-                           "SYS_STATION.ITEM_NAME_2,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE,'' AS SQUENCE_NO,TASK.TARGET_CODE,SYS_STATION.STATION_NO,SYS_STATION.MEMO,TASK.PRODUCT_TYPE " +
+                           "SYS_STATION.ITEM_NAME_2,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE,'' AS SQUENCE_NO,TASK.TARGET_CODE,SYS_STATION.STATION_NO,SYS_STATION.MEMO,TASK.PRODUCT_TYPE,TASK.CELL_CODE " +
                             "FROM WCS_TASK_DETAIL DETAIL " +
                             "LEFT JOIN WCS_TASK TASK  ON DETAIL.TASK_ID=TASK.TASK_ID " +
                             "LEFT JOIN CMD_PRODUCT  PRODUCT ON TASK.PRODUCT_CODE=PRODUCT.PRODUCT_CODE " +
                             "LEFT JOIN CMD_PRODUCT_STYLE STYLE ON STYLE.STYLE_NO=PRODUCT.STYLE_NO " +
                             "LEFT JOIN SYS_STATION ON DETAIL.CRANE_NO=SYS_STATION.CRANE_NO AND SYS_STATION.STATION_TYPE=TASK.TASK_TYPE " +
-                            "WHERE DETAIL.CRANE_NO<>'' AND " + where +
+                            "WHERE DETAIL.CRANE_NO IS NOT NULL AND " + where +
                             "ORDER BY TASK.TASK_LEVEL,TASK.TASK_DATE,TASK.BILL_NO, TASK.IS_MIX,TASK.PRODUCT_CODE,TASK_ID";
 
             return ExecuteQuery(strSQL).Tables[0];
@@ -107,9 +105,9 @@ namespace THOK.XC.Process.Dao
             string where = strWhere;
             if (strWhere == "")
                 where = "1=1";
-            string strSQL = "SELECT TASK.TASK_ID,'' AS TASK_NO,SYS_TASK_ROUTE.ITEM_NO，''AS  ASSIGNMENT_ID,CMD_SHELF.CRANE_NO, '30'||TASK.cell_code||'01' AS FROM_STATION,SYS_STATION.CRANE_POSITION TO_STATION ,SYS_TASK_ROUTE.ITEM_NO ,'0' AS STATE,TASK.BILL_NO," +
+            string strSQL = "SELECT TASK.TASK_ID,'' AS TASK_NO,SYS_TASK_ROUTE.ITEM_NO，''AS  ASSIGNMENT_ID,CMD_SHELF.CRANE_NO, '30'||TASK.CELL_CODE||'01' AS FROM_STATION,SYS_STATION.CRANE_POSITION TO_STATION  ,'0' AS STATE,TASK.BILL_NO," +
                            "TASK.PRODUCT_CODE,TASK.CELL_CODE,TASK.TASK_TYPE,TASK.TASK_LEVEL,TASK.TASK_DATE,STYLE.SORT_LEVEL,TASK.IS_MIX,PRODUCT.STYLE_NO,SYS_STATION.SERVICE_NAME,SYS_STATION.ITEM_NAME_1," +
-                           "SYS_STATION.ITEM_NAME_2,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE,'' AS SQUENCE_NO,TASK.TARGET_CODE,SYS_STATION.STATION_NO,SYS_STATION.MEMO,TASK.PRODUCT_TYPE " +
+                           "SYS_STATION.ITEM_NAME_2,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE,'' AS SQUENCE_NO,TASK.TARGET_CODE,SYS_STATION.STATION_NO,SYS_STATION.MEMO,TASK.PRODUCT_TYPE,TASK.CELL_CODE " +
                            "FROM WCS_TASK TASK " +
                            "LEFT JOIN CMD_CELL on CMD_CELL.CELL_CODE=TASK.CELL_CODE " +
                            "LEFT JOIN CMD_SHELF on CMD_CELL.SHELF_CODE=CMD_SHELF.SHELF_CODE " +
@@ -117,7 +115,7 @@ namespace THOK.XC.Process.Dao
                            "LEFT JOIN SYS_STATION SYS_STATION on SYS_STATION.STATION_TYPE=TASK.TASK_TYPE and SYS_STATION.CRANE_NO=cmd_shelf.CRANE_NO " +
                            "LEFT JOIN CMD_PRODUCT  PRODUCT ON TASK.PRODUCT_CODE=PRODUCT.PRODUCT_CODE " +
                            "LEFT JOIN CMD_PRODUCT_STYLE STYLE ON STYLE.STYLE_NO=PRODUCT.STYLE_NO " +
-                           "WHERE  STATE=0  AND " + where;
+                           "WHERE STATE='0' AND " + where;
             return ExecuteQuery(strSQL).Tables[0];
         }
 

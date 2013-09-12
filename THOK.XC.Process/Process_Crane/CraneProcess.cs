@@ -86,11 +86,6 @@ namespace THOK.XC.Process.Process_Crane
                         {
                             TaskDal tdal = new TaskDal();
                             tdal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=1", drs[0]["TASK_ID"].ToString()), "2");
-                            if (strdd[1] == "3")
-                            {
-                                CellDal Cdal = new CellDal();
-                                Cdal.UpdateCellOutUnLock(drs[0]["CELL_CODE"].ToString()); //出库完成，货位解锁
-                            }
                             dtCrane.Rows.Remove(drs[0]);
                         }
                         CraneThreadStart(); //更新完成之后，线程调用堆垛机，避免堆垛机因调度原因而是堆垛机没有任务。
@@ -380,23 +375,29 @@ namespace THOK.XC.Process.Process_Crane
         /// </summary>
         private void CraneThreadStart()
         {
-            ThreadStart starter1 = delegate { SendTelegram("01", null); };
-            new Thread(starter1).Start();
+            //ThreadStart starter1 = delegate { SendTelegram("01", null); };
+            //new Thread(starter1).Start();
 
-            ThreadStart starter2 = delegate { SendTelegram("02", null); };
-            new Thread(starter2).Start();
+            //ThreadStart starter2 = delegate { SendTelegram("02", null); };
+            //new Thread(starter2).Start();
 
-            ThreadStart starter3 = delegate { SendTelegram("03", null); };
-            new Thread(starter3).Start();
+            //ThreadStart starter3 = delegate { SendTelegram("03", null); };
+            //new Thread(starter3).Start();
 
-            ThreadStart starter4 = delegate { SendTelegram("04", null); };
-            new Thread(starter4).Start();
+            //ThreadStart starter4 = delegate { SendTelegram("04", null); };
+            //new Thread(starter4).Start();
 
-            ThreadStart starter5 = delegate { SendTelegram("05", null); };
-            new Thread(starter5).Start();
+            //ThreadStart starter5 = delegate { SendTelegram("05", null); };
+            //new Thread(starter5).Start();
 
-            ThreadStart starter6 = delegate { SendTelegram("06", null); };
-            new Thread(starter6).Start();
+            //ThreadStart starter6 = delegate { SendTelegram("06", null); };
+            //new Thread(starter6).Start();
+            SendTelegram("01", null);
+            SendTelegram("02", null);
+            SendTelegram("03", null);
+            SendTelegram("04", null);
+            SendTelegram("05", null);
+            SendTelegram("06", null);
  
         }
         #endregion  
@@ -421,12 +422,12 @@ namespace THOK.XC.Process.Process_Crane
                 TaskDal dal = new TaskDal();
                 string strWhere = string.Format("TASK_ID='{0}' and CRANE_NO is not null", drs[0]["TASK_ID"]);
                 dal.UpdateTaskDetailState(strWhere, "2"); //更新堆垛机状态
-                if (TaskType.PadRight(2, '0').Substring(1, 1) == "2")
+                if (TaskType.Substring(1, 1) == "2" || (TaskType.Substring(1, 1) == "3" && drs[0]["ITEM_NO"].ToString() == "1"))
                 {
                     if (TaskType == "12") //一楼出库
                     {
                         CellDal Cdal = new CellDal();
-                        Cdal.UpdateCellOutUnLock(drs[0][""].ToString());//货位解锁
+                        Cdal.UpdateCellOutFinishUnLock(drs[0]["CELL_CODE"].ToString());//货位解锁
                     }
                     int[] WriteValue = new int[3];
                     WriteValue[0] = int.Parse(drs[0]["TASK_NO"].ToString());
@@ -437,39 +438,34 @@ namespace THOK.XC.Process.Process_Crane
                     WriteValue[2] = int.Parse(drs[0]["PRODUCT_TYPE"].ToString());
 
 
-                    string Barcode = "";
+                    string Barcode = drs[0]["PRODUCT_BARCODE"].ToString();
+                    string PalletCode = drs[0]["PALLET_CODE"].ToString();
 
-
-
-
-
-
-
-
-
-
-
-
-
+                    sbyte[] b=new sbyte[90];
+                    Common.ConvertStringChar.stringToBytes(Barcode, 40).CopyTo(b, 0);
+                    Common.ConvertStringChar.stringToBytes(PalletCode, 50).CopyTo(b, 50);
 
                     dal.UpdateTaskDetailStation(drs[0]["STATION_NO"].ToString(), WriteValue[1].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", TASK_ID));
 
                     WriteToService(drs[0]["SERVICE_NAME"].ToString(), drs[0]["ITEM_NAME_2"].ToString() + "_1", WriteValue);
 
-                    WriteToService(drs[0]["SERVICE_NAME"].ToString(), drs[0]["ITEM_NAME_2"].ToString() + "_2", Barcode);
+                    WriteToService(drs[0]["SERVICE_NAME"].ToString(), drs[0]["ITEM_NAME_2"].ToString() + "_2", b);
                     WriteToService(drs[0]["SERVICE_NAME"].ToString(), drs[0]["ITEM_NAME_2"].ToString() + "_3", 1);
                   
                 
 
                 }
-                else if(TaskType.PadRight(2, '0').Substring(1, 1) == "1") //入库完成，更新Task任务完成。
+                else if (TaskType.Substring(1, 1) == "1" || (TaskType.Substring(1, 1) == "3" && drs[0]["ITEM_NO"].ToString()=="4")) //入库完成，更新Task任务完成。
                 {
                     dal.UpdateTaskState(drs[0]["TASK_ID"].ToString(), "2");//更新任务状态。
                     CellDal Cdal = new CellDal();
-                    Cdal.UpdateCellInLock(); //入库完成，更新货位。
+                    Cdal.UpdateCellInFinishUnLock(drs[0]["TASK_ID"].ToString()); //入库完成，更新货位。
 
                     BillDal billdal = new BillDal();
-                    billdal.UpdateBillMasterFinished(drs[0]["BILL_NO"].ToString());//更新表单
+                    string isBill = "1";
+                    if (drs[0][""].ToString() == "0000")
+                        isBill = "0";
+                    billdal.UpdateBillMasterFinished(drs[0]["BILL_NO"].ToString(),isBill);//更新表单
 
                 }
                 lock (dCraneState)

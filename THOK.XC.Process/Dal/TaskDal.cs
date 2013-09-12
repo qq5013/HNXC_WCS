@@ -17,7 +17,7 @@ namespace THOK.XC.Process.Dal
             }
         }
          /// <summary>
-        /// 系统重新启动时，获取正在出库，或者出库完成的Task_Detail
+        /// 获取正在出库，或者出库完成的Task_Detail，主表 WCS_TASK_DETAIL ,WCS_TASK 
         /// </summary>
         /// <returns></returns>
         public DataTable TaskCraneDetail(string strWhere)
@@ -29,7 +29,7 @@ namespace THOK.XC.Process.Dal
             }
         }
          /// <summary>
-        /// 根据Task获取出库信息
+        /// 根据TASKID获取，要出库的堆垛机相关任务信息。主表，WCS_TASK 
         /// </summary>
         /// <param name="strWhere"></param>
         /// <returns></returns>

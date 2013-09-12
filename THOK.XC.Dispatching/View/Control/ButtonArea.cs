@@ -61,11 +61,33 @@ namespace THOK.XC.Dispatching.View
         {
             try
             {
-                Context.ProcessDispatcher.WriteToProcess("OrderDataStateProcess", "Start", null);
-                Context.ProcessDispatcher.WriteToProcess("LEDProcess", "Refresh", null);
-                Context.ProcessDispatcher.WriteToProcess("LedStateProcess", "Refresh", null);
                 SwitchStatus(true);
+
+                TaskDal taskDal = new TaskDal();
+                DataTable dt = taskDal.TaskOutToDetail();
+                DataTable dt2 = null;
+                if (IndexStar == 0)
+                {
+                    string strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1})", "11,21,12,13", "0,1");
+                    dt2 = taskDal.TaskCraneDetail(strWhere);
+                    strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1})", "22", "0,1,2");
+                    DataTable dtout = taskDal.TaskCraneDetail(strWhere);
+                    dt2.Merge(dtout);
+                }
+                DataTable[] dtSend = new DataTable[2];
+                dtSend[0] = dt;
+                dtSend[1] = dt2;
+                Context.Processes["CraneProcess"].Start();
+                Context.ProcessDispatcher.WriteToProcess("CraneProcess", "StockOutRequest", dtSend);
+                IndexStar++;
+
+
+
+               
                 timer1.Enabled = true;
+                timer1.Start();
+                timer1.Interval = 300000;
+                timer1.Tick += new EventHandler(timer1_Tick);
             }
             catch (Exception ex)
             {
@@ -122,6 +144,7 @@ namespace THOK.XC.Dispatching.View
             DataTable[] dtSend = new DataTable[2];
             dtSend[0] = dt;
             dtSend[1] = dt2;
+            Context.Processes["CraneProcess"].Start();
             Context.ProcessDispatcher.WriteToProcess("CraneProcess", "StockOutRequest", dtSend);
             IndexStar++;
         }
@@ -214,7 +237,7 @@ namespace THOK.XC.Dispatching.View
                     dal.UpdateTaskState(strInfo[0], "2");
 
                     BillDal billdal = new BillDal();
-                    billdal.UpdateBillMasterFinished(strInfo[1]);
+                    billdal.UpdateBillMasterFinished(strInfo[1],"1");
                     Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "1", 1); //PLC写入任务
                 }
                 break;
@@ -275,6 +298,53 @@ namespace THOK.XC.Dispatching.View
                 break;
             }
             this.Resume();
+        }
+
+        private void btnBarcodeScan_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+
+                object obj = ObjectUtil.GetObject(Context.ProcessDispatcher.WriteToService("StockPLC_01", "01_1_124"));
+                if (obj == null || obj.ToString() == "0")
+                    return;
+
+                string strBadFlag = "";
+
+                switch (obj.ToString())
+                {
+                    case "1":
+                        strBadFlag = "左边条码无法读取";
+                        break;
+                    case "2":
+                        strBadFlag = "右边条码无法读取";
+                        break;
+                    case "3":
+                        strBadFlag = "两边条码无法读取";
+                        break;
+                    case "4":
+                        strBadFlag = "两边条码不一致";
+                        break;
+                }
+                string strBarCode;
+                string[] strMessage = new string[3];
+                strMessage[0] = "3";
+                strMessage[1] = strBadFlag;
+                while ((strBarCode = FormDialog.ShowDialog(strMessage, null)) != "")
+                {
+                    sbyte[] b = THOK.XC.Process.Common.ConvertStringChar.stringToBytes(strBarCode, 40);
+                    Context.ProcessDispatcher.WriteToService("StockPLC_01", "01_2_124_1", b); //写入条码  
+                    Context.ProcessDispatcher.WriteToService("StockPLC_01", "01_2_124_2", 1);//写入标识。
+                    Context.Processes["NotReadBarcodeProcess"].Resume();
+                    break;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("THOK.XC.Process.Process_01.NotReadBarcodeProcess:" + ex.Message);
+            }
         }
     }
 }

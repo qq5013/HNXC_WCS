@@ -19,7 +19,8 @@ namespace THOK.XC.Process.Process_02
             */
             try
             {
-                if ((int)stateItem.State == 0)
+                object obj = ObjectUtil.GetObject(stateItem.State);
+                if (obj == null || obj.ToString() == "0")
                     return;
                 PalletBillDal Billdal = new PalletBillDal();
                 TaskID = Billdal.CreatePalletInBillTask(false);

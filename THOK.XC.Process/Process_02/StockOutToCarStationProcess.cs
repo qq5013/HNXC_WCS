@@ -82,7 +82,7 @@ namespace THOK.XC.Process.Process_02
                     StationState[0] = strTask[0];//任务号;
                     StationState[1] = "3";
                     WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为3.
-                    Celldal.UpdateCellOutUnLock(CellCode);//解除货位锁定
+                    Celldal.UpdateCellOutFinishUnLock(CellCode);//解除货位锁定
 
                     DataTable dt = dal.TaskCarDetail(string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=3", strTask[0])); //获取任务ID
                     WriteToProcess("CarProcess", "CarOutRequest", dt);  //调度小车；
@@ -90,9 +90,6 @@ namespace THOK.XC.Process.Process_02
                 }
                 else //错误烟包
                 {
-
-
-
                     //生成二楼退库单
                     BillDal bdal = new BillDal();
                     string CancelTaskID = bdal.CreateCancelBillInTask(strTask[0], strTask[1], NewPalletCode);//产生退库单，并生成明细。
@@ -117,20 +114,25 @@ namespace THOK.XC.Process.Process_02
                     strMessage[2] = NewPalletCode;
                    
                     this.Stop();
-                    while ((strBillNo = FormDialog.ShowDialog(strMessage,dtProductInfo)) != "")
+                    while ((strBillNo = FormDialog.ShowDialog(strMessage, dtProductInfo)) != "")
                     {
                         string strNewBillNo = strBillNo;
 
                         string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo);
-                        DataTable dtOutTask = dal.CraneOutTask(string.Format("TASK.TASK_ID='{0}'", strOutTaskID));
+                        DataTable dtOutTask = dal.CraneOutTask(string.Format("TASK_ID='{0}'", strOutTaskID));
 
                         WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
 
 
-
+                        int i = 0;
+                        while (i < 100)  //延迟
+                        {
+                            i++;
+                        }
                         StationState[0] = strTask[0];//TaskID;
                         StationState[1] = "4";
-                        WriteToProcess("CraneProcess", "StockOutRequest", StationState); //更新堆垛机Process 状态为4.
+                        WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为4.
+
                         break;
                     }
                     this.Resume();
