@@ -23,7 +23,7 @@ namespace THOK.XC.Process.Process_02
            // 1、正常烟包，更新原有CranProcess的datatable将状态更改为3，并更改数据库状态。调用WriteToProcess(穿梭车Process).
            // 2、错误烟包，写入移库单，产生任务，调用调用WriteToProcess(穿梭车Process)。写入出库单，产生任务，并下达出库任务。
             object[] obj = ObjectUtil.GetObjects(stateItem.State);
-            if (obj == null || obj.ToString() == "0")
+            if (obj[0] == null || obj[0].ToString() == "0")
                 return;
 
             try
@@ -68,7 +68,7 @@ namespace THOK.XC.Process.Process_02
 
 
                 
-                string NewPalletCode = (string)WriteToService("StockPLC_02", ReadItem2);
+              
                 string[] StationState = new string[2];
 
                 TaskDal dal = new TaskDal();
@@ -83,8 +83,10 @@ namespace THOK.XC.Process.Process_02
 
                 if (obj[1].ToString() == "1") //正常烟包
                 {
-                    StationState[0] = strTask[0];//任务号;
+                    StationState[0] = obj[0].ToString();//任务号;
                     StationState[1] = "3";
+
+                    //this.Context.Processes["CraneProcess"].Start();
                     WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为3.
                     Celldal.UpdateCellOutFinishUnLock(CellCode);//解除货位锁定
 
@@ -94,6 +96,7 @@ namespace THOK.XC.Process.Process_02
                 }
                 else //错误烟包
                 {
+                    string NewPalletCode = Common.ConvertStringChar.BytesToString((object[])ObjectUtil.GetObjects(WriteToService("StockPLC_02", ReadItem2)));
                     //生成二楼退库单
                     BillDal bdal = new BillDal();
                     string CancelTaskID = bdal.CreateCancelBillInTask(strTask[0], strTask[1], NewPalletCode);//产生退库单，并生成明细。
@@ -146,7 +149,7 @@ namespace THOK.XC.Process.Process_02
             }
             catch (Exception e)
             {
-                Logger.Error("THOK.XC.Process.Process_02.StockOutToCarStationProcess，原因：" + e.Message);
+                Logger.Error("THOK.XC.Process.Process_02.StockOutToCarStationProcess:" + e.Message);
             }
         }
     }

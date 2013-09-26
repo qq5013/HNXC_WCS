@@ -46,12 +46,12 @@
       <OPCItem ItemName="02_2_C04_2" ClientHandler="38" OPCItemName="DB1,CHAR342,90"  ItemType="WRITE"/>
       <OPCItem ItemName="02_2_C04_3" ClientHandler="39" OPCItemName="DB1,INT432,1"  ItemType="WRITE"/>
       <!--二层入库站台读-->
-      <OPCItem ItemName="02_1_302" ClientHandler="40" OPCItemName="DB1,INT60,1"  ItemType="READ" IsActive="false"/>
-      <OPCItem ItemName="02_1_306" ClientHandler="41" OPCItemName="DB1,INT130,1"  ItemType="READ" IsActive="false"/>
-      <OPCItem ItemName="02_1_310" ClientHandler="42" OPCItemName="DB1,INT200,1"  ItemType="READ" IsActive="false"/>
-      <OPCItem ItemName="02_1_314" ClientHandler="43" OPCItemName="DB1,INT270,1"  ItemType="READ" IsActive="false"/>
-      <OPCItem ItemName="02_1_318" ClientHandler="44" OPCItemName="DB1,INT340,1"  ItemType="READ" IsActive="false"/>
-      <OPCItem ItemName="02_1_324" ClientHandler="45" OPCItemName="DB1,INT470,1"  ItemType="READ" IsActive="false"/>
+      <OPCItem ItemName="02_1_302" ClientHandler="40" OPCItemName="DB1,INT60,1"  ItemType="READ" />
+      <OPCItem ItemName="02_1_306" ClientHandler="41" OPCItemName="DB1,INT130,1"  ItemType="READ" />
+      <OPCItem ItemName="02_1_310" ClientHandler="42" OPCItemName="DB1,INT200,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_314" ClientHandler="43" OPCItemName="DB1,INT270,1"  ItemType="READ" />
+      <OPCItem ItemName="02_1_318" ClientHandler="44" OPCItemName="DB1,INT340,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_324" ClientHandler="45" OPCItemName="DB1,INT470,1"  ItemType="READ" />
       <!--二层出库站台读-->
       <OPCItem ItemName="02_1_303" ClientHandler="46" OPCItemName="DB1,INT0,1"  ItemType="READ" IsActive="false"/>
       <OPCItem ItemName="02_1_307" ClientHandler="47" OPCItemName="DB1,INT0,1"  ItemType="READ" IsActive="false"/>
@@ -81,15 +81,15 @@
       <!--二层出库小车站台读-->
       <OPCItem ItemName="02_1_304_1" ClientHandler="70" OPCItemName="DB1,INT70,2"  ItemType="READ"/>
       <OPCItem ItemName="02_1_304_2" ClientHandler="71" OPCItemName="DB1,CHAR74,50"  ItemType="READ" IsActive="false"/>
-      <OPCItem ItemName="02_1_308_1" ClientHandler="72" OPCItemName="DB1,INT140,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_308_1" ClientHandler="72" OPCItemName="DB1,INT140,2"  ItemType="READ"/>
       <OPCItem ItemName="02_1_308_2" ClientHandler="73" OPCItemName="DB1,CHAR144,50"  ItemType="READ" IsActive="false"/>
-      <OPCItem ItemName="02_1_312_1" ClientHandler="74" OPCItemName="DB1,INT210,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_312_1" ClientHandler="74" OPCItemName="DB1,INT210,2"  ItemType="READ"/>
       <OPCItem ItemName="02_1_312_2" ClientHandler="75" OPCItemName="DB1,CHAR214,50"  ItemType="READ" IsActive="false"/>
-      <OPCItem ItemName="02_1_316_1" ClientHandler="76" OPCItemName="DB1,INT280,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_316_1" ClientHandler="76" OPCItemName="DB1,INT280,2"  ItemType="READ"/>
       <OPCItem ItemName="02_1_316_2" ClientHandler="77" OPCItemName="DB1,CHAR284,50"  ItemType="READ" IsActive="false"/>
-      <OPCItem ItemName="02_1_320_1" ClientHandler="78" OPCItemName="DB1,INT350,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_320_1" ClientHandler="78" OPCItemName="DB1,INT350,2"  ItemType="READ"/>
       <OPCItem ItemName="02_1_320_2" ClientHandler="79" OPCItemName="DB1,CHAR354,50"  ItemType="READ" IsActive="false"/>
-      <OPCItem ItemName="02_1_322_1" ClientHandler="80" OPCItemName="DB1,INT410,1"  ItemType="READ"/>
+      <OPCItem ItemName="02_1_322_1" ClientHandler="80" OPCItemName="DB1,INT410,2"  ItemType="READ"/>
       <OPCItem ItemName="02_1_322_2" ClientHandler="81" OPCItemName="DB1,CHAR414,50"  ItemType="READ" IsActive="false"/>
       <!--二层出库小车到达站台-->
       <OPCItem ItemName="02_2_340_1" ClientHandler="82" OPCItemName="DB1,INT0,1"  ItemType="WRITE"/>

@@ -83,7 +83,7 @@ namespace THOK.XC.Process.Dao
                 where = "1=1";
             string strSQL = "SELECT TASK.TASK_ID,'' AS TASK_NO,DETAIL.ITEM_NO，''AS  ASSIGNMENT_ID,DETAIL.CRANE_NO, '30'||TASK.CELL_CODE||'01' AS FROM_STATION,SYS_STATION.CRANE_POSITION TO_STATION ,DETAIL.STATE,TASK.BILL_NO," +
                            "TASK.PRODUCT_CODE,TASK.CELL_CODE,TASK.TASK_TYPE,TASK.TASK_LEVEL,TASK.TASK_DATE,STYLE.SORT_LEVEL,TASK.IS_MIX,PRODUCT.STYLE_NO,SYS_STATION.SERVICE_NAME,SYS_STATION.ITEM_NAME_1," +
-                           "SYS_STATION.ITEM_NAME_2,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE,'' AS SQUENCE_NO,TASK.TARGET_CODE,SYS_STATION.STATION_NO,SYS_STATION.MEMO,TASK.PRODUCT_TYPE,TASK.CELL_CODE " +
+                           "SYS_STATION.ITEM_NAME_2,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE,'' AS SQUENCE_NO,TASK.TARGET_CODE,SYS_STATION.STATION_NO,SYS_STATION.MEMO,TASK.PRODUCT_TYPE " +
                             "FROM WCS_TASK_DETAIL DETAIL " +
                             "LEFT JOIN WCS_TASK TASK  ON DETAIL.TASK_ID=TASK.TASK_ID " +
                             "LEFT JOIN CMD_PRODUCT  PRODUCT ON TASK.PRODUCT_CODE=PRODUCT.PRODUCT_CODE " +
@@ -107,7 +107,7 @@ namespace THOK.XC.Process.Dao
                 where = "1=1";
             string strSQL = "SELECT TASK.TASK_ID,'' AS TASK_NO,SYS_TASK_ROUTE.ITEM_NO，''AS  ASSIGNMENT_ID,CMD_SHELF.CRANE_NO, '30'||TASK.CELL_CODE||'01' AS FROM_STATION,SYS_STATION.CRANE_POSITION TO_STATION  ,'0' AS STATE,TASK.BILL_NO," +
                            "TASK.PRODUCT_CODE,TASK.CELL_CODE,TASK.TASK_TYPE,TASK.TASK_LEVEL,TASK.TASK_DATE,STYLE.SORT_LEVEL,TASK.IS_MIX,PRODUCT.STYLE_NO,SYS_STATION.SERVICE_NAME,SYS_STATION.ITEM_NAME_1," +
-                           "SYS_STATION.ITEM_NAME_2,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE,'' AS SQUENCE_NO,TASK.TARGET_CODE,SYS_STATION.STATION_NO,SYS_STATION.MEMO,TASK.PRODUCT_TYPE,TASK.CELL_CODE " +
+                           "SYS_STATION.ITEM_NAME_2,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE,'' AS SQUENCE_NO,TASK.TARGET_CODE,SYS_STATION.STATION_NO,SYS_STATION.MEMO,TASK.PRODUCT_TYPE " +
                            "FROM WCS_TASK TASK " +
                            "LEFT JOIN CMD_CELL on CMD_CELL.CELL_CODE=TASK.CELL_CODE " +
                            "LEFT JOIN CMD_SHELF on CMD_CELL.SHELF_CODE=CMD_SHELF.SHELF_CODE " +
@@ -132,7 +132,7 @@ namespace THOK.XC.Process.Dao
             string strSQL = "SELECT '30'||TASK.cell_code||'01' AS TO_STATION,SYS_STATION.CRANE_POSITION AS FROM_STATION,CMD_SHELF.CRANE_NO FROM WCS_TASK TASK " +
                            "LEFT JOIN CMD_CELL on CMD_CELL.CELL_CODE=TASK.CELL_CODE " +
                            "LEFT JOIN CMD_SHELF on CMD_CELL.SHELF_CODE=CMD_SHELF.SHELF_CODE " +
-                           "LEFT JOIN SYS_STATION SYS_STATION on SYS_STATION.STATION_TYPE=TASK.TASK_TYPE and SYS_STATION.CRANE_NO=CMD_SHELF.CRANE_NO" +
+                           "LEFT JOIN SYS_STATION SYS_STATION on SYS_STATION.STATION_TYPE=TASK.TASK_TYPE and SYS_STATION.CRANE_NO=CMD_SHELF.CRANE_NO " +
                            "WHERE  " + where;
             return ExecuteQuery(strSQL).Tables[0];
         }
@@ -385,6 +385,10 @@ namespace THOK.XC.Process.Dao
                 VCell = dt.Rows[0]["CELL_CODE"].ToString();
             }
 
+            if (VCell == "")
+            {
+                throw new Exception("没有可分配的货位！");
+            }
 
             strSQL = string.Format("UPDATE CMD_CELL SET IS_LOCK='1' WHERE CELL_CODE='{0}'", VCell);
             ExecuteNonQuery(strSQL);
@@ -416,8 +420,11 @@ namespace THOK.XC.Process.Dao
                             "WHERE DETAIL.TASK_NO='{0}'", TaskNo);
             DataTable dt = ExecuteQuery(strSQL).Tables[0];
             string[] str = new string[2];
-            str[0] = dt.Rows[0]["TASK_ID"].ToString();
-            str[1] = dt.Rows[0]["BILL_NO"].ToString();
+            if (dt.Rows.Count > 0)
+            {
+                str[0] = dt.Rows[0]["TASK_ID"].ToString();
+                str[1] = dt.Rows[0]["BILL_NO"].ToString();
+            }
             return str;
         }
         /// <summary>
@@ -441,7 +448,7 @@ namespace THOK.XC.Process.Dao
                 StoredProcParameter parameters = new StoredProcParameter();
                 parameters.AddParameter("VBILLNO", billNo);
                 parameters.AddParameter("VPRODUCTCODE", ProductCode);
-                parameters.AddParameter("VCELL", "", DbType.String, ParameterDirection.Output);
+                parameters.AddParameter("VCELL", "00000000", DbType.String, ParameterDirection.Output);
                 ExecuteNonQuery("APPLYCELL", parameters);
                 VCell = parameters["VCELL"].ToString();
             }
@@ -450,6 +457,10 @@ namespace THOK.XC.Process.Dao
                 VCell = dt.Rows[0]["CELL_CODE"].ToString();
             }
 
+            if (VCell == "")
+            {
+                throw new Exception("没有可分配的货位！");
+            }
 
             strSQL = string.Format("UPDATE CMD_CELL SET IS_LOCK='1' WHERE CELL_CODE='{0}'", VCell);
             ExecuteNonQuery(strSQL);

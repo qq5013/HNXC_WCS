@@ -26,8 +26,7 @@ namespace THOK.XC.Process.Process_02
 
                 int PalletCount = int.Parse(obj[1].ToString());
 
-                PalletBillDal Billdal = new PalletBillDal();
-                TaskID = Billdal.CreatePalletInBillTask(false);
+             
 
                 //判断是否还有出库任务
                 TaskDal dal = new TaskDal();
@@ -35,6 +34,10 @@ namespace THOK.XC.Process.Process_02
 
                 if (PalletCount >= 5 || dtTask.Rows.Count <= 4)
                 {
+                    PalletBillDal Billdal = new PalletBillDal();
+                    TaskID = Billdal.CreatePalletInBillTask(false);
+
+
                     string strWhere = string.Format("TASK_ID='{0}'", TaskID);
                     string[] strValue = dal.AssignCellTwo(strWhere);//货位申请
 

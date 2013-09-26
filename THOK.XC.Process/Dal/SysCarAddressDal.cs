@@ -11,8 +11,11 @@ namespace THOK.XC.Process.Dal
     {
         public DataTable CarAddress()
         {
-            SysCarAddressDao dao = new SysCarAddressDao();
-            return dao.CarAddress();
+            using (PersistentManager pm = new PersistentManager())
+            {
+                SysCarAddressDao dao = new SysCarAddressDao();
+                return dao.CarAddress();
+            }
         }
     }
 }

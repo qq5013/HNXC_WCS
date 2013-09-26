@@ -75,14 +75,16 @@ namespace THOK.XC.Process.Process_02
                     writestate[0] = int.Parse(TaskNo);
                     writestate[1] = int.Parse(ToStation);
                     writestate[2] = 2;
-                    WriteToService("StockPLC_02", WriteItem + "_1", writestate);
+                   
                     string barcode = "";
                     string palletcode = "";
                     if (dt.Rows[0]["PRODUCT_CODE"].ToString() != "0000") //
                     {
+                        writestate[2] = 1;
                         barcode = dt.Rows[0]["PRODUCT_BARCODE"].ToString();
                         palletcode = dt.Rows[0]["PALLET_CODE"].ToString();
                     }
+                    WriteToService("StockPLC_02", WriteItem + "_1", writestate);
                     sbyte [] b=new sbyte[90];
                     Common.ConvertStringChar.stringToBytes(barcode, 40).CopyTo(b, 0);
                     Common.ConvertStringChar.stringToBytes(palletcode, 50).CopyTo(b, 40);

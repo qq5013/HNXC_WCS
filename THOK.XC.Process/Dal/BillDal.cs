@@ -16,13 +16,16 @@ namespace THOK.XC.Process.Dal
         /// <returns>TaskID</returns>
         public string  CreateCancelBillInTask(string TaskID,string BillNo,string NewPalletCode)
         {
-            BillDao dao = new BillDao();
-            string strTaskID = dao.CreateCancelBillInTask(TaskID, BillNo);
-           
-            TaskDao tdao = new TaskDao();
-            tdao.InsertTaskDetail(strTaskID);
-            tdao.UpdateTaskState(strTaskID, "1");//更新任务开始执行
-            return strTaskID;
+            using (PersistentManager pm = new PersistentManager())
+            {
+                BillDao dao = new BillDao();
+                string strTaskID = dao.CreateCancelBillInTask(TaskID, BillNo);
+
+                TaskDao tdao = new TaskDao();
+                tdao.InsertTaskDetail(strTaskID);
+                tdao.UpdateTaskState(strTaskID, "1");//更新任务开始执行
+                return strTaskID;
+            }
         }
 
         /// <summary>
@@ -31,9 +34,12 @@ namespace THOK.XC.Process.Dal
         /// <returns></returns>
         public DataTable GetCancelBillNo(string TaskID)
         {
-            BillDao dao = new BillDao();
+            using (PersistentManager pm = new PersistentManager())
+            {
+                BillDao dao = new BillDao();
 
-            return dao.GetCancelBillNo(TaskID);
+                return dao.GetCancelBillNo(TaskID);
+            }
  
         }
 
@@ -43,9 +49,12 @@ namespace THOK.XC.Process.Dal
         /// <returns>TaskID</returns>
         public string CreateCancelBillOutTask(string TaskID, string BillNo, string OutBillNO)
         {
-            BillDao dao = new BillDao();
-            string strTaskID = dao.CreateCancelBillOutTask(TaskID, BillNo, OutBillNO);
-            return strTaskID;
+            using (PersistentManager pm = new PersistentManager())
+            {
+                BillDao dao = new BillDao();
+                string strTaskID = dao.CreateCancelBillOutTask(TaskID, BillNo, OutBillNO);
+                return strTaskID;
+            }
         }
 
          /// <summary>
@@ -53,8 +62,11 @@ namespace THOK.XC.Process.Dal
         /// </summary>
         public string CreatePalletOutBillTask(string TARGET_CODE)
         {
-            BillDao dao = new BillDao();
-            return dao.CreatePalletOutBillTask(TARGET_CODE);
+            using (PersistentManager pm = new PersistentManager())
+            {
+                BillDao dao = new BillDao();
+                return dao.CreatePalletOutBillTask(TARGET_CODE);
+            }
         }
 
         public void UpdateBillMasterFinished(string BillNo,string IsBill)

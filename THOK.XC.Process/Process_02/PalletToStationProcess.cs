@@ -23,7 +23,7 @@ namespace THOK.XC.Process.Process_02
                 return;
 
 
-            string TaskNo = ((int)stateItem.State).ToString().PadLeft(4, '0');
+            string TaskNo = obj.ToString().PadLeft(4, '0');
             try
             {
                 switch (stateItem.ItemName)

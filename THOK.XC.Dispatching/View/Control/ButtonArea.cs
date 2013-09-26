@@ -211,8 +211,10 @@ namespace THOK.XC.Dispatching.View
         /// <param name="e"></param>
         private void btnSpotCheck_Click(object sender, EventArgs e)
         {
- 
-             string strTaskNo = ((string)Context.ProcessDispatcher.WriteToService("StockPLC_01", "01_1_195")).PadLeft(4,'0');
+            object obj = ObjectUtil.GetObject(Context.ProcessDispatcher.WriteToService("StockPLC_01", "01_1_195"));
+            if (obj == null || obj.ToString() == "0")
+                return;
+            string strTaskNo = obj.ToString().PadLeft(4, '0');
 
             string[] str = new string[3];
             if (int.Parse(strTaskNo) >= 9000 && int.Parse(strTaskNo) <= 9299) //≤π¡œ
@@ -252,7 +254,10 @@ namespace THOK.XC.Dispatching.View
         /// <param name="e"></param>
         private void btnCheckScan_Click(object sender, EventArgs e)
         {
-            string strTaskNo = ((string)Context.ProcessDispatcher.WriteToService("StockPLC_01", "01_1_195")).PadLeft(4, '0');
+            object obj= ObjectUtil.GetObject(Context.ProcessDispatcher.WriteToService("StockPLC_01", "01_1_195"));
+            if (obj == null || obj.ToString() == "0")
+                return;
+            string strTaskNo = obj.ToString().PadLeft(4, '0');
 
             string[] str = new string[3];
            
@@ -300,12 +305,15 @@ namespace THOK.XC.Dispatching.View
             this.Resume();
         }
 
+        /// <summary>
+        /// Ãı¬Îπ ’œ
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnBarcodeScan_Click(object sender, EventArgs e)
         {
             try
             {
-
-
                 object obj = ObjectUtil.GetObject(Context.ProcessDispatcher.WriteToService("StockPLC_01", "01_1_124"));
                 if (obj == null || obj.ToString() == "0")
                     return;
