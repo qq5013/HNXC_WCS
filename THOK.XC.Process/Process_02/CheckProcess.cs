@@ -19,7 +19,8 @@ namespace THOK.XC.Process.Process_02
             */
             try
             {
-                if ((int)stateItem.State == 0)
+                object obj = ObjectUtil.GetObject(stateItem.State);
+                if (obj == null || obj.ToString() == "0")
                     return;
                 PalletBillDal Billdal = new PalletBillDal();
                 TaskID = Billdal.CreatePalletInBillTask(false);
@@ -47,7 +48,7 @@ namespace THOK.XC.Process.Process_02
             }
             catch (Exception e)
             {
-                Logger.Error("入库任务请求批次生成处理失败，原因：" + e.Message);
+                Logger.Error("THOK.XC.Process.Process_02.CheckProcess，原因：" + e.Message);
             }
         }
 

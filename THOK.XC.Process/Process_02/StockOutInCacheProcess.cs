@@ -14,6 +14,12 @@ namespace THOK.XC.Process.Process_02
             /*  处理事项：
              * 二层小车进入缓存站台
             */
+
+            object obj = ObjectUtil.GetObject(stateItem.State);
+
+            if (obj == null || obj.ToString() == "0")
+                return;
+
             string WriteItem = "";
             string ChannelNo = "";
             try
@@ -58,8 +64,7 @@ namespace THOK.XC.Process.Process_02
                     dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEMNO=5", strValue[0]), "2"); //更新
                     dal.UpdateTaskState(strValue[0], "2"); //更新任务
 
-                    BillDal bdal = new BillDal(); //更新出库单号
-                    bdal.UpdateBillMasterFinished(strValue[1]);
+                   
 
                     int[] intvalue = new int[2];
                     intvalue[0] = value;
@@ -71,7 +76,7 @@ namespace THOK.XC.Process.Process_02
             }
             catch (Exception e)
             {
-                Logger.Error("入库任务请求批次生成处理失败，原因：" + e.Message);
+                Logger.Error("THOK.XC.Process.Process_02.StockOutInCacheProcess，原因：" + e.Message);
             }
         }
     }

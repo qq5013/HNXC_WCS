@@ -22,6 +22,10 @@ namespace THOK.XC.Process.Process_02
           //烟包托盘到达出库站台，根据返回的任务号，判断是否正常烟包：
            // 1、正常烟包，更新原有CranProcess的datatable将状态更改为3，并更改数据库状态。调用WriteToProcess(穿梭车Process).
            // 2、错误烟包，写入移库单，产生任务，调用调用WriteToProcess(穿梭车Process)。写入出库单，产生任务，并下达出库任务。
+            object[] obj = ObjectUtil.GetObjects(stateItem.State);
+            if (obj[0] == null || obj[0].ToString() == "0")
+                return;
+
             try
             {
                 string ToStation = "";
@@ -63,8 +67,8 @@ namespace THOK.XC.Process.Process_02
                 }
 
 
-                object[] obj = ObjectUtil.GetObjects(stateItem.State);
-                string NewPalletCode = (string)WriteToService("StockPLC_02", ReadItem2);
+                
+              
                 string[] StationState = new string[2];
 
                 TaskDal dal = new TaskDal();
@@ -79,10 +83,12 @@ namespace THOK.XC.Process.Process_02
 
                 if (obj[1].ToString() == "1") //正常烟包
                 {
-                    StationState[0] = strTask[0];//任务号;
+                    StationState[0] = obj[0].ToString();//任务号;
                     StationState[1] = "3";
+
+                    //this.Context.Processes["CraneProcess"].Start();
                     WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为3.
-                    Celldal.UpdateCellOutUnLock(CellCode);//解除货位锁定
+                    Celldal.UpdateCellOutFinishUnLock(CellCode);//解除货位锁定
 
                     DataTable dt = dal.TaskCarDetail(string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=3", strTask[0])); //获取任务ID
                     WriteToProcess("CarProcess", "CarOutRequest", dt);  //调度小车；
@@ -90,9 +96,7 @@ namespace THOK.XC.Process.Process_02
                 }
                 else //错误烟包
                 {
-
-
-
+                    string NewPalletCode = Common.ConvertStringChar.BytesToString((object[])ObjectUtil.GetObjects(WriteToService("StockPLC_02", ReadItem2)));
                     //生成二楼退库单
                     BillDal bdal = new BillDal();
                     string CancelTaskID = bdal.CreateCancelBillInTask(strTask[0], strTask[1], NewPalletCode);//产生退库单，并生成明细。
@@ -117,20 +121,25 @@ namespace THOK.XC.Process.Process_02
                     strMessage[2] = NewPalletCode;
                    
                     this.Stop();
-                    while ((strBillNo = FormDialog.ShowDialog(strMessage,dtProductInfo)) != "")
+                    while ((strBillNo = FormDialog.ShowDialog(strMessage, dtProductInfo)) != "")
                     {
                         string strNewBillNo = strBillNo;
 
                         string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo);
-                        DataTable dtOutTask = dal.CraneOutTask(string.Format("TASK.TASK_ID='{0}'", strOutTaskID));
+                        DataTable dtOutTask = dal.CraneOutTask(string.Format("TASK_ID='{0}'", strOutTaskID));
 
                         WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
 
 
-
+                        int i = 0;
+                        while (i < 100)  //延迟
+                        {
+                            i++;
+                        }
                         StationState[0] = strTask[0];//TaskID;
                         StationState[1] = "4";
-                        WriteToProcess("CraneProcess", "StockOutRequest", StationState); //更新堆垛机Process 状态为4.
+                        WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为4.
+
                         break;
                     }
                     this.Resume();
@@ -140,7 +149,7 @@ namespace THOK.XC.Process.Process_02
             }
             catch (Exception e)
             {
-                Logger.Error("入库任务请求批次生成处理失败，原因：" + e.Message);
+                Logger.Error("THOK.XC.Process.Process_02.StockOutToCarStationProcess:" + e.Message);
             }
         }
     }

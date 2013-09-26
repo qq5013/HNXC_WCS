@@ -18,7 +18,12 @@ namespace THOK.XC.Process.Process_02
              *  空托盘组，从小车站台到达入库站台。
              *  stateItem.State ：参数 - 任务号。        
             */
-            string TaskNo = ((int)stateItem.State).ToString().PadLeft(4, '0');
+            object obj = ObjectUtil.GetObject(stateItem.State);
+            if (obj == null || obj.ToString() == "0")
+                return;
+
+
+            string TaskNo = obj.ToString().PadLeft(4, '0');
             try
             {
                 switch (stateItem.ItemName)
@@ -48,14 +53,14 @@ namespace THOK.XC.Process.Process_02
                     {
                         DataRow dr = dt.Rows[0];
                         dal.UpdateTaskDetailCrane(dr["FROM_STATION"].ToString(), dr["TO_STATION"].ToString(), "0", dr["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO='4'", strValue[0]));
-                        dt = dal.TaskCraneDetail(string.Format("TASK_ID='{0}'", strValue[0]));
+                        dt = dal.TaskCraneDetail(string.Format("TASK.TASK_ID='{0}'", strValue[0]));
                         WriteToProcess("CraneProcess", "CraneInRequest", dt);
                     }
                 }
             }
             catch (Exception e)
             {
-                Logger.Error("入库任务请求批次生成处理失败，原因：" + e.Message);
+                Logger.Error("THOK.XC.Process.Process_02.PalletToStationProcess, 原因：" + e.Message);
             }
         }
     }

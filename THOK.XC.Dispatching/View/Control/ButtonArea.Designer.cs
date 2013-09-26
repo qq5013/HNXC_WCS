@@ -298,6 +298,7 @@
             this.btnBarcodeScan.Text = "条码故障";
             this.btnBarcodeScan.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnBarcodeScan.UseVisualStyleBackColor = true;
+            this.btnBarcodeScan.Click += new System.EventHandler(this.btnBarcodeScan_Click);
             // 
             // timer1
             // 

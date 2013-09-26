@@ -34,7 +34,7 @@ namespace THOK.XC.Process.Process_01
                 string[] strInfo = dal.GetTaskInfo(sta.ToString().PadLeft(4, '0'));
                 DataTable dt = dal.TaskInfo(string.Format("TASK_ID='{0}'", strInfo[0]));
                 DataTable dtProductInfo = dal.GetProductInfoByTaskID(strInfo[0]);
-                this.Stop(); //线程停止
+                this.Suspend(); //线程停止
                 string strValue = "";
                 while ((strValue = FormDialog.ShowDialog(str, dtProductInfo)) != "")
                 {
@@ -45,13 +45,19 @@ namespace THOK.XC.Process.Process_01
                         dal.UpdateTaskState(strInfo[0], "2");
 
                         BillDal billdal = new BillDal();
-                        billdal.UpdateBillMasterFinished(strInfo[1]);
-                        WriteToService("StockPLC_01", writeItem + "1", 1); //PLC写入任务
+                        billdal.UpdateBillMasterFinished(strInfo[1],"1");
+
+                        int[] ServiceW = new int[3];
+                        ServiceW[0] = int.Parse(strInfo[1]); //任务号
+                        ServiceW[1] = 131;//目的地址
+                        ServiceW[2] = 4;
+
+                        WriteToService("StockPLC_01", writeItem + "1", ServiceW); //PLC写入任务
+
+                        WriteToService("StockPLC_01", writeItem + "2", 1); //PLC写入任务
                     }
                     else  //盘点
                     {
-
-
                         DataTable dtTask = dal.TaskInfo(string.Format("TASK_ID='{0}'", strInfo[0]));
 
                         DataRow dr = dtTask.Rows[0];
@@ -71,17 +77,17 @@ namespace THOK.XC.Process.Process_01
                         ServiceW[2] = 1;
 
                         WriteToService("StockPLC_01", writeItem + "1", ServiceW); //PLC写入任务
-                        WriteToService("StockPLC_01", writeItem + "3", 1); //PLC写入任务
+                        WriteToService("StockPLC_01", writeItem + "2", 1); //PLC写入任务
 
                         dal.UpdateTaskDetailStation("195", dtstation.Rows[0]["STATION_NO"].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=3", strInfo[0]));//更新货位到达入库站台，
                         dal.UpdateTaskDetailCrane(dtstation.Rows[0]["STATION_NO"].ToString(), dr["CELL_CODE"].ToString(), "0", dtstation.Rows[0]["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO=4", strInfo[0]));//更新调度堆垛机的其实位置及目标地址。
                     }
 
 
-
+                    this.Resume();//线程继续。
                     break;
                 }
-                this.Resume();//线程继续。
+              
             }
             catch (Exception ex)
             {

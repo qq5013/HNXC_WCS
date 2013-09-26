@@ -9,7 +9,7 @@ namespace THOK.XC.Process.Process_02
 {
     public class PalletInRequestProcess : AbstractProcess
     {
-        private System.Timers.Timer PalletTime = new System.Timers.Timer();
+     
         private string TaskID = "";
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
         {
@@ -19,69 +19,51 @@ namespace THOK.XC.Process.Process_02
             */
             try
             {
-                if ((int)stateItem.State == 0)
+                object[] obj = ObjectUtil.GetObjects(stateItem.State);
+                if (obj[0] == null || obj[0].ToString() == "0")
                     return;
-                PalletBillDal Billdal = new PalletBillDal();
-                TaskID = Billdal.CreatePalletInBillTask(false);
+
+
+                int PalletCount = int.Parse(obj[1].ToString());
+
+             
 
                 //判断是否还有出库任务
                 TaskDal dal = new TaskDal();
                 DataTable dtTask = dal.TaskInfo("TASK_TYPE='22' AND STATE IN (0,1)");
-                if (dtTask.Rows.Count > 0)
-                {
-                    PalletTime.Enabled = true;
-                    PalletTime.Interval = 100000;
-                    PalletTime.AutoReset = true;
-                    PalletTime.Elapsed += new System.Timers.ElapsedEventHandler(PalletTime_Elapsed);
-                    PalletTime.Start();
-                }
-                else
-                {
-                    string strWhere = string.Format("TASK_ID='{0}'", TaskID);
-                    dal.AssignCellTwo(strWhere);//货位申请
 
-                    strWhere = string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=3", TaskID);
+                if (PalletCount >= 5 || dtTask.Rows.Count <= 4)
+                {
+                    PalletBillDal Billdal = new PalletBillDal();
+                    TaskID = Billdal.CreatePalletInBillTask(false);
+
+
+                    string strWhere = string.Format("TASK_ID='{0}'", TaskID);
+                    string[] strValue = dal.AssignCellTwo(strWhere);//货位申请
+
+                    dal.UpdateTaskState(strValue[0], "1");//更新任务开始执行
+                    ProductStateDal StateDal = new ProductStateDal();
+                    StateDal.UpdateProductCellCode(strValue[0], strValue[4]); //更新Product_State 货位
+                    dal.UpdateTaskDetailStation("357", "359", "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", strValue[0])); //更新货位申请起始地址及目标地址。
+
+
+                    //dal.UpdateTaskDetailStation("359", strValue[6], "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", strValue[0]));//更新货位到达入库站台，
+                    //dal.UpdateTaskDetailStation(strValue[6], strValue[2], "0", string.Format("TASK_ID='{0}' AND ITEM_NO=3", strValue[0]));//更新货位到达入库站台，
+                    //dal.UpdateTaskDetailCrane(strValue[3], "30" + strValue[4], "0", strValue[5], string.Format("TASK_ID='{0}' AND ITEM_NO=4", strValue[0]));//更新调度堆垛机的其实位置及目标地址。
+
+
+
+                    strWhere = string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=2", TaskID);
                     DataTable dt = dal.TaskCarDetail(strWhere);
                     WriteToProcess("CarProcess", "CarInRequest", dt);
                 }
             }
             catch (Exception e)
             {
-                Logger.Error("入库任务请求批次生成处理失败，原因：" + e.Message);
+                Logger.Error("THOK.XC.Process.Process_02.PalletInRequestProcess：" + e.Message);
             }
         }
 
-        private void PalletTime_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            int str = (int)WriteToService("", "");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            if (str >= 5)
-            {
-                string strWhere = string.Format("TASK_ID='{0}'", TaskID);
-                TaskDal dal = new TaskDal();
-                dal.AssignCellTwo(strWhere);//货位申请
-
-                strWhere = string.Format("TASK_ID='{0}' AND TASK_TYPE='{1}'", TaskID, "21");
-                DataTable dt = dal.TaskCarDetail(strWhere);
-                WriteToProcess("CarProcess", "CarInRequest", dt);
-                PalletTime.Enabled = false;
-                PalletTime.Stop();
-
-            }
-        }
+      
     }
 }

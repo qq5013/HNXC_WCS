@@ -12,19 +12,25 @@ namespace THOK.XC.Process.Dal
         /// 出库-- 货位解锁
         /// </summary>
         /// <param name="strCell"></param>
-        public void UpdateCellOutUnLock(string strCell)
+        public void UpdateCellOutFinishUnLock(string strCell)
         {
-            CellDao dao = new CellDao();
-            dao.UpdateCellOutUnLock(strCell);
+            using (PersistentManager pm = new PersistentManager())
+            {
+                CellDao dao = new CellDao();
+                dao.UpdateCellOutFinishUnLock(strCell);
+            }
         }
 
         /// <summary>
-        /// 入库---更新货位储存信息。
+        /// 入库---解除货位锁定，更新货位储存信息。
         /// </summary>
-        public void UpdateCellInLock()
+        public void UpdateCellInFinishUnLock(string TaskID)
         {
-            CellDao dao = new CellDao();
-            dao.UpdateCellInLock("");
+            using (PersistentManager pm = new PersistentManager())
+            {
+                CellDao dao = new CellDao();
+                dao.UpdateCellInFinishUnLock(TaskID);
+            }
         }
 
         /// <summary>
@@ -32,8 +38,11 @@ namespace THOK.XC.Process.Dal
         /// </summary>
         public void UpdateCellLock(string strCell)
         {
-            CellDao dao = new CellDao();
-            dao.UpdateCellLock(strCell);
+            using (PersistentManager pm = new PersistentManager())
+            {
+                CellDao dao = new CellDao();
+                dao.UpdateCellLock(strCell);
+            }
         }
 
         /// <summary>
@@ -42,8 +51,11 @@ namespace THOK.XC.Process.Dal
         /// <param name="NewPalletCode"></param>
         public void UpdateCellNewPalletCode(string CellCode, string NewPalletCode)
         {
-            CellDao dao = new CellDao();
-            dao.UpdateCellNewPalletCode(CellCode, NewPalletCode);
+            using (PersistentManager pm = new PersistentManager())
+            {
+                CellDao dao = new CellDao();
+                dao.UpdateCellNewPalletCode(CellCode, NewPalletCode);
+            }
         }
 
     }

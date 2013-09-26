@@ -44,14 +44,16 @@ namespace THOK.XC.Process.Process_01
                string[]  strMessage=new string[3];
                strMessage[0] = "3";
                strMessage[1] = strBadFlag;
+               this.Suspend();
                while ((strBarCode = FormDialog.ShowDialog(strMessage,null)) != "")
                {
-                   this.Stop();
-                   WriteToProcess("StockPLC_01", "01_2_124_1", strBarCode); //写入条码
-                   WriteToProcess("StockPLC_01", "01_2_124_2", 1);//写入标识。
+                   sbyte[] b = Common.ConvertStringChar.stringToBytes(strBarCode, 40);
+                   WriteToService("StockPLC_01", "01_2_124_1", b); //写入条码  
+                   WriteToService("StockPLC_01", "01_2_124_2", 1);//写入标识。
+                   this.Resume();
                    break;
                }
-               this.Resume();
+              
             }
             catch (Exception e)
             {
