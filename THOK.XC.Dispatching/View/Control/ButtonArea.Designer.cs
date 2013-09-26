@@ -66,6 +66,18 @@
             this.imgList.Images.SetKeyName(11, "05.ico");
             this.imgList.Images.SetKeyName(12, "pic.png");
             this.imgList.Images.SetKeyName(13, "开始出库.BMP");
+            this.imgList.Images.SetKeyName(14, "停止出库.gif");
+            this.imgList.Images.SetKeyName(15, "恢复出库.gif");
+            this.imgList.Images.SetKeyName(16, "校验.gif");
+            this.imgList.Images.SetKeyName(17, "抽检.gif");
+            this.imgList.Images.SetKeyName(18, "操作.gif");
+            this.imgList.Images.SetKeyName(19, "出.gif");
+            this.imgList.Images.SetKeyName(20, "故障.gif");
+            this.imgList.Images.SetKeyName(21, "倒库.gif");
+            this.imgList.Images.SetKeyName(22, "入.gif");
+            this.imgList.Images.SetKeyName(23, "扫码1.gif");
+            this.imgList.Images.SetKeyName(24, "退出.gif");
+            this.imgList.Images.SetKeyName(25, "托盘入库.gif");
             // 
             // pnlButton
             // 
@@ -100,9 +112,9 @@
             // btnMoveOut
             // 
             this.btnMoveOut.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnMoveOut.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnMoveOut.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnMoveOut.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnMoveOut.ImageIndex = 5;
+            this.btnMoveOut.ImageIndex = 21;
             this.btnMoveOut.ImageList = this.imgList;
             this.btnMoveOut.Location = new System.Drawing.Point(109, 68);
             this.btnMoveOut.Name = "btnMoveOut";
@@ -115,9 +127,9 @@
             // btnInspect
             // 
             this.btnInspect.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnInspect.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnInspect.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnInspect.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnInspect.ImageIndex = 5;
+            this.btnInspect.ImageIndex = 17;
             this.btnInspect.ImageList = this.imgList;
             this.btnInspect.Location = new System.Drawing.Point(3, 68);
             this.btnInspect.Name = "btnInspect";
@@ -131,7 +143,7 @@
             // btnStart
             // 
             this.btnStart.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnStart.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnStart.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnStart.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnStart.ImageIndex = 12;
             this.btnStart.ImageList = this.imgList;
@@ -148,9 +160,9 @@
             // 
             this.btnStop.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnStop.Enabled = false;
-            this.btnStop.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnStop.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnStop.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnStop.ImageIndex = 1;
+            this.btnStop.ImageIndex = 14;
             this.btnStop.ImageList = this.imgList;
             this.btnStop.Location = new System.Drawing.Point(109, 3);
             this.btnStop.Name = "btnStop";
@@ -164,9 +176,9 @@
             // btnSimulate
             // 
             this.btnSimulate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnSimulate.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnSimulate.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnSimulate.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnSimulate.ImageIndex = 9;
+            this.btnSimulate.ImageIndex = 15;
             this.btnSimulate.ImageList = this.imgList;
             this.btnSimulate.Location = new System.Drawing.Point(214, 3);
             this.btnSimulate.Name = "btnSimulate";
@@ -180,9 +192,9 @@
             // btnOperate
             // 
             this.btnOperate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnOperate.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnOperate.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnOperate.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnOperate.ImageIndex = 3;
+            this.btnOperate.ImageIndex = 18;
             this.btnOperate.ImageList = this.imgList;
             this.btnOperate.Location = new System.Drawing.Point(328, 3);
             this.btnOperate.Name = "btnOperate";
@@ -196,9 +208,9 @@
             // btnPalletIn
             // 
             this.btnPalletIn.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnPalletIn.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnPalletIn.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnPalletIn.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnPalletIn.ImageIndex = 6;
+            this.btnPalletIn.ImageIndex = 25;
             this.btnPalletIn.ImageList = this.imgList;
             this.btnPalletIn.Location = new System.Drawing.Point(214, 68);
             this.btnPalletIn.Name = "btnPalletIn";
@@ -212,9 +224,9 @@
             // btnCheckScan
             // 
             this.btnCheckScan.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnCheckScan.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnCheckScan.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnCheckScan.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnCheckScan.ImageIndex = 5;
+            this.btnCheckScan.ImageIndex = 23;
             this.btnCheckScan.ImageList = this.imgList;
             this.btnCheckScan.Location = new System.Drawing.Point(328, 68);
             this.btnCheckScan.Name = "btnCheckScan";
@@ -228,7 +240,7 @@
             // btnHelp
             // 
             this.btnHelp.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnHelp.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnHelp.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnHelp.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnHelp.ImageIndex = 7;
             this.btnHelp.ImageList = this.imgList;
@@ -244,9 +256,9 @@
             // btnExit
             // 
             this.btnExit.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnExit.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnExit.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnExit.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnExit.ImageIndex = 4;
+            this.btnExit.ImageIndex = 24;
             this.btnExit.ImageList = this.imgList;
             this.btnExit.Location = new System.Drawing.Point(550, 68);
             this.btnExit.Name = "btnExit";
@@ -260,9 +272,9 @@
             // btnVerficate
             // 
             this.btnVerficate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnVerficate.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnVerficate.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnVerficate.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnVerficate.ImageIndex = 11;
+            this.btnVerficate.ImageIndex = 16;
             this.btnVerficate.ImageList = this.imgList;
             this.btnVerficate.Location = new System.Drawing.Point(441, 3);
             this.btnVerficate.Name = "btnVerficate";
@@ -275,9 +287,9 @@
             // btnBarcodeScan
             // 
             this.btnBarcodeScan.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnBarcodeScan.Font = new System.Drawing.Font("SimSun", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnBarcodeScan.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnBarcodeScan.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnBarcodeScan.ImageIndex = 4;
+            this.btnBarcodeScan.ImageIndex = 20;
             this.btnBarcodeScan.ImageList = this.imgList;
             this.btnBarcodeScan.Location = new System.Drawing.Point(441, 68);
             this.btnBarcodeScan.Name = "btnBarcodeScan";

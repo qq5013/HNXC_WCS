@@ -35,13 +35,18 @@
             this.pnlBottom = new System.Windows.Forms.Panel();
             this.scBottom = new System.Windows.Forms.SplitContainer();
             this.lbLog = new System.Windows.Forms.ListBox();
-            this.monitorView = new THOK.MCP.View.MonitorView();
             this.buttonArea = new THOK.XC.Dispatching.View.ButtonArea();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.monitorView = new THOK.MCP.View.MonitorView();
+            this.monitorView1 = new THOK.MCP.View.MonitorView();
             this.pnlMain.SuspendLayout();
             this.pnlBottom.SuspendLayout();
             this.scBottom.Panel1.SuspendLayout();
             this.scBottom.Panel2.SuspendLayout();
             this.scBottom.SuspendLayout();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlTitle
@@ -55,7 +60,7 @@
             // lblTitle
             // 
             this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new System.Drawing.Font("SimSun", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lblTitle.Font = new System.Drawing.Font("宋体", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
             this.lblTitle.Location = new System.Drawing.Point(326, 9);
             this.lblTitle.Name = "lblTitle";
@@ -65,7 +70,7 @@
             // 
             // pnlMain
             // 
-            this.pnlMain.Controls.Add(this.monitorView);
+            this.pnlMain.Controls.Add(this.splitContainer1);
             this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlMain.Location = new System.Drawing.Point(0, 58);
             this.pnlMain.Name = "pnlMain";
@@ -103,24 +108,13 @@
             // lbLog
             // 
             this.lbLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbLog.Font = new System.Drawing.Font("SimSun", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lbLog.Font = new System.Drawing.Font("宋体", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lbLog.FormattingEnabled = true;
             this.lbLog.HorizontalScrollbar = true;
             this.lbLog.Location = new System.Drawing.Point(0, 0);
             this.lbLog.Name = "lbLog";
             this.lbLog.Size = new System.Drawing.Size(522, 130);
             this.lbLog.TabIndex = 1;
-            // 
-            // monitorView
-            // 
-            this.monitorView.BackColor = System.Drawing.SystemColors.Highlight;
-            this.monitorView.BackgroundImage = global::THOK.XC.Dispatching.WCS.Properties.Resources.S1_0002;
-            this.monitorView.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.monitorView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.monitorView.Location = new System.Drawing.Point(0, 0);
-            this.monitorView.Name = "monitorView";
-            this.monitorView.Size = new System.Drawing.Size(1024, 580);
-            this.monitorView.TabIndex = 0;
             // 
             // buttonArea
             // 
@@ -129,6 +123,47 @@
             this.buttonArea.Name = "buttonArea";
             this.buttonArea.Size = new System.Drawing.Size(500, 130);
             this.buttonArea.TabIndex = 0;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.IsSplitterFixed = true;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.monitorView);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.monitorView1);
+            this.splitContainer1.Size = new System.Drawing.Size(1024, 580);
+            this.splitContainer1.SplitterDistance = 521;
+            this.splitContainer1.SplitterWidth = 1;
+            this.splitContainer1.TabIndex = 1;
+            // 
+            // monitorView
+            // 
+            this.monitorView.BackColor = System.Drawing.SystemColors.Highlight;
+            this.monitorView.BackgroundImage = global::THOK.XC.Dispatching.WCS.Properties.Resources.S2;
+            this.monitorView.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.monitorView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.monitorView.Location = new System.Drawing.Point(0, 0);
+            this.monitorView.Name = "monitorView";
+            this.monitorView.Size = new System.Drawing.Size(521, 580);
+            this.monitorView.TabIndex = 0;
+            // 
+            // monitorView1
+            // 
+            this.monitorView1.BackColor = System.Drawing.SystemColors.Highlight;
+            this.monitorView1.BackgroundImage = global::THOK.XC.Dispatching.WCS.Properties.Resources.S3;
+            this.monitorView1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.monitorView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.monitorView1.Location = new System.Drawing.Point(0, 0);
+            this.monitorView1.Name = "monitorView1";
+            this.monitorView1.Size = new System.Drawing.Size(502, 580);
+            this.monitorView1.TabIndex = 1;
             // 
             // MainForm
             // 
@@ -156,6 +191,9 @@
             this.scBottom.Panel1.ResumeLayout(false);
             this.scBottom.Panel2.ResumeLayout(false);
             this.scBottom.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -171,6 +209,8 @@
         private System.Windows.Forms.SplitContainer scBottom;
         private THOK.XC.Dispatching.View.ButtonArea buttonArea;
         private System.Windows.Forms.ListBox lbLog;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private MCP.View.MonitorView monitorView1;
     }
 }
 
