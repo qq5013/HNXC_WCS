@@ -17,7 +17,12 @@ namespace THOK.XC.Process.Process_02
              * 
              *  stateItem.State ：参数 - 任务号。        
             */
-            string TaskNo = ((int)stateItem.State).ToString().PadLeft(4, '0');
+            object obj = ObjectUtil.GetObject(stateItem.State);
+
+            if (obj == null || obj.ToString() == "0")
+                return;
+
+            string TaskNo = obj.ToString().PadLeft(4, '0');
             string FromStation = "";
             string WriteItem = "";
             string ToStation = "";
@@ -59,6 +64,7 @@ namespace THOK.XC.Process.Process_02
                 }
                 TaskDal dal = new TaskDal();
                 string[] strValue = dal.GetTaskInfo(TaskNo);
+                DataTable dt = dal.TaskInfo(string.Format("TASK_ID='{0}'", strValue[0]));
                 if (!string.IsNullOrEmpty(strValue[0]))
                 {
                     string strWhere = string.Format("TASK_ID='{0}' AND ITEM_NO=2", strValue[0]);
@@ -69,14 +75,27 @@ namespace THOK.XC.Process.Process_02
                     writestate[0] = int.Parse(TaskNo);
                     writestate[1] = int.Parse(ToStation);
                     writestate[2] = 2;
+                   
+                    string barcode = "";
+                    string palletcode = "";
+                    if (dt.Rows[0]["PRODUCT_CODE"].ToString() != "0000") //
+                    {
+                        writestate[2] = 1;
+                        barcode = dt.Rows[0]["PRODUCT_BARCODE"].ToString();
+                        palletcode = dt.Rows[0]["PALLET_CODE"].ToString();
+                    }
                     WriteToService("StockPLC_02", WriteItem + "_1", writestate);
-                    WriteToService("StockPLC_02", WriteItem + "_2", "");
+                    sbyte [] b=new sbyte[90];
+                    Common.ConvertStringChar.stringToBytes(barcode, 40).CopyTo(b, 0);
+                    Common.ConvertStringChar.stringToBytes(palletcode, 50).CopyTo(b, 40);
+                    WriteToService("StockPLC_02", WriteItem + "_2", b);
+
                     WriteToService("StockPLC_02", WriteItem + "_3", 1);
                 }
             }
             catch (Exception e)
             {
-                Logger.Error("入库任务请求批次生成处理失败，原因：" + e.Message);
+                Logger.Error("THOK.XC.Process.Process_02.PalletToCarStationProcess，原因：" + e.Message);
             }
         }
     }

@@ -21,6 +21,11 @@ namespace THOK.XC.Process.Process_02
              * 
              *  stateItem.State ：参数 - 请求的卷烟编码。        
             */
+            object obj = ObjectUtil.GetObject(stateItem.State);
+
+            if (obj == null || obj.ToString() == "0")
+                return;
+
             string FromStation="";
             string ToStation="";
             string WriteItem = "";
@@ -73,7 +78,7 @@ namespace THOK.XC.Process.Process_02
 
             catch (Exception e)
             {
-                Logger.Error("入库任务请求批次生成处理失败，原因：" + e.Message);
+                Logger.Error("THOK.XC.Process.Process_02.StockOutCarFinishProcess，原因：" + e.Message);
             }
         }
     }

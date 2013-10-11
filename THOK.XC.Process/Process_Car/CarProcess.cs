@@ -13,13 +13,41 @@ namespace THOK.XC.Process.Process_Car
         private DataTable dtCarOrder;
         private DataTable dtOrder;
         private DataTable dtCarAddress;
-        protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
+
+        public override void Initialize(Context context)
         {
             if (dtCarAddress == null)
             {
                 SysCarAddressDal cad = new SysCarAddressDal();
                 dtCarAddress = cad.CarAddress();
             }
+            if (dtCarOrder == null)
+            {
+                dtCarOrder = new DataTable();
+                DataColumn dc1 = new DataColumn("CarNo", Type.GetType("System.String"));
+                DataColumn dc2 = new DataColumn("State", Type.GetType("System.String"));
+                DataColumn dc3 = new DataColumn("CurStation", Type.GetType("System.Int16"));
+                DataColumn dc4 = new DataColumn("OrderNo", Type.GetType("System.Int16"));
+                DataColumn dc5 = new DataColumn("ToStation", Type.GetType("System.Int16"));
+
+                DataColumn dc6 = new DataColumn("WriteItem", Type.GetType("System.String"));
+                DataColumn dc7 = new DataColumn("cc", Type.GetType("System.Int16"));
+
+                dtCarOrder.Columns.Add(dc1);
+                dtCarOrder.Columns.Add(dc2);
+                dtCarOrder.Columns.Add(dc3);
+                dtCarOrder.Columns.Add(dc4);
+                dtCarOrder.Columns.Add(dc5);
+                dtCarOrder.Columns.Add(dc6);
+                dtCarOrder.Columns.Add(dc7);
+            }
+            base.Initialize(context);
+        }
+
+
+        protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
+        {
+           
 
 
             bool blnChange = false;
@@ -35,28 +63,28 @@ namespace THOK.XC.Process.Process_Car
                     InsertdtCar((DataTable)stateItem.State);
                     break;
                 case "02_1_C01_2":
-                    strState = (string)stateItem.State;
+                    strState = ObjectUtil.GetObject(stateItem.State).ToString();
                     blnChange = true;
                     strCarNo = "01";
                     strReadItem = "02_1_C01_1";
                     strWriteItem = "02_2_C01";
                     break;
                 case "02_1_C02_2":
-                    strState = (string)stateItem.State;
+                    strState = ObjectUtil.GetObject(stateItem.State).ToString();
                     blnChange = true;
                     strCarNo = "02";
                     strReadItem = "02_1_C02_1";
                     strWriteItem = "02_2_C02";
                     break;
                 case "02_1_C03_2":
-                    strState = (string)stateItem.State;
+                    strState = ObjectUtil.GetObject(stateItem.State).ToString();
                      blnChange = true;
                     strCarNo = "03";
                     strReadItem = "02_1_C03_1";
                     strWriteItem = "02_2_C03";
                     break;
                 case "02_1_C04_2":
-                    strState = (string)stateItem.State;
+                    strState = ObjectUtil.GetObject(stateItem.State).ToString();
                      blnChange = true;
                     strCarNo = "04";
                     strReadItem = "02_1_C04_1";
@@ -230,56 +258,35 @@ namespace THOK.XC.Process.Process_Car
         /// <returns></returns>
         private DataTable GetCarOrder(int CurStation)
         {
-            if (dtCarOrder == null)
-            {
-                dtCarOrder = new DataTable();
-                DataColumn dc1 = new DataColumn("CarNo", Type.GetType("System.String"));
-                DataColumn dc2 = new DataColumn("State", Type.GetType("System.String"));
-                DataColumn dc3 = new DataColumn("CurStation", Type.GetType("System.Int16"));
-                DataColumn dc4 = new DataColumn("OrderNo", Type.GetType("System.Int16"));
-                DataColumn dc5 = new DataColumn("ToStation", Type.GetType("System.Int16"));
-                
-                DataColumn dc6 = new DataColumn("WriteItem", Type.GetType("System.String"));
-                DataColumn dc7 = new DataColumn("cc", Type.GetType("System.Int16"));
-
-                dtCarOrder.Columns.Add(dc1);
-                dtCarOrder.Columns.Add(dc2);
-                dtCarOrder.Columns.Add(dc3);
-                dtCarOrder.Columns.Add(dc4);
-                dtCarOrder.Columns.Add(dc5);
-                dtCarOrder.Columns.Add(dc6);
-                dtCarOrder.Columns.Add(dc7);
-            }
             DataTable dt = new DataTable();
             dt = dtCarOrder.Clone();
 
 
-
-            int[] obj =(int []) WriteToService("StockPLC_02", "02_1_C01_1"); //第一辆小车
+            object[] obj = ObjectUtil.GetObjects(WriteToService("StockPLC_02", "02_1_C01_1")); //第一辆小车
 
             InsertCarOrder(dt, "01","02_2_C01", CurStation, obj);
 
-            obj = (int[])WriteToService("StockPLC_02", "02_1_C02_1"); //第二辆小车
+            obj = ObjectUtil.GetObjects(WriteToService("StockPLC_02", "02_1_C02_1")); //第二辆小车
             InsertCarOrder(dt, "02","02_2_C02", CurStation, obj);
 
-            obj = (int[])WriteToService("StockPLC_02", "02_1_C03_1"); //第三辆小车
+            obj =  ObjectUtil.GetObjects(WriteToService("StockPLC_02", "02_1_C03_1")); //第三辆小车
             InsertCarOrder(dt, "03", "02_2_C03",CurStation, obj);
-            obj = (int[])WriteToService("StockPLC_02", "02_1_C04_1"); //第四辆小车
+            obj =  ObjectUtil.GetObjects(WriteToService("StockPLC_02", "02_1_C04_1")); //第四辆小车
             InsertCarOrder(dt, "04","02_2_C04", CurStation, obj);
             return dt;
         }
         
-        private void InsertCarOrder(DataTable dt, string CarNo, string WriteItem, int CurStation,  int[] obj)
+        private void InsertCarOrder(DataTable dt, string CarNo, string WriteItem, int CurStation,  object[] obj)
         {
-            if (obj[1] != 2)//故障
+            if (obj[1].ToString() != "2")//故障
             {
                 DataRow dr = dt.NewRow();
                 dr["CarNo"] = CarNo;
                 dr["State"] = obj[0]; //状态
                 dr["WriteItem"] = WriteItem;
                 dr["CurStation"] = obj[1];//当前位置
-                if (obj[1] <= CurStation)
-                    dr["OrderNo"] = obj[1] + 10000; //小车位置小于当前位置，加上最大码尺地址。
+                if (int.Parse(obj[1].ToString()) <= CurStation)
+                    dr["OrderNo"] = int.Parse(obj[1].ToString()) + 10000; //小车位置小于当前位置，加上最大码尺地址。
 
 
 
@@ -289,8 +296,8 @@ namespace THOK.XC.Process.Process_Car
                     dr["OrderNo"] = obj[1];
                 dr["ToStation"] = obj[2]; //目的地
                 dr["ToStationOrder"] = obj[2];
-                if (obj[2] < 5000)
-                    dr["ToStationOrder"] = obj[2] + 10000;//最大码尺地址
+                if (int.Parse(obj[2].ToString()) < 5000)
+                    dr["ToStationOrder"] = int.Parse(obj[2].ToString()) + 10000;//最大码尺地址
                 dt.Rows.Add(dr);
             }
         }

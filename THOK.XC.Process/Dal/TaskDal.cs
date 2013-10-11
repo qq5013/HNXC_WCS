@@ -17,7 +17,7 @@ namespace THOK.XC.Process.Dal
             }
         }
          /// <summary>
-        /// 系统重新启动时，获取正在出库，或者出库完成的Task_Detail
+        /// 获取正在出库，或者出库完成的Task_Detail，主表 WCS_TASK_DETAIL ,WCS_TASK 
         /// </summary>
         /// <returns></returns>
         public DataTable TaskCraneDetail(string strWhere)
@@ -29,7 +29,7 @@ namespace THOK.XC.Process.Dal
             }
         }
          /// <summary>
-        /// 根据Task获取出库信息
+        /// 根据TASKID获取，要出库的堆垛机相关任务信息。主表，WCS_TASK 
         /// </summary>
         /// <param name="strWhere"></param>
         /// <returns></returns>
@@ -174,15 +174,15 @@ namespace THOK.XC.Process.Dal
         }
 
          /// <summary>
-        /// 二楼分配货位,更新货位信息，插入Task_Detail明细,更新货位申请完成。
+        /// 二楼分配货位,更新货位信息，返回 0:TaskID，1:任务号，2:货物到达入库站台的目的地址--平面号,3:堆垛机入库站台，4:货位，5:堆垛机编号,6:小车站台
         /// </summary>
         /// <param name="strWhere"></param>
-        public void AssignCellTwo(string strWhere) //
+        public string[] AssignCellTwo(string strWhere) //
         {
             using (PersistentManager pm = new PersistentManager())
             {
                 TaskDao dao = new TaskDao();
-                dao.AssignCellTwo(strWhere);
+               return dao.AssignCellTwo(strWhere);
             }
         }
         /// <summary>

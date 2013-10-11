@@ -35,10 +35,18 @@ namespace THOK.XC.Process.Process_01
                     dal.UpdateTaskState(strInfo[0], "2");
 
                     BillDal billdal = new BillDal();
-                    billdal.UpdateBillMasterFinished(strInfo[1]);
+                    billdal.UpdateBillMasterFinished(strInfo[1],"1");
 
                     string writeItem = "01_2_122_";
-                    Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "1", 1); //PLC写入任务
+
+                    int[] ServiceW = new int[3];
+                    ServiceW[0] = int.Parse(strInfo[1]); //任务号
+                    ServiceW[1] = 131;//目的地址
+                    ServiceW[2] = 4;
+
+                    WriteToService("StockPLC_01", writeItem + "1", ServiceW); //PLC写入任务
+
+                    Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "2", 1); //PLC写入任务
                     break;
                 }
                 this.Resume();//线程继续。
