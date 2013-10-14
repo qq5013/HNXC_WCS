@@ -36,7 +36,8 @@ namespace THOK.CRANE
             tgm.TelegramData = "ARQ";
             tgm.TelegramData += tgd.CraneNo;
             tgm.TelegramData += tgd.AssignmenID;
-            tgm.TelegramData += "CM00";
+            tgm.TelegramData += tgd.AssignmentType;
+            tgm.TelegramData += "00";
             tgm.TelegramData += tgd.StartPosition;
             tgm.TelegramData += tgd.DestinationPosition;
             tgm.TelegramData += "REHIFUFU";
