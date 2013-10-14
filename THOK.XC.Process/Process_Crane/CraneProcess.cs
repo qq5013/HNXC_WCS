@@ -194,7 +194,7 @@ namespace THOK.XC.Process.Process_Crane
                         drTaskCrane["ASSIGNMENT_ID"] = strTaskDetailNo.PadLeft(8, '0');
                         drTaskCrane.EndEdit();
                     }
-                    SendTelegramARQ(drTaskCrane);//发送报文
+                    SendTelegramARQ(drTaskCrane, true);//发送报文
                     blnSend = true;
                 }
             }
@@ -664,35 +664,13 @@ namespace THOK.XC.Process.Process_Crane
                     StateDal.UpdateProductCellCode(strValue[0], strValue[4]); //更新Product_State 货位
                     dal.UpdateTaskDetailCrane(strValue[3], "30" + strValue[4], "1", strValue[5], string.Format("TASK_ID='{0}' AND ITEM_NO=3", strValue[0]));//更新调度堆垛机的其实位置及目标地址。
 
-                    string From_STATION = drs[0]["TO_STATION"].ToString();
                     drs[0].BeginEdit();
                     drs[0]["TO_STATION"] = "30" + strValue[4];
                     drs[0].EndEdit();
 
-
-                    THOK.CRANE.TelegramData tgd = new CRANE.TelegramData(); //发送新的报文
-                    tgd.CraneNo = drs[0]["CRANE_NO"].ToString();
-                    tgd.AssignmenID = drs[0]["ASSIGNMENT_ID"].ToString();
-                    tgd.StartPosition = From_STATION;
-
-                    tgd.DestinationPosition = drs[0]["TO_STATION"].ToString();
-
-                    THOK.CRANE.TelegramFraming tf = new CRANE.TelegramFraming();
-                    string QuenceNo = GetNextSQuenceNo();
-                    string str = tf.DataFraming("1" + QuenceNo, tgd, tf.TelegramCRQ);
-                    WriteToService("Crane", "ARQ", str);
-                    drs[0].BeginEdit();
-                    drs[0]["SQUENCE_NO"] = DateTime.Now.ToString("yyyyMMdd") + QuenceNo;
-                    drs[0].EndEdit();
-                    lock (dCraneState)
-                    {
-                        dCraneState[drs[0]["CRANE_NO"].ToString()] = "1";
-                    }
-                    dtCrane.AcceptChanges();
-                    //更新发送报文。
+                    SendTelegramARQ(drs[0], false);
 
 
-                    dal.UpdateCraneQuenceNo(TASK_ID, drs[0]["SQUENCE_NO"].ToString()); //更新堆垛机序列号。并更新为1
                 }
                 else //出库 货位无货，系统记录有货--重新分配新的出库任务。
                 {
@@ -707,18 +685,22 @@ namespace THOK.XC.Process.Process_Crane
         #endregion
 
         #region 发送堆垛机报文
-        private void SendTelegramARQ(DataRow dr)
+        private void SendTelegramARQ(DataRow dr,bool blnValue)
         {
 
             THOK.CRANE.TelegramData tgd = new CRANE.TelegramData();
             tgd.CraneNo = dr["CRANE_NO"].ToString();
             tgd.AssignmenID = dr["ASSIGNMENT_ID"].ToString();
+            if (!blnValue)
+            {
+                tgd.AssignmentType = "DE";
+            }
             tgd.StartPosition = dr["FROM_STATION"].ToString();
             tgd.DestinationPosition = dr["TO_STATION"].ToString();
 
             THOK.CRANE.TelegramFraming tf = new CRANE.TelegramFraming();
             string QuenceNo = GetNextSQuenceNo();
-            string str = tf.DataFraming("1" + QuenceNo, tgd, tf.TelegramCRQ);
+            string str = tf.DataFraming("1" + QuenceNo, tgd, tf.TelegramARQ);
             WriteToService("Crane", "ARQ", str);
             dr.BeginEdit();
             dr["SQUENCE_NO"] = DateTime.Now.ToString("yyyyMMdd") + QuenceNo;

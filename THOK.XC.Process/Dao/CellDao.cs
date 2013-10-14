@@ -59,5 +59,16 @@ namespace THOK.XC.Process.Dao
             string strSQL = string.Format("SELECT * FROM CMD_CELL WHERE CELL_CODE='{1}' ", CellCode);
             return ExecuteQuery(strSQL).Tables[0];
         }
+
+        public DataTable Find()
+        {
+            string sql = "SELECT A.*,B.AREANAME,C.SHELFNAME,D.PRODUCTNAME,TO_NUMBER(SUBSTR(A.SHELFCODE,7)) SHELF FROM CELL A " +
+                "LEFT JOIN AREA B ON A.AREACODE = B.AREACODE " +
+                "LEFT JOIN SHELF C ON A.SHELFCODE=C.SHELFCODE " +
+                "LEFT JOIN PRODUCT D ON A.PRODUCTCODE=D.PRODUCTCODE " +
+                "ORDER BY AREACODE,A.SHELFCODE,CELLCODE";
+            return ExecuteQuery(sql).Tables[0];
+        }
+
     }
 }

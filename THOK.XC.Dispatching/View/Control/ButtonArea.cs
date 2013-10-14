@@ -18,6 +18,8 @@ namespace THOK.XC.Dispatching.View
         public ButtonArea()
         {
             InitializeComponent();
+            this.btnStop.Enabled = false;
+            this.btnSimulate.Enabled = false;
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -61,7 +63,8 @@ namespace THOK.XC.Dispatching.View
         {
             try
             {
-                SwitchStatus(true);
+                this.btnStart.Enabled = false;
+                this.btnStop.Enabled = true;
 
                 TaskDal taskDal = new TaskDal();
                 DataTable dt = taskDal.TaskOutToDetail();
@@ -80,9 +83,6 @@ namespace THOK.XC.Dispatching.View
                 Context.Processes["CraneProcess"].Start();
                 Context.ProcessDispatcher.WriteToProcess("CraneProcess", "StockOutRequest", dtSend);
                 IndexStar++;
-
-
-
                
                 timer1.Enabled = true;
                 timer1.Start();
@@ -98,9 +98,18 @@ namespace THOK.XC.Dispatching.View
 
         private void btnStop_Click(object sender, EventArgs e)
         {
-            Context.ProcessDispatcher.WriteToProcess("OrderDataStateProcess", "Stop", null);
+            if (Context.Processes["CraneProcess"] != null)
+            {
+                Context.Processes["CraneProcess"].Suspend();
+            }
+
             SwitchStatus(false);
+
+            this.btnStop.Enabled = false;
+            this.btnStart.Enabled = false;
+            this.btnSimulate.Enabled = true;
             timer1.Enabled = false;
+            timer1.Stop();
         }
 
         private void btnHelp_Click(object sender, EventArgs e)
@@ -110,22 +119,28 @@ namespace THOK.XC.Dispatching.View
 
         private void SwitchStatus(bool isStart)
         {
-            btnCheckScan.Enabled = !isStart;
-            btnPalletIn.Enabled = !isStart;
-            btnStart.Enabled = !isStart;
-            btnStop.Enabled = isStart;
-            btnSimulate.Enabled = !isStart;
+             
         }
 
         private void btnSimulate_Click(object sender, EventArgs e)
         {            
             try
             {
-               
+                if (Context.Processes["CraneProcess"] != null)
+                {
+                    Context.Processes["CraneProcess"].Resume();
+                }
+
+                SwitchStatus(false);
+                this.btnStop.Enabled = true;
+                this.btnStart.Enabled = false;
+                this.btnSimulate.Enabled = false;
+                timer1.Enabled = true;
+                timer1.Start();
             }
             catch (Exception ee)
             {
-                Logger.Error("清除PLC未扫码件烟信息处理失败，原因：" + ee.Message);
+                Logger.Error("恢复出库任务失败：" + ee.Message);
             }
         }
         private void timer1_Tick(object sender, EventArgs e)
