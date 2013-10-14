@@ -15,36 +15,40 @@ namespace THOK.XC.Process.Process_02
         {
             /*  处理事项：
              * 二楼出库条码校验
-             * 生成入库单，入库作业。
+             *  
             */
             try
             {
-                object obj = ObjectUtil.GetObject(stateItem.State);
-                if (obj == null || obj.ToString() == "0")
+                object[] obj = ObjectUtil.GetObjects(stateItem.State);
+                if (obj[0] == null || obj[0].ToString() == "0")
                     return;
-                PalletBillDal Billdal = new PalletBillDal();
-                TaskID = Billdal.CreatePalletInBillTask(false);
 
-                //判断是否还有出库任务
+                string TaskNo = obj[0].ToString().PadLeft(4, '0');
                 TaskDal dal = new TaskDal();
-                DataTable dtTask = dal.TaskInfo("TASK_TYPE='22' AND STATE IN (0,1)");
-                if (dtTask.Rows.Count > 0)
-                {
-                    PalletTime.Enabled = true;
-                    PalletTime.Interval = 100000;
-                    PalletTime.AutoReset = true;
-                    PalletTime.Elapsed += new System.Timers.ElapsedEventHandler(PalletTime_Elapsed);
-                    PalletTime.Start();
-                }
-                else
-                {
-                    string strWhere = string.Format("TASK_ID='{0}'", TaskID);
-                    dal.AssignCellTwo(strWhere);//货位申请
+                string[] strValue = dal.GetTaskInfo(TaskNo);
 
-                    strWhere = string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=3", TaskID);
-                    DataTable dt = dal.TaskCarDetail(strWhere);
-                    WriteToProcess("CarProcess", "CarInRequest", dt);
+                string WriteItem = "";
+                string ReadItem = "";
+                switch (stateItem.ItemName)
+                {
+                    case "02_1_340_1":
+                        WriteItem = "02_2_340";
+                        ReadItem = "02_1_340_2";
+                        break;
+                    case "02_1_360_1":
+                        WriteItem = "02_2_360";
+                        ReadItem = "02_1_360_2";
+                        break;
+
                 }
+                if (obj[1].ToString() == "1")
+                {
+                    string BarCode = Common.ConvertStringChar.BytesToString(ObjectUtil.GetObjects(WriteToService("StockPLC_02", ReadItem)));
+                    dal.UpdateTaskCheckBarCode(strValue[0], BarCode);
+                }
+                WriteToService("StockPLC_02", WriteItem + "_3", 1);
+
+
             }
             catch (Exception e)
             {
@@ -52,37 +56,5 @@ namespace THOK.XC.Process.Process_02
             }
         }
 
-        private void PalletTime_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            int str = (int)WriteToService("", "");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            if (str >= 5)
-            {
-                string strWhere = string.Format("TASK_ID='{0}'", TaskID);
-                TaskDal dal = new TaskDal();
-                dal.AssignCellTwo(strWhere);//货位申请
-
-                strWhere = string.Format("TASK_ID='{0}' AND TASK_TYPE='{1}'", TaskID, "21");
-                DataTable dt = dal.TaskCarDetail(strWhere);
-                WriteToProcess("CarProcess", "CarInRequest", dt);
-                PalletTime.Enabled = false;
-                PalletTime.Stop();
-
-            }
-        }
     }
 }

@@ -61,6 +61,8 @@
             this.label14 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.btnOK = new System.Windows.Forms.Button();
+            this.txtCode = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -81,7 +83,7 @@
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(7, 44);
+            this.groupBox1.Location = new System.Drawing.Point(7, 69);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(408, 158);
             this.groupBox1.TabIndex = 12;
@@ -233,7 +235,7 @@
             this.groupBox2.Controls.Add(this.label12);
             this.groupBox2.Controls.Add(this.label13);
             this.groupBox2.Controls.Add(this.label14);
-            this.groupBox2.Location = new System.Drawing.Point(439, 44);
+            this.groupBox2.Location = new System.Drawing.Point(436, 69);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(408, 158);
             this.groupBox2.TabIndex = 13;
@@ -293,9 +295,9 @@
             // 
             this.txtScanCode.Location = new System.Drawing.Point(68, 24);
             this.txtScanCode.Name = "txtScanCode";
+            this.txtScanCode.ReadOnly = true;
             this.txtScanCode.Size = new System.Drawing.Size(334, 21);
             this.txtScanCode.TabIndex = 7;
-            this.txtScanCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtScanCode_KeyDown);
             // 
             // label1
             // 
@@ -363,7 +365,7 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(281, 220);
+            this.label15.Location = new System.Drawing.Point(281, 252);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(317, 12);
             this.label15.TabIndex = 15;
@@ -371,7 +373,7 @@
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(385, 256);
+            this.btnOK.Location = new System.Drawing.Point(385, 277);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 27);
             this.btnOK.TabIndex = 14;
@@ -379,11 +381,30 @@
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
+            // txtCode
+            // 
+            this.txtCode.Location = new System.Drawing.Point(505, 41);
+            this.txtCode.Name = "txtCode";
+            this.txtCode.Size = new System.Drawing.Size(334, 21);
+            this.txtCode.TabIndex = 17;
+            this.txtCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtCode_KeyDown);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(443, 44);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(65, 12);
+            this.label16.TabIndex = 16;
+            this.label16.Text = "扫描条码：";
+            // 
             // CheckScan
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(856, 295);
+            this.ClientSize = new System.Drawing.Size(856, 316);
+            this.Controls.Add(this.txtCode);
+            this.Controls.Add(this.label16);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.btnOK);
             this.Controls.Add(this.groupBox2);
@@ -394,7 +415,7 @@
             this.MinimizeBox = false;
             this.Name = "CheckScan";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "CheckScan";
+            this.Text = "盘点处理";
             this.Activated += new System.EventHandler(this.CheckScan_Activated);
             this.Load += new System.EventHandler(this.CheckScan_Load);
             this.groupBox1.ResumeLayout(false);
@@ -441,5 +462,7 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.TextBox txtCode;
+        private System.Windows.Forms.Label label16;
     }
 }

@@ -415,7 +415,7 @@
             this.MinimizeBox = false;
             this.Name = "CannelBillSelect";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "CannelBillSelect";
+            this.Text = "出库处理";
             this.Load += new System.EventHandler(this.CannelBillSelect_Load);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();

@@ -1,6 +1,6 @@
 ﻿namespace THOK.XC.Dispatching.View
 {
-    partial class StockToStation
+    partial class CellNewBillSelect
     {
         /// <summary>
         /// Required designer variable.
@@ -28,9 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnOK = new System.Windows.Forms.Button();
-            this.lblMessage = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.txtWeight = new System.Windows.Forms.TextBox();
             this.txtGRADE_NAME = new System.Windows.Forms.TextBox();
@@ -46,36 +43,12 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.cmbBill = new System.Windows.Forms.ComboBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.btnOK = new System.Windows.Forms.Button();
+            this.lblMsg = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnOK
-            // 
-            this.btnOK.Location = new System.Drawing.Point(170, 264);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(75, 27);
-            this.btnOK.TabIndex = 7;
-            this.btnOK.Text = "确定";
-            this.btnOK.UseVisualStyleBackColor = true;
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
-            // 
-            // lblMessage
-            // 
-            this.lblMessage.AutoSize = true;
-            this.lblMessage.Location = new System.Drawing.Point(145, 20);
-            this.lblMessage.Name = "lblMessage";
-            this.lblMessage.Size = new System.Drawing.Size(161, 12);
-            this.lblMessage.TabIndex = 8;
-            this.lblMessage.Text = "抽检货物已到达，请人工处理";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(66, 228);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(293, 12);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "如货物已经抱走，请点击确定按钮，执行空托盘入库！";
             // 
             // groupBox1
             // 
@@ -93,12 +66,12 @@
             this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Location = new System.Drawing.Point(26, 55);
+            this.groupBox1.Location = new System.Drawing.Point(36, 52);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(408, 158);
-            this.groupBox1.TabIndex = 10;
+            this.groupBox1.TabIndex = 21;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "货物信息";
+            this.groupBox1.Text = "出库货物信息";
             // 
             // txtWeight
             // 
@@ -220,21 +193,58 @@
             this.label2.TabIndex = 0;
             this.label2.Text = "产品条码：";
             // 
-            // StockToStation
+            // cmbBill
+            // 
+            this.cmbBill.FormattingEnabled = true;
+            this.cmbBill.Location = new System.Drawing.Point(201, 225);
+            this.cmbBill.Name = "cmbBill";
+            this.cmbBill.Size = new System.Drawing.Size(204, 20);
+            this.cmbBill.TabIndex = 27;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(70, 228);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(137, 12);
+            this.label16.TabIndex = 26;
+            this.label16.Text = "请选择补货的入库批次：";
+            // 
+            // btnOK
+            // 
+            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnOK.Location = new System.Drawing.Point(201, 272);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(75, 23);
+            this.btnOK.TabIndex = 28;
+            this.btnOK.Text = "确定";
+            this.btnOK.UseVisualStyleBackColor = true;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            // 
+            // lblMsg
+            // 
+            this.lblMsg.AutoSize = true;
+            this.lblMsg.Location = new System.Drawing.Point(42, 21);
+            this.lblMsg.Name = "lblMsg";
+            this.lblMsg.Size = new System.Drawing.Size(371, 12);
+            this.lblMsg.TabIndex = 29;
+            this.lblMsg.Text = "堆垛机返回错误，错误代码：111,错误内容：Pickup location enpty";
+            // 
+            // CellNewBillSelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(446, 303);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.lblMessage);
+            this.ClientSize = new System.Drawing.Size(473, 318);
+            this.Controls.Add(this.lblMsg);
             this.Controls.Add(this.btnOK);
+            this.Controls.Add(this.cmbBill);
+            this.Controls.Add(this.label16);
+            this.Controls.Add(this.groupBox1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "StockToStation";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "提示";
-            this.Load += new System.EventHandler(this.StockToStation_Load);
+            this.Name = "CellNewBillSelect";
+            this.Text = "CellNewBillSelect";
+            this.Load += new System.EventHandler(this.CellNewBillSelect_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -244,9 +254,6 @@
 
         #endregion
 
-        private System.Windows.Forms.Button btnOK;
-        private System.Windows.Forms.Label lblMessage;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox txtWeight;
         private System.Windows.Forms.TextBox txtGRADE_NAME;
@@ -262,5 +269,9 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox cmbBill;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.Label lblMsg;
     }
 }

@@ -24,23 +24,14 @@ namespace THOK.XC.Process.Process_02
                 switch (stateItem.ItemName)
                 {
 
-                    case "02_1_378":
-                        WriteItem = "02_2_378";
+                    case "02_1_475":
+                        WriteItem = "02_2_475";
                         break;
-                    case "02_1_381":
-                        WriteItem = "02_2_381";
+                    case "02_1_440":
+                        WriteItem = "02_2_440";
                         break;
-                    case "02_1_383":
-                        WriteItem = "02_2_383";
-                        break;
-                    case "02_1_385":
-                        WriteItem = "02_2_385";
-                        break;
-                    case "02_1_387":
-                        WriteItem = "02_2_387";
-                        break;
-                    case "02_1_389":
-                        WriteItem = "02_2_389";
+                    case "02_1_412":
+                        WriteItem = "02_2_412";
                         break;
                 }
                 string TaskNo = obj.ToString().PadLeft(4, '0');
@@ -48,8 +39,10 @@ namespace THOK.XC.Process.Process_02
                 string[] strValue = dal.GetTaskInfo(TaskNo);
                 if (!string.IsNullOrEmpty(strValue[0]))
                 {
-                    dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEMNO=5", strValue[0]), "2"); //更新
-                    dal.UpdateTaskState(strValue[0], "2"); //更新任务
+                    dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=5", strValue[0]), "2"); //更新
+                    ChannelDal cDal = new ChannelDal();
+                    cDal.UpdateOutChannelTime(strValue[0]);
+
                     WriteToService("StockPLC_02", WriteItem, 1);
                 }
                 

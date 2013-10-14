@@ -47,12 +47,12 @@ namespace THOK.XC.Process.Dal
         /// 二楼出库托盘校验出错，由用户选定出库的入库单号OutBillNO， 补充生成 出库单。
         /// </summary>
         /// <returns>TaskID</returns>
-        public string CreateCancelBillOutTask(string TaskID, string BillNo, string OutBillNO)
+        public string CreateCancelBillOutTask(string TaskID, string BillNo, string OutBillNO, string OLD_PALLET_CODE)
         {
             using (PersistentManager pm = new PersistentManager())
             {
                 BillDao dao = new BillDao();
-                string strTaskID = dao.CreateCancelBillOutTask(TaskID, BillNo, OutBillNO);
+                string strTaskID = dao.CreateCancelBillOutTask(TaskID, BillNo, OutBillNO, OLD_PALLET_CODE);
                 return strTaskID;
             }
         }

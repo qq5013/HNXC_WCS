@@ -107,6 +107,18 @@
     <Compile Include="View\CannelBillSelect.Designer.cs">
       <DependentUpon>CannelBillSelect.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\CellError.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\CellError.Designer.cs">
+      <DependentUpon>CellError.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\CellNewBillSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\CellNewBillSelect.Designer.cs">
+      <DependentUpon>CellNewBillSelect.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\CheckScan.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -146,6 +158,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\CannelBillSelect.resx">
       <DependentUpon>CannelBillSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\CellError.resx">
+      <DependentUpon>CellError.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\CellNewBillSelect.resx">
+      <DependentUpon>CellNewBillSelect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\CheckScan.resx">
       <DependentUpon>CheckScan.cs</DependentUpon>

@@ -120,7 +120,7 @@ namespace THOK.XC.Dispatching.WCS
                     }
 
                 }
-                else if (args.Message[0] == "2")//盘点
+                else if (args.Message[0] == "6")//盘点
                 {
                     THOK.XC.Dispatching.View.CheckScan frm = new THOK.XC.Dispatching.View.CheckScan(int.Parse(args.Message[0]), args.dtInfo);
                     if (frm.ShowDialog() == DialogResult.OK)
@@ -138,7 +138,7 @@ namespace THOK.XC.Dispatching.WCS
                     }
 
                 }
-                else if (args.Message[0] == "5")  //
+                else if (args.Message[0] == "5")  //二楼出库，RFID不一致,选择新批次
                 {
                     THOK.XC.Dispatching.View.CannelBillSelect frm = new THOK.XC.Dispatching.View.CannelBillSelect(args.Message[1], args.Message[2], args.dtInfo);
                     if (frm.ShowDialog() == DialogResult.OK)
@@ -146,10 +146,22 @@ namespace THOK.XC.Dispatching.WCS
                         strValue = frm.strBillNo;
                     }
                 }
-                
-                   
-                 
-                
+                else if (args.Message[0] == "7")//烟包入库，堆垛机返回错误,货位有货
+                {
+                    THOK.XC.Dispatching.View.CellError frm = new View.CellError(args.Message[1], args.Message[2]);
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        strValue = frm.Flag;
+                    }
+                }
+                else if (args.Message[0] == "8")//烟包出库，堆垛机返回错误,货位无货
+                {
+                    THOK.XC.Dispatching.View.CellNewBillSelect frm = new View.CellNewBillSelect(args.Message[1], args.Message[2], args.dtInfo);
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        strValue = frm.strBillNo;
+                    }
+                }
             }
             return strValue;
         }

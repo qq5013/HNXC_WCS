@@ -127,6 +127,7 @@
             this.btnMoveOut.Text = "倒库出库";
             this.btnMoveOut.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnMoveOut.UseVisualStyleBackColor = true;
+            this.btnMoveOut.Click += new System.EventHandler(this.btnMoveOut_Click);
             // 
             // btnInspect
             // 
@@ -287,6 +288,7 @@
             this.btnVerficate.Text = "校验处理";
             this.btnVerficate.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnVerficate.UseVisualStyleBackColor = true;
+            this.btnVerficate.Click += new System.EventHandler(this.btnVerficate_Click);
             // 
             // btnBarcodeScan
             // 
