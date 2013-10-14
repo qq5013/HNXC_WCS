@@ -28,7 +28,7 @@ namespace THOK.XC.Process.Process_01
                 string[] strInfo = dal.GetTaskInfo(sta.ToString().PadLeft(4, '0'));
                 DataTable dt = dal.TaskInfo(string.Format("TASK_ID='{0}'", strInfo[0]));
                 DataTable dtProductInfo = dal.GetProductInfoByTaskID(strInfo[0]);
-                this.Stop(); //线程停止
+                ; //线程停止
                 while (FormDialog.ShowDialog(str, dtProductInfo) != "")
                 {
                     dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=2", strInfo[0]), "2");
@@ -46,10 +46,10 @@ namespace THOK.XC.Process.Process_01
 
                     WriteToService("StockPLC_01", writeItem + "1", ServiceW); //PLC写入任务
 
-                    Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "2", 1); //PLC写入任务
+                    WriteToService("StockPLC_01", writeItem + "2", 1); //PLC写入任务
                     break;
                 }
-                this.Resume();//线程继续。
+               ;//线程继续。
             }
             catch (Exception ex)
             {

@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Configuration>
   <LogLevel>DEBUG</LogLevel>
-  <Attributes>    
+  <Attributes>
+    <Attribute Name="ScanPortName" Value="COM11" />
+    <Attribute Name="ScanBaudRate" Value="9600" />
   </Attributes>
   <Services>
     <Service Name="StockPLC_01" Type="THOK.MCP.Service.Siemens.dll, THOK.MCP.Service.Siemens.OPCService" ConfigFile="StockPLC_01.xml" />
@@ -57,6 +59,7 @@
     </Process>
     <!--二层空托盘组入库到达小车站台-->
     <Process Name="PalletToCarStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.PalletToCarStationProcess">
+     
     </Process>
     <!--二层空托盘组入库到达入库站台-->
     <Process Name="PalletToStationProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_02.PalletToStationProcess">

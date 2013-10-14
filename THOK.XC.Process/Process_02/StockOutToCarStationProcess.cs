@@ -89,6 +89,8 @@ namespace THOK.XC.Process.Process_02
                     //this.Context.Processes["CraneProcess"].Start();
                     WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为3.
                     Celldal.UpdateCellOutFinishUnLock(CellCode);//解除货位锁定
+                    ProductStateDal psdal = new ProductStateDal();
+                    psdal.UpdateOutBillNo(strTask[0]); //更新出库单
 
                     DataTable dt = dal.TaskCarDetail(string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=3", strTask[0])); //获取任务ID
                     WriteToProcess("CarProcess", "CarOutRequest", dt);  //调度小车；
@@ -120,12 +122,13 @@ namespace THOK.XC.Process.Process_02
                     strMessage[1] = strTask[0];
                     strMessage[2] = NewPalletCode;
                    
-                    this.Stop();
+                   
                     while ((strBillNo = FormDialog.ShowDialog(strMessage, dtProductInfo)) != "")
                     {
+                        
                         string strNewBillNo = strBillNo;
 
-                        string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo);
+                        string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo, dtTask.Rows[0]["PALLET_CODE"].ToString());
                         DataTable dtOutTask = dal.CraneOutTask(string.Format("TASK_ID='{0}'", strOutTaskID));
 
                         WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
@@ -139,10 +142,10 @@ namespace THOK.XC.Process.Process_02
                         StationState[0] = strTask[0];//TaskID;
                         StationState[1] = "4";
                         WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为4.
-
+                       
                         break;
                     }
-                    this.Resume();
+                 
 
 
                 }

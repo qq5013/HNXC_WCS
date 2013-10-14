@@ -254,6 +254,31 @@ namespace THOK.XC.Process.Dal
                 return dao.GetProductInfoByTaskID(TaskID);
             }
         }
+        /// <summary>
+        /// 二楼出库--条码校验出错，记录错误标志，及新条码。
+        /// </summary>
+        public void UpdateTaskCheckBarCode(string TaskID,string BarCode)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                TaskDao dao = new TaskDao();
+                dao.UpdateTaskCheckBarCode(TaskID, BarCode);
+            }
+        }
+
+        /// <summary>
+        ///  分配货位,返回 0:TaskID，1:任务号，2:货物到达入库站台的目的地址--平面号,3:堆垛机入库站台，4:货位，5:堆垛机编号
+        /// </summary>
+        /// <param name="strWhere"></param>
+        public string[] AssignNewCell(string strWhere, string CranNo)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                TaskDao dao = new TaskDao();
+                return dao.AssignCell(strWhere, CranNo);
+            }
+
+        }
 
 
 

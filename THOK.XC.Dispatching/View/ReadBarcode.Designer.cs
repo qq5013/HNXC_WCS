@@ -82,7 +82,7 @@
             // 
             this.txtRightBarcode.Location = new System.Drawing.Point(519, 77);
             this.txtRightBarcode.Name = "txtRightBarcode";
-            this.txtRightBarcode.Size = new System.Drawing.Size(229, 21);
+            this.txtRightBarcode.Size = new System.Drawing.Size(310, 21);
             this.txtRightBarcode.TabIndex = 3;
             this.txtRightBarcode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtRightBarcode_KeyDown);
             // 
@@ -90,7 +90,7 @@
             // 
             this.txtLeftBarcode.Location = new System.Drawing.Point(92, 75);
             this.txtLeftBarcode.Name = "txtLeftBarcode";
-            this.txtLeftBarcode.Size = new System.Drawing.Size(217, 21);
+            this.txtLeftBarcode.Size = new System.Drawing.Size(306, 21);
             this.txtLeftBarcode.TabIndex = 4;
             this.txtLeftBarcode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtLeftBarcode_KeyDown);
             // 
@@ -406,7 +406,7 @@
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(65, 12);
             this.label16.TabIndex = 18;
-            this.label16.Text = "左侧条码：";
+            this.label16.Text = "右侧条码：";
             // 
             // label17
             // 
@@ -437,6 +437,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "错误条码处理";
             this.Activated += new System.EventHandler(this.ReadBarcode_Activated);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ReadBarcode_FormClosing);
             this.Load += new System.EventHandler(this.ReadBarcode_Load);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();

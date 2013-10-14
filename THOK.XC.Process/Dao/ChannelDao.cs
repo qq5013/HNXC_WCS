@@ -15,10 +15,10 @@ namespace THOK.XC.Process.Dao
         /// <returns></returns>
         public DataTable ChannelInfo(string Line_No)
         {
-            string strSQL = "SELECT LINE_NO, ORDERNO, CMD_CACHE_CHANNEL.CHANNEL_NO,CACHE_QTY,DECODE(TMPCACHE.QTY,NULL, 0,TMPCACHE.QTY) AS QTY  FROM CMD_CACHE_CHANNEL " +
+            string strSQL = string.Format("SELECT LINE_NO, ORDERNO, CMD_CACHE_CHANNEL.CHANNEL_NO,CACHE_QTY,DECODE(TMPCACHE.QTY,NULL, 0,TMPCACHE.QTY) AS QTY  FROM CMD_CACHE_CHANNEL " +
                             "LEFT JOIN (SELECT  CHANNEL_NO, COUNT(*) AS QTY FROM WCS_PRODUCT_CACHE WHERE STATE=0 GROUP BY CHANNEL_NO) TMPCACHE " +
-                            "ON CMD_CACHE_CHANNEL.CHANNEL_NO=TMPCACHE.CHANNEL_NO WHERE LINE_NO='01' ORDER BY ORDERNO";
-            return null;
+                            "ON CMD_CACHE_CHANNEL.CHANNEL_NO=TMPCACHE.CHANNEL_NO WHERE LINE_NO='{0}' ORDER BY ORDERNO", Line_No);
+            return ExecuteQuery(strSQL).Tables[0];
         }
         /// <summary>
         /// 获取缓存道最后入库的产品信息。
@@ -27,7 +27,8 @@ namespace THOK.XC.Process.Dao
         /// <returns></returns>
         public DataTable ChannelProductInfo(string Channel_No)
         {
-            return null;
+            string strSQL = string.Format("SELECT * FROM WCS_PRODUCT_CACHE WHERE STATE='0' AND  CHANNEL_NO='{0}' ORDER BY ORDER_NO DESC", Channel_No);
+            return ExecuteQuery(strSQL).Tables[0];
         }
 
         public void InsertChannel(string Task_ID, string Bill_No, string Channel_No)
@@ -61,6 +62,31 @@ namespace THOK.XC.Process.Dao
             int Count = int.Parse(dt.Rows[0][0].ToString());
             return Count;
  
+        }
+
+          /// <summary>
+        /// 判断是否已经在缓存道中，true 存在
+        /// </summary>
+        /// <param name="TaskID"></param>
+        /// <returns></returns>
+        public bool HasTaskInChannel(string TaskID)
+        {
+            bool blnValue = false;
+            string strSQL = string.Format("SELECT * FROM WCS_PRODUCT_CACHE WHERE TASK_ID='{0}' ", TaskID);
+            DataTable dt = ExecuteQuery(strSQL).Tables[0];
+            if (dt.Rows.Count > 0)
+                blnValue = true;
+            return blnValue;
+ 
+        }
+
+        /// <summary>
+        /// 更新出库
+        /// </summary>
+        public void UpdateOutChannelTime(string TaskID)
+        {
+            string strSQL = string.Format("UPDATE WCS_PRODUCT_CACHE SET STATE=1,OUT_DATE =SYSDATE WHERE TASK_ID='{0}'", TaskID);
+            ExecuteNonQuery(strSQL);
         }
     }
 }

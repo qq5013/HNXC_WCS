@@ -528,6 +528,86 @@ namespace THOK.XC.Process.Dao
             return ExecuteQuery(strSQL).Tables[0];
         }
         
+
+          /// <summary>
+        /// 二楼出库--条码校验出错，记录错误标志，及新条码。
+        /// </summary>
+        public void UpdateTaskCheckBarCode(string TaskID, string BarCode)
+        {
+            string strSQL = string.Format("UPDATE WCS_TASK SET BARCODE_CHECK='1', CHECK_PRODUCT_BARCODE='{1}' WHERE TASK_ID='{0}'", TaskID, BarCode);
+            ExecuteNonQuery(strSQL);
+        }
+        /// <summary>
+        /// 分配货位,返回 0:TaskID，1:任务号，2:货物到达入库站台的目的地址--平面号,3:堆垛机入库站台，4:货位，5:堆垛机编号
+        /// </summary>
+        /// <param name="strWhere"></param>
+        public string[] AssignNewCell(string strWhere, string CraneNo)
+        {
+            string[] strValue = new string[6];
+            string where = "1=1";
+            if (!string.IsNullOrEmpty(strWhere))
+                where = strWhere;
+            string strSQL = "SELECT * FROM WCS_TASK WHERE " + where;
+            DataTable dt = ExecuteQuery(strSQL).Tables[0];
+            if (dt.Rows.Count == 0)
+            {
+                throw new Exception("找不到相关的入库单号。");
+            }
+            string TaskID = dt.Rows[0]["TASK_ID"].ToString();
+
+            string billNo = dt.Rows[0]["BILL_NO"].ToString();
+            string ProductCode = dt.Rows[0]["PRODUCT_CODE"].ToString();
+            string VCell = "";
+            if (dt.Rows[0]["CELL_CODE"].ToString() != "")
+            {
+                VCell = dt.Rows[0]["CELL_CODE"].ToString();
+                CellDao cdao = new CellDao();
+                DataTable dtCell = cdao.GetCellInfo(VCell);
+                if (dtCell.Rows[0]["ERROR_FLAG"].ToString() == "1")
+                {
+                    VCell = "";
+                }
+
+            }
+            if (VCell == "")
+            {
+                StoredProcParameter parameters = new StoredProcParameter();
+                parameters.AddParameter("VPRODUCTCODE",ProductCode);
+                parameters.AddParameter("VCRANENO", CraneNo);
+                parameters.AddParameter("VCELL", "00000000", DbType.String, ParameterDirection.Output);
+
+                ExecuteNonQuery("APPLYNEWCELL", parameters);
+                VCell = parameters["VCELL"].ToString();
+               
+            }
+            if (VCell == "")
+            {
+                throw new Exception("没有可分配的货位！");
+            }
+
+            strSQL = string.Format("UPDATE CMD_CELL SET IS_LOCK='1' WHERE CELL_CODE='{0}'", VCell);
+            ExecuteNonQuery(strSQL);
+
+            strSQL = string.Format("UPDATE WCS_TASK SET CELL_CODE='{0}' WHERE {1}", VCell, where);
+            ExecuteNonQuery(strSQL);
+
+
+            SysStationDao sysdao = new SysStationDao();
+
+            dt = sysdao.GetSationInfo(VCell, "11");
+            string TaskNo = InsertTaskDetail(TaskID);
+
+            strValue[0] = TaskID;
+            strValue[1] = TaskNo;
+            strValue[2] = dt.Rows[0]["STATION_NO"].ToString();
+            strValue[3] = dt.Rows[0]["CRANE_POSITION"].ToString();
+            strValue[4] = VCell;
+            strValue[5] = dt.Rows[0]["CRANE_NO"].ToString();
+
+
+            return strValue;
+
+        }
        
 
 

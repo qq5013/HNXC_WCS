@@ -15,7 +15,7 @@ namespace THOK.XC.Process.Dao
         /// <param name="state"></param>
         public void UpdateProductCellCode(string TaskID, string strCell)
         {
-            string BillNo = TaskID.Substring(0,TaskID.Length-2);
+            string BillNo = TaskID.Substring(0, TaskID.Length - 2);
             string ItemNo = int.Parse(TaskID.Substring(TaskID.Length - 2)).ToString();
 
             string strSQL = string.Format("UPDATE WMS_PRODUCT_STATE SET CELL_CODE='{0}' WHERE BILL_NO='{1}' AND ITEM_NO='{2}'", strCell, BillNo, ItemNo);
@@ -36,6 +36,28 @@ namespace THOK.XC.Process.Dao
                             "LEFT JOIN CMD_PRODUCT_GRADE G ON G.GRADE_CODE=P.GRADE_CODE " +
                             "LEFT JOIN CMD_PRODUCT_STYLE S ON S.STYLE_NO=P.STYLE_NO WHERE PRODUCT_BARCODE='{0}'", BarCode);
             return ExecuteQuery(strSQL).Tables[0];
+        }
+        /// <summary>
+        /// 更新出库单号
+        /// </summary>
+        /// <param name="TaskID"></param>
+        public void UpdateOutBillNo(string TaskID)
+        {
+            string BillNO = TaskID.Substring(0, TaskID.Length - 2);
+            string ItemNo = int.Parse(TaskID.Substring(TaskID.Length - 2, 2)).ToString();
+            string strSQL = string.Format("UPDATE WMS_PRODUCT_STATE SET OUT_BILLNO=(SELECT BILL_NO FROM WMS_PRODUCT_STATE STATE WHERE WMS_PRODUCT_STATE.CELL_CODE=STATE.CELL_CODE AND WMS_PRODUCT_STATE.PRODUCT_BARCODE=STATE.PRODUCT_BARCODE AND STATE.BILL_NO='{0}' AND STATE.ITEM_NO={1} ) " +
+                            "WHERE PRODUCT_BARCODE IN (SELECT PRODUCT_BARCODE FROM WMS_PRODUCT_STATE WHERE BILL_NO='{0}' AND ITEM_NO={1}) AND OUT_BILLNO IS  NULL AND BILL_NO<>'{0}' ", BillNO, ItemNo);
+            ExecuteNonQuery(strSQL);
+
+        }
+        public bool ExistsPalletCode(string OLD_PALLET_CODE)
+        {
+            bool blnValue = false;
+            string strSQL = string.Format("SELECT * FROM WMS_PRODUCT_STATE WHERE OLD_PALLET_CODE='{0}'", OLD_PALLET_CODE);
+            DataTable dt = ExecuteQuery(strSQL).Tables[0];
+            if (dt.Rows.Count > 0)
+                blnValue = true;
+            return blnValue;
         }
     }
 }

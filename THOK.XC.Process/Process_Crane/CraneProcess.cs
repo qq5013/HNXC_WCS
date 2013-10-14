@@ -60,11 +60,6 @@ namespace THOK.XC.Process.Process_Crane
              * 
              *  stateItem.State ：参数 - 请求的卷烟编码。        
             */
-
-           
-          
-           
-
             try
             {
                 switch (stateItem.ItemName)
@@ -86,7 +81,11 @@ namespace THOK.XC.Process.Process_Crane
                         {
                             TaskDal tdal = new TaskDal();
                             tdal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=1", drs[0]["TASK_ID"].ToString()), "2");
+
+                            ProductStateDal psdal = new ProductStateDal();
+                            psdal.UpdateOutBillNo(strdd[0]);
                             dtCrane.Rows.Remove(drs[0]);
+
                         }
                         CraneThreadStart(); //更新完成之后，线程调用堆垛机，避免堆垛机因调度原因而是堆垛机没有任务。
 
@@ -114,6 +113,9 @@ namespace THOK.XC.Process.Process_Crane
                         break;
                     case "NCK":
                         NCK(stateItem.State);
+                        break;
+                    case "DEC":
+                        DEC(stateItem.State);
                         break;
 
                     default:
@@ -428,6 +430,7 @@ namespace THOK.XC.Process.Process_Crane
                     {
                         CellDal Cdal = new CellDal();
                         Cdal.UpdateCellOutFinishUnLock(drs[0]["CELL_CODE"].ToString());//货位解锁
+                     
                     }
                     int[] WriteValue = new int[3];
                     WriteValue[0] = int.Parse(drs[0]["TASK_NO"].ToString());
@@ -463,7 +466,7 @@ namespace THOK.XC.Process.Process_Crane
 
                     BillDal billdal = new BillDal();
                     string isBill = "1";
-                    if (drs[0][""].ToString() == "0000")
+                    if (drs[0]["PRODUCT_CODE"].ToString() == "0000")
                         isBill = "0";
                     billdal.UpdateBillMasterFinished(drs[0]["BILL_NO"].ToString(),isBill);//更新表单
 
@@ -482,15 +485,78 @@ namespace THOK.XC.Process.Process_Crane
             }
             else
             {
-                lock (dCraneState)
+
+                string ErrMsg = "";
+                DataRow[] drMsgs = dtErrMesage.Select(string.Format("CODE='{0}'", msg["ReturnCode"]));
+                if (drMsgs.Length > 0)
+                    ErrMsg = drMsgs[0]["DESCRIPTION"].ToString();
+                if (msg["ReturnCode"] == "111") //入库，货位有货
                 {
-                    dCraneState[msg["CraneNo"]] = "1";
+                    string Flag = "";
+                    string[] strMessage = new string[3];
+                    strMessage[0] = "7";
+                    strMessage[1] = msg["ReturnCode"];
+                    strMessage[2] = ErrMsg;
+
+
+                    while ((Flag = FormDialog.ShowDialog(strMessage, null)) != "")
+                    {
+                        if (Flag == "2") //系统错误
+                        {
+                            DataRow[] drs = dtCrane.Select(string.Format("ASSIGNMENT_ID='{0}'", msg["AssignmenID"]));
+                            CellDal cdal = new CellDal();
+                            cdal.UpdateCellErrFlag(drs[0]["CELL_CODE"].ToString(), "货位有货，系统无记录");
+
+
+                            SendTelegramDER(drs[0]); //删除任务
+                        }
+                        break;
+                    }
+                    
                 }
-                string strMessage = "";
-                DataRow[] drs = dtErrMesage.Select(string.Format("CODE='{0}'", msg["ReturnCode"]));
-                if (drs.Length > 0)
-                    strMessage = drs[0]["DESCRIPTION"].ToString();
-                Logger.Error(string.Format("堆垛机{0}返回错误代码{1}:{2}", msg["CraneNo"], msg["ReturnCode"], strMessage));
+                else if (msg["ReturnCode"] == "113")//出库，货位无货，
+                {
+                     DataRow[] drs = dtCrane.Select(string.Format("ASSIGNMENT_ID='{0}'", msg["AssignmenID"]));
+
+                    string strBillNo = "";
+                    string[] strMessage = new string[3];
+                    strMessage[0] = "8";
+                    strMessage[1] = drs[0]["TASK_ID"].ToString();
+                    strMessage[2] = "错误代码：" +  msg["ReturnCode"] + ",错误内容：" + ErrMsg;
+                   
+
+                    TaskDal dal = new TaskDal();
+                    DataTable dtProductInfo = dal.GetProductInfoByTaskID(drs[0]["TASK_ID"].ToString());
+
+                    while ((strBillNo = FormDialog.ShowDialog(strMessage, dtProductInfo)) != "")
+                    {
+                        BillDal bdal = new BillDal();
+                        string strNewBillNo = strBillNo;
+
+                        string strOutTaskID = bdal.CreateCancelBillOutTask(drs[0]["TASK_ID"].ToString(), drs[0]["BILL_NO"].ToString(), strNewBillNo,"");
+                        
+                        DataTable dtOutTask = dal.CraneOutTask(string.Format("TASK_ID='{0}'", strOutTaskID));
+
+                        WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
+                        CellDal cdal = new CellDal();
+                        cdal.UpdateCellErrFlag(drs[0]["CELL_CODE"].ToString(), "货位有货，系统有记录");
+
+
+                        SendTelegramDER(drs[0]); //删除任务
+                        dtCrane.Rows.Remove(drs[0]);
+                        break;
+                    }
+                }
+                else
+                {
+
+                    lock (dCraneState)
+                    {
+                        dCraneState[msg["CraneNo"]] = "0";
+                    }
+
+                    Logger.Error(string.Format("堆垛机{0}返回错误代码{1}:{2}", msg["CraneNo"], msg["ReturnCode"], ErrMsg));
+                }
             }
         }
         /// <summary>
@@ -576,6 +642,68 @@ namespace THOK.XC.Process.Process_Crane
                 }
             }
         }
+        /// <summary>
+        ///接收删除指令返回值
+        /// </summary>
+        /// <param name="state"></param>
+        private void DEC(object state)
+        {
+            Dictionary<string, string> msg = (Dictionary<string, string>)state;
+            if (msg["ReturnCode"] == "000") //序列号出错，重新发送报文
+            {
+                DataRow[] drs = dtCrane.Select(string.Format("ASSIGNMENT_ID='{0}'", msg["AssignmenID"]));
+                string TaskType = drs[0]["TASK_TYPE"].ToString();
+                string TASK_ID = drs[0]["TASK_ID"].ToString();
+                if (TaskType.Substring(1, 1) == "1") //入库--货位有货，系统无记录
+                {
+                    //重新分配货位；
+
+                    TaskDal dal = new TaskDal();
+                    string[] strValue = dal.AssignNewCell(string.Format("TASK_ID='{0}'", TASK_ID), drs[0]["CRANE_NO"].ToString());//货位申请
+                    ProductStateDal StateDal = new ProductStateDal();
+                    StateDal.UpdateProductCellCode(strValue[0], strValue[4]); //更新Product_State 货位
+                    dal.UpdateTaskDetailCrane(strValue[3], "30" + strValue[4], "1", strValue[5], string.Format("TASK_ID='{0}' AND ITEM_NO=3", strValue[0]));//更新调度堆垛机的其实位置及目标地址。
+
+                    string From_STATION = drs[0]["TO_STATION"].ToString();
+                    drs[0].BeginEdit();
+                    drs[0]["TO_STATION"] = "30" + strValue[4];
+                    drs[0].EndEdit();
+
+
+                    THOK.CRANE.TelegramData tgd = new CRANE.TelegramData(); //发送新的报文
+                    tgd.CraneNo = drs[0]["CRANE_NO"].ToString();
+                    tgd.AssignmenID = drs[0]["ASSIGNMENT_ID"].ToString();
+                    tgd.StartPosition = From_STATION;
+
+                    tgd.DestinationPosition = drs[0]["TO_STATION"].ToString();
+
+                    THOK.CRANE.TelegramFraming tf = new CRANE.TelegramFraming();
+                    string QuenceNo = GetNextSQuenceNo();
+                    string str = tf.DataFraming("1" + QuenceNo, tgd, tf.TelegramCRQ);
+                    WriteToService("Crane", "ARQ", str);
+                    drs[0].BeginEdit();
+                    drs[0]["SQUENCE_NO"] = DateTime.Now.ToString("yyyyMMdd") + QuenceNo;
+                    drs[0].EndEdit();
+                    lock (dCraneState)
+                    {
+                        dCraneState[drs[0]["CRANE_NO"].ToString()] = "1";
+                    }
+                    dtCrane.AcceptChanges();
+                    //更新发送报文。
+
+
+                    dal.UpdateCraneQuenceNo(TASK_ID, drs[0]["SQUENCE_NO"].ToString()); //更新堆垛机序列号。并更新为1
+                }
+                else //出库 货位无货，系统记录有货--重新分配新的出库任务。
+                {
+                    lock (dCraneState)
+                    {
+                        dCraneState[msg["CraneNo"]] = "0";
+                    }
+                    GetNextTaskID(msg["CraneNo"], TaskType);
+                }
+            }
+        }
         #endregion
 
         #region 发送堆垛机报文
@@ -632,6 +760,23 @@ namespace THOK.XC.Process.Process_Crane
             dtSendCRQ.Rows.Add(dr);
             dtSendCRQ.AcceptChanges();
         }
+
+        /// <summary>
+        /// 删除指令
+        /// </summary>
+        /// <param name="dr"></param>
+        private void SendTelegramDER(DataRow dr)
+        {
+            THOK.CRANE.TelegramData tgd = new CRANE.TelegramData();
+            tgd.CraneNo = dr["CRANE_NO"].ToString();
+            tgd.AssignmenID = dr["ASSIGNMENT_ID"].ToString();
+            
+            THOK.CRANE.TelegramFraming tf = new CRANE.TelegramFraming();
+
+            string str = tf.DataFraming("1" + dr["SQUENCE_NO"].ToString(), tgd, tf.TelegramDER);
+            WriteToService("Crane", "DER", str);
+        }
+
 
         private string GetNextSQuenceNo()
         {

@@ -93,7 +93,7 @@ namespace THOK.XC.Process.Dao
         /// 二楼出库托盘校验出错，由用户选定出库的入库单号OutBillNO， 补充生成 出库单。
         /// </summary>
         /// <returns>TaskID</returns>
-        public string CreateCancelBillOutTask(string TaskID, string Bill_No,string OutBillNO)
+        public string CreateCancelBillOutTask(string TaskID, string Bill_No, string OutBillNO, string OLD_PALLET_CODE)
         {
             string strBillNo = GetBillNo("OS");
 

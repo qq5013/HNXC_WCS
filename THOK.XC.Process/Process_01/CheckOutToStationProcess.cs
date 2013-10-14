@@ -27,14 +27,14 @@ namespace THOK.XC.Process.Process_01
                 else if (((short)sta) >= 9300 && ((short)sta) <= 9499)//抽检
                     str[0] = "2";
                 else if (((short)sta) >= 9800 && ((short)sta) < 9999) //盘点
-                    str[0] = "3";
+                    str[0] = "6";
                 str[1] = "";
                 str[2] = "";
                 TaskDal dal = new TaskDal(); //更具任务号，获取TaskID及BILL_NO
                 string[] strInfo = dal.GetTaskInfo(sta.ToString().PadLeft(4, '0'));
                 DataTable dt = dal.TaskInfo(string.Format("TASK_ID='{0}'", strInfo[0]));
                 DataTable dtProductInfo = dal.GetProductInfoByTaskID(strInfo[0]);
-                this.Suspend(); //线程停止
+                 //线程停止
                 string strValue = "";
                 while ((strValue = FormDialog.ShowDialog(str, dtProductInfo)) != "")
                 {
@@ -67,7 +67,7 @@ namespace THOK.XC.Process.Process_01
                         if (strValue != "1")
                         {
                             CellDal celldal = new CellDal();
-                            celldal.UpdateCellNewPalletCode(dr["CELL_CODE"].ToString(), strValue);
+                            celldal.UpdateCellErrFlag(dr["CELL_CODE"].ToString(), "条码扫描不一致");
                         }
 
 
@@ -84,7 +84,7 @@ namespace THOK.XC.Process.Process_01
                     }
 
 
-                    this.Resume();//线程继续。
+                   //线程继续。
                     break;
                 }
               
