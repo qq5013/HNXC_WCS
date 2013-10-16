@@ -25,7 +25,7 @@ namespace THOK.XC.Process.Process_02
                     TaskDal dal = new TaskDal();
                     string[] strValue = dal.GetTaskInfo(TaskNo);
                     string WriteItem = "";
-                    if (strValue[0] != "")
+                    if (!string.IsNullOrEmpty( strValue[0]))
                     {
 
                         switch (stateItem.ItemName)

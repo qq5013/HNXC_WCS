@@ -62,11 +62,17 @@ namespace THOK.XC.Process.Dao
 
         public DataTable Find()
         {
-            string sql = "SELECT A.*,B.AREANAME,C.SHELFNAME,D.PRODUCTNAME,TO_NUMBER(SUBSTR(A.SHELFCODE,7)) SHELF FROM CELL A " +
-                "LEFT JOIN AREA B ON A.AREACODE = B.AREACODE " +
-                "LEFT JOIN SHELF C ON A.SHELFCODE=C.SHELFCODE " +
-                "LEFT JOIN PRODUCT D ON A.PRODUCTCODE=D.PRODUCTCODE " +
-                "ORDER BY AREACODE,A.SHELFCODE,CELLCODE";
+            string sql = "select * from cmd_cell A "+
+                          "LEFT JOIN cmd_AREA B on a. area_code=b.area_code "+
+                            "LEFT JOIN cmd_SHELF C on A.Shelf_Code=C.Shelf_Code "+
+                        "LEFT JOIN cmd_product D ON A.Product_Code=D.Product_Code " +
+                "ORDER BY AREA_CODE,A.SHELF_CODE,CELL_CODE";
+            return ExecuteQuery(sql).Tables[0];
+        }
+
+        public DataTable GetShelf()
+        {
+            string sql = "SELECT * FROM CMD_SHELF ORDER BY SHELF_CODE";
             return ExecuteQuery(sql).Tables[0];
         }
 

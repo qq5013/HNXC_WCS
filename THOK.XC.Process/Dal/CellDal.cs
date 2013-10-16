@@ -88,6 +88,13 @@ namespace THOK.XC.Process.Dal
                 return cellDao.Find();
             }
         }
-
+        public DataTable GetShelf()
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                CellDao cellDao = new CellDao();
+                return cellDao.GetShelf();
+            }
+        }
     }
 }
