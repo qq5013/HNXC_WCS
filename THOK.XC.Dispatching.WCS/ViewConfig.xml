@@ -1,22 +1,22 @@
-<?xml version="1.0" encoding="gb2312"?>
+<?xml version="1.0" encoding="utf-8"?>
   <Application>
   <Caption MinBox="true" MaxBox="true"/>
   <Title Visible="false"/>
   <MenuBar Width="180"/>
   <MenuItem Height="22"/>
-  <Menus Name="统计查询">
-	  <Menu Name="入库任务查询" Type="THOK.XC.Dispatching.View.StockInTaskForm,THOK.XC.Dispatching.dll"/>
-	  <Menu Name="入库明细查询" Type="THOK.XC.Dispatching.View.StockInForm,THOK.XC.Dispatching.dll"/>
-	  <Menu Name="补货任务查询" Type="THOK.XC.Dispatching.View.StockOutTaskForm,THOK.XC.Dispatching.dll"/>
-	  <Menu Name="补货明细查询" Type="THOK.XC.Dispatching.View.StockOutForm,THOK.XC.Dispatching.dll"/>	  
-	  <Menu Name="订单状态查询" Type="THOK.XC.Dispatching.View.OrderStateForm,THOK.XC.Dispatching.dll"/>
-      <Menu Name="补货烟道查询" Type="THOK.XC.Dispatching.View.ChannelForm,THOK.XC.Dispatching.dll"/>
-      <Menu Name="分拣烟道查询" Type="THOK.XC.Dispatching.View.ChannelQueryForm,THOK.XC.Dispatching.dll"/>    
+  <Menus Name="缁熻鏌ヨ">
+	  <Menu Name="鍏ュ簱浠诲姟鏌ヨ" Type="THOK.XC.Dispatching.View.StockInTaskForm,THOK.XC.Dispatching.dll"/>
+	  <Menu Name="鍏ュ簱鏄庣粏鏌ヨ" Type="THOK.XC.Dispatching.View.StockInForm,THOK.XC.Dispatching.dll"/>
+	  <Menu Name="琛ヨ揣浠诲姟鏌ヨ" Type="THOK.XC.Dispatching.View.StockOutTaskForm,THOK.XC.Dispatching.dll"/>
+	  <Menu Name="琛ヨ揣鏄庣粏鏌ヨ" Type="THOK.XC.Dispatching.View.StockOutForm,THOK.XC.Dispatching.dll"/>	  
+	  <Menu Name="璁㈠崟鐘舵�佹煡璇�" Type="THOK.XC.Dispatching.View.OrderStateForm,THOK.XC.Dispatching.dll"/>
+      <Menu Name="琛ヨ揣鐑熼亾鏌ヨ" Type="THOK.XC.Dispatching.View.ChannelForm,THOK.XC.Dispatching.dll"/>
+      <Menu Name="鍒嗘嫞鐑熼亾鏌ヨ" Type="THOK.XC.Dispatching.View.ChannelQueryForm,THOK.XC.Dispatching.dll"/>    
   </Menus>
-	  <Menus Name="打印">
-		  <Menu Name="补货明细打印" Type="THOK.XC.Dispatching.View.SortChannelPrintForm,THOK.XC.Dispatching.dll"/>
+	  <Menus Name="璐т綅鏌ヨ">
+		  <Menu Name="璐т綅鏄庣粏鏌ヨ" Type="THOK.XC.Dispatching.OperateView.CellQueryForm,THOK.XC.Dispatching.dll"/>
 	  </Menus>
-  <Menus Name="系统">
-    <Menu Name="参数设置" Type="THOK.XC.Dispatching.View.ParameterForm,THOK.XC.Dispatching.dll"/>
+  <Menus Name="绯荤粺">
+    <Menu Name="鍙傛暟璁剧疆" Type="THOK.XC.Dispatching.View.ParameterForm,THOK.XC.Dispatching.dll"/>
   </Menus>
 </Application>
