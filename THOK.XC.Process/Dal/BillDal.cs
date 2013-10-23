@@ -77,5 +77,57 @@ namespace THOK.XC.Process.Dal
                 dao.UpdateBillMasterFinished(BillNo,IsBill);
             }
         }
+
+        public DataTable GetBillByType(string BillType)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                BillDao dao = new BillDao();
+               return dao.GetBillByType(BillType);
+            }
+        }
+
+        public DataTable GetCigarette()
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                BillDao dao = new BillDao();
+                return dao.GetCigarette();
+            }
+        }
+
+        public DataTable GetFormula()
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                BillDao dao = new BillDao();
+                return dao.GetFormula();
+            }
+        }
+
+        public DataTable GetBillInTask(string filter)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                BillDao dao = new BillDao();
+                return dao.GetBillInTask(filter);
+            }
+        }
+        public DataTable GetBillOutTask(string filter)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                BillDao dao = new BillDao();
+                return dao.GetBillOutTask(filter);
+            }
+        }
+        public DataTable GetBillTaskDetail(string TaskID)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                BillDao dao = new BillDao();
+                return dao.GetBillTaskDetail(TaskID);
+            }
+        }
     }
 }

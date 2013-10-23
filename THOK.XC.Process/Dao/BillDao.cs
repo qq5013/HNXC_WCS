@@ -245,5 +245,74 @@ namespace THOK.XC.Process.Dao
 
          }
 
+         public DataTable GetBillByType(string BillType)
+         {
+             string strSQL = string.Format("SELECT BTYPE_CODE,BTYPE_NAME FROM CMD_BILL_TYPE WHERE BILL_TYPE in ({0}) ORDER BY BTYPE_CODE", BillType);
+             return ExecuteQuery(strSQL).Tables[0];
+         }
+
+         public DataTable GetCigarette()
+         {
+             string strSQL = "SELECT * FROM CMD_CIGARETTE";
+             return ExecuteQuery(strSQL).Tables[0];
+         }
+
+         public DataTable GetFormula()
+         {
+             string strSQL = "SELECT A.*,B.CIGARETTE_NAME FROM WMS_FORMULA_MASTER A LEFT JOIN CMD_CIGARETTE B ON A.CIGARETTE_CODE=B.CIGARETTE_CODE ";
+             return ExecuteQuery(strSQL).Tables[0];
+         }
+         public DataTable GetBillInTask(string filter)
+         {
+             string strSQL = "SELECT ROWNUM AS ROWIDSTRING, A.BILL_NO,I.BTYPE_NAME,J.USER_NAME AS TASKNAME,A.TASK_DATE,K.STATE_DESC AS BILL_METHOD, A.CIGARETTE_CODE,C.CIGARETTE_NAME, A.FORMULA_CODE,D.FORMULA_NAME,A.BATCH_WEIGHT, " +
+                            " B.PRODUCT_CODE,B.PRODUCT_BARCODE,B.CELL_CODE,B.FINISH_DATE,B.IS_MIX,P.PRODUCT_NAME,E.GRADE_NAME,F.ORIGINAL_NAME,P.YEARS,G.STYLE_NAME,L.CATEGORY_NAME, H.STATE_DESC AS TASKSTATE,B.TASK_ID " +
+                            "FROM WMS_BILL_MASTER A " +
+                            "LEFT JOIN WCS_TASK B ON A.BILL_NO=B.BILL_NO " +
+                            "LEFT JOIN CMD_CIGARETTE C ON C.CIGARETTE_CODE=A.CIGARETTE_CODE " +
+                            "LEFT JOIN WMS_FORMULA_MASTER D ON D.FORMULA_CODE=A.FORMULA_CODE " +
+                            "LEFT JOIN CMD_PRODUCT P ON P.PRODUCT_CODE=B.PRODUCT_CODE " +
+                            "LEFT JOIN CMD_PRODUCT_GRADE E ON E.GRADE_CODE=P.GRADE_CODE " +
+                            "LEFT JOIN CMD_PRODUCT_CATEGORY L ON L.CATEGORY_CODE=P.CATEGORY_CODE " +
+                            "LEFT JOIN CMD_PRODUCT_ORIGINAL F ON F.ORIGINAL_CODE=P.ORIGINAL_CODE " +
+                            "LEFT JOIN CMD_PRODUCT_STYLE G ON G.STYLE_NO=P.STYLE_NO " +
+                            "LEFT JOIN SYS_TABLE_STATE H ON H.Table_Name='WCS_TASK' AND Field_Name='STATE' AND B.STATE=H.STATE " +
+                            "LEFT JOIN CMD_BILL_TYPE I ON I.BTYPE_CODE=A.BTYPE_CODE " +
+                            "LEFT JOIN AUTH_USER J ON J.USER_ID=A.TASKER " +
+                            "LEFT JOIN SYS_TABLE_STATE K  ON K.Table_Name='WMS_BILL_MASTER' and K.Field_Name='BILL_METHOD' AND A.BILL_METHOD=K.STATE WHERE "+
+                             filter + " ORDER BY B.TASK_ID ";
+             return ExecuteQuery(strSQL).Tables[0];
+         }
+
+         public DataTable GetBillOutTask(string filter)
+         {
+             string strSQL = "SELECT ROWNUM AS ROWIDSTRING, A.BILL_NO,I.BTYPE_NAME,J.USER_NAME AS TASKNAME,A.TASK_DATE,K.STATE_DESC AS BILL_METHOD, A.CIGARETTE_CODE,C.CIGARETTE_NAME, A.FORMULA_CODE,D.FORMULA_NAME,A.BATCH_WEIGHT, " +
+                            " B.PRODUCT_CODE,B.PRODUCT_BARCODE,B.CELL_CODE,B.FINISH_DATE,B.IS_MIX,P.PRODUCT_NAME,E.GRADE_NAME,F.ORIGINAL_NAME,P.YEARS,G.STYLE_NAME,L.CATEGORY_NAME, H.STATE_DESC AS TASKSTATE,B.TASK_ID " +
+                            "FROM WMS_BILL_MASTER A " +
+                            "LEFT JOIN WCS_TASK B ON A.BILL_NO=B.BILL_NO " +
+                            "LEFT JOIN CMD_CIGARETTE C ON C.CIGARETTE_CODE=A.CIGARETTE_CODE " +
+                            "LEFT JOIN WMS_FORMULA_MASTER D ON D.FORMULA_CODE=A.FORMULA_CODE " +
+                            "LEFT JOIN CMD_PRODUCT P ON P.PRODUCT_CODE=B.PRODUCT_CODE " +
+                            "LEFT JOIN CMD_PRODUCT_GRADE E ON E.GRADE_CODE=P.GRADE_CODE " +
+                            "LEFT JOIN CMD_PRODUCT_CATEGORY L ON L.CATEGORY_CODE=P.CATEGORY_CODE " +
+                            "LEFT JOIN CMD_PRODUCT_ORIGINAL F ON F.ORIGINAL_CODE=P.ORIGINAL_CODE " +
+                            "LEFT JOIN CMD_PRODUCT_STYLE G ON G.STYLE_NO=P.STYLE_NO " +
+                            "LEFT JOIN SYS_TABLE_STATE H ON H.Table_Name='WCS_TASK' AND Field_Name='STATE' AND B.STATE=H.STATE " +
+                            "LEFT JOIN CMD_BILL_TYPE I ON I.BTYPE_CODE=A.BTYPE_CODE " +
+                            "LEFT JOIN AUTH_USER J ON J.USER_ID=A.TASKER " +
+                            "LEFT JOIN SYS_TABLE_STATE K  ON K.Table_Name='WMS_BILL_MASTER' and K.Field_Name='BILL_METHOD' AND A.BILL_METHOD=K.STATE WHERE " +
+                             filter + " ORDER BY B.TASK_ID ";
+             return ExecuteQuery(strSQL).Tables[0];
+         }
+         public DataTable GetBillTaskDetail(string TaskID)
+         {
+             string strSQL = string.Format("SELECT ITEM_NO,DESCRIPTION,DETAIL.CRANE_NO,CMD_CRANE.CRANE_NAME, DETAIL.CAR_NO,CMD_CAR.CAR_NAME, FROM_STATION,TO_STATION,STATE.STATE_DESC " +
+                            "FROM WCS_TASK_DETAIL DETAIL " +
+                            "LEFT JOIN CMD_CRANE ON DETAIL.CRANE_NO=CMD_CRANE.CRANE_NO " +
+                            "LEFT JOIN CMD_CAR ON CMD_CAR.CAR_NO=DETAIL.CAR_NO " +
+                            "LEFT JOIN SYS_TABLE_STATE STATE ON STATE.TABLE_NAME='WCS_TASK' AND STATE.FIELD_NAME='STATE' AND STATE.STATE=DETAIL.STATE " +
+                            "WHERE TASK_ID='{0}' ORDER BY ITEM_NO ", TaskID);
+             return ExecuteQuery(strSQL).Tables[0];
+         }
+
     }
 }

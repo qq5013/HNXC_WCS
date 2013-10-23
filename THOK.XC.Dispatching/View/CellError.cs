@@ -12,7 +12,7 @@ namespace THOK.XC.Dispatching.View
     {
         public string Flag;
         private string ErrCode;
-        private DataTable dtProductInfo;
+         
         private string ErrMsg;
         public CellError()
         {

@@ -138,6 +138,7 @@
     </Content>
     <Content Include="ViewConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="EQ2008_Dll_Set.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

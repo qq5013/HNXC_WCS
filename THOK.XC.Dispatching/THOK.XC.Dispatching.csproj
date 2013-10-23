@@ -93,6 +93,36 @@
     <Compile Include="OperateView\CellQueryForm.designer.cs">
       <DependentUpon>CellQueryForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="OperateView\SelectDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateView\SelectDialog.designer.cs">
+      <DependentUpon>SelectDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OperateView\StockInWorkQuery.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateView\StockInWorkQuery.Designer.cs">
+      <DependentUpon>StockInWorkQuery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OperateView\StockInWorkQueryDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateView\StockInWorkQueryDialog.Designer.cs">
+      <DependentUpon>StockInWorkQueryDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OperateView\StockOutWorkQuery.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateView\StockOutWorkQuery.Designer.cs">
+      <DependentUpon>StockOutWorkQuery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OperateView\StockOutWorkQueryDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateView\StockOutWorkQueryDialog.Designer.cs">
+      <DependentUpon>StockOutWorkQueryDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Parameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -172,6 +202,22 @@
     </EmbeddedResource>
     <EmbeddedResource Include="OperateView\CellQueryForm.resx">
       <DependentUpon>CellQueryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OperateView\SelectDialog.resx">
+      <DependentUpon>SelectDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OperateView\StockInWorkQuery.resx">
+      <DependentUpon>StockInWorkQuery.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OperateView\StockInWorkQueryDialog.resx">
+      <DependentUpon>StockInWorkQueryDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OperateView\StockOutWorkQuery.resx">
+      <DependentUpon>StockOutWorkQuery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OperateView\StockOutWorkQueryDialog.resx">
+      <DependentUpon>StockOutWorkQueryDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
@@ -343,6 +389,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\tasks.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DatePick1.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

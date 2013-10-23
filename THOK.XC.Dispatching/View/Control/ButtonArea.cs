@@ -422,41 +422,44 @@ namespace THOK.XC.Dispatching.View
 
                 TaskDal dal = new TaskDal();
                 string[] strTask = dal.GetTaskInfo(obj[0].ToString().PadLeft(4, '0'));
-                string NewPalletCode = THOK.XC.Process.Common.ConvertStringChar.BytesToString((object[])ObjectUtil.GetObjects(Context.ProcessDispatcher.WriteToService("StockPLC_02", ReadItem2)));
-                string[] StationState = new string[2];
-
-                DataTable dtProductInfo = dal.GetProductInfoByTaskID(strTask[0]);
-                DataTable dtTask = dal.TaskInfo(string.Format("TASK_ID='{0}'", strTask[0]));
-
-                string strBillNo = "";
-                string[] strMessage = new string[3];
-                strMessage[0] = "5";
-                strMessage[1] = strTask[0];
-                strMessage[2] = NewPalletCode;
-                ProductStateDal psdal = new ProductStateDal();
-                if (psdal.ExistsPalletCode(dtTask.Rows[0]["PALLET_CODE"].ToString())) //已经产生替代单号
-                    continue;
-                while ((strBillNo = FormDialog.ShowDialog(strMessage, dtProductInfo)) != "")
+                if (!string.IsNullOrEmpty(strTask[0]))
                 {
+                    string NewPalletCode = THOK.XC.Process.Common.ConvertStringChar.BytesToString((object[])ObjectUtil.GetObjects(Context.ProcessDispatcher.WriteToService("StockPLC_02", ReadItem2)));
+                    string[] StationState = new string[2];
 
-                    string strNewBillNo = strBillNo;
-                    BillDal bdal = new BillDal();
-                    string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo, dtTask.Rows[0]["PALLET_CODE"].ToString());
-                    DataTable dtOutTask = dal.CraneOutTask(string.Format("TASK_ID='{0}'", strOutTaskID));
+                    DataTable dtProductInfo = dal.GetProductInfoByTaskID(strTask[0]);
+                    DataTable dtTask = dal.TaskInfo(string.Format("TASK_ID='{0}'", strTask[0]));
 
-                    Context.ProcessDispatcher.WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
-
-
-                    int j = 0;
-                    while (j < 100)  //延迟
+                    string strBillNo = "";
+                    string[] strMessage = new string[3];
+                    strMessage[0] = "5";
+                    strMessage[1] = strTask[0];
+                    strMessage[2] = NewPalletCode;
+                    ProductStateDal psdal = new ProductStateDal();
+                    if (psdal.ExistsPalletCode(dtTask.Rows[0]["PALLET_CODE"].ToString())) //已经产生替代单号
+                        continue;
+                    while ((strBillNo = FormDialog.ShowDialog(strMessage, dtProductInfo)) != "")
                     {
-                        i++;
-                    }
-                    StationState[0] = strTask[0];//TaskID;
-                    StationState[1] = "4";
-                    Context.ProcessDispatcher.WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为4.
 
-                    break;
+                        string strNewBillNo = strBillNo;
+                        BillDal bdal = new BillDal();
+                        string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo, dtTask.Rows[0]["PALLET_CODE"].ToString());
+                        DataTable dtOutTask = dal.CraneOutTask(string.Format("TASK_ID='{0}'", strOutTaskID));
+
+                        Context.ProcessDispatcher.WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
+
+
+                        int j = 0;
+                        while (j < 100)  //延迟
+                        {
+                            i++;
+                        }
+                        StationState[0] = strTask[0];//TaskID;
+                        StationState[1] = "4";
+                        Context.ProcessDispatcher.WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为4.
+
+                        break;
+                    }
                 }
             }
 
