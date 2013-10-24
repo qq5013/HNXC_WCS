@@ -70,7 +70,8 @@
     <Reference Include="THOK.AF.View">
       <HintPath>..\Libraries\THOK.AF.View.dll</HintPath>
     </Reference>
-    <Reference Include="THOK.ParamUtil">
+    <Reference Include="THOK.ParamUtil, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Libraries\THOK.ParamUtil.dll</HintPath>
     </Reference>
     <Reference Include="XPanderControl">
