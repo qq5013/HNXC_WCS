@@ -104,8 +104,7 @@ namespace THOK.XC.Dispatching.OperateView
             strWhere += string.Format(" AND A.TASK_DATE BETWEEN TO_DATE('{0}','yyyy/mm/dd') AND TO_DATE('{1}','yyyy/mm/dd')", this.dtpStartBillDate.Value.ToString("yyyy/MM/dd"), this.dtpEndBillDate.Value.ToString("yyyy/MM/dd"));
 
             strWhere += string.Format(" AND A.BTYPE_CODE='{0}'", cbBillType.SelectedValue);
-            if (cbBillMethod.Text.Trim() != "")
-                strWhere += string.Format(" AND A.BILL_METHOD='{0}'", cbBillMethod.SelectedIndex);
+          
 
             if (this.txtCigaretteCode.Text != "")
             {
