@@ -205,7 +205,8 @@ namespace THOK.XC.Dispatching.OperateView
         {
             for (int j = columns; j > 0; j--)
             {
-                g.DrawString(Convert.ToString(j), font, Brushes.DarkCyan, left + (83-j) * cellWidth + adjustWidth, top);
+                if (j % 2 == 1)
+                    g.DrawString(Convert.ToString(j), font, Brushes.DarkCyan, left + (83 - j) * cellWidth + adjustWidth, top + cellHeight / 2);
             }
 
             foreach (DataRow cellRow in cellRows)
@@ -224,6 +225,12 @@ namespace THOK.XC.Dispatching.OperateView
                 {                  
                     FillCell(g, top, row, column, quantity);                        
                 }
+            }
+
+            for (int j = columns; j > 0; j--)
+            {
+                if (j % 2 == 0)
+                    g.DrawString(Convert.ToString(j), font, Brushes.DarkCyan, left + (83 - j) * cellWidth + adjustWidth, top + cellHeight * 14 +3);
             }
         }
 
