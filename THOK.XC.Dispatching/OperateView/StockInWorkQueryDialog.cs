@@ -106,6 +106,7 @@ namespace THOK.XC.Dispatching.OperateView
             {
                 strWhere += string.Format(" AND A.CIGARETTE_CODE='{0}'", txtCigaretteCode.Tag);
             }
+
             if (this.txtFormulaCode.Text != "")
             {
                 strWhere += string.Format(" AND A.FORMULA_CODE='{0}'", txtFormulaCode.Tag);
