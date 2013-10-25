@@ -71,7 +71,7 @@ namespace THOK.MCP.Service.TCP
 
             //if(server.OnlineCount)
 
-            server.Write("127.0.0.1", "");
+            server.Write(ip + ":" + port.ToString(), (string)state);
             return true;
             //throw new Exception("TCPService未实现Write方法，请用System.Net.Sockets.TCPClient类发送TCP消息。");
             //TcpClient tcpClient = new TcpClient();
