@@ -91,10 +91,6 @@
       <Project>{D162AF5E-4A8A-4FEB-AAD2-4E7143CB38A7}</Project>
       <Name>THOK.MCP</Name>
     </ProjectReference>
-    <ProjectReference Include="..\THOK.ParamUtil\THOK.ParamUtil.csproj">
-      <Project>{E5E55D53-F6D8-4644-A534-4036BE112940}</Project>
-      <Name>THOK.ParamUtil</Name>
-    </ProjectReference>
     <ProjectReference Include="..\THOK.Util\THOK.Util.csproj">
       <Project>{BD58139F-8D92-44B9-91B8-851441EB9E18}</Project>
       <Name>THOK.Util</Name>

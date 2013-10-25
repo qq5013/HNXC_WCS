@@ -58,5 +58,43 @@ namespace THOK.XC.Process.Dal
             }
         }
 
+        /// <summary>
+        /// 更新货位错误标志，错误内容
+        /// </summary>
+        /// <param name="NewPalletCode"></param>
+        public void UpdateCellErrFlag(string CellCode, string ErrMsg)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                CellDao dao = new CellDao();
+                dao.UpdateCellErrFlag(CellCode, ErrMsg);
+            }
+        }
+
+        public DataTable GetCellInfo(string CellCode)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                CellDao dao = new CellDao();
+                return dao.GetCellInfo(CellCode);
+            }
+        }
+
+        public DataTable GetCell()
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                CellDao cellDao = new CellDao();
+                return cellDao.Find();
+            }
+        }
+        public DataTable GetShelf()
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                CellDao cellDao = new CellDao();
+                return cellDao.GetShelf();
+            }
+        }
     }
 }

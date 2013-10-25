@@ -32,21 +32,21 @@
             this.pnlTitle = new System.Windows.Forms.Panel();
             this.lblTitle = new System.Windows.Forms.Label();
             this.pnlMain = new System.Windows.Forms.Panel();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.monitorView = new THOK.MCP.View.MonitorView();
+            this.monitorView1 = new THOK.MCP.View.MonitorView();
             this.pnlBottom = new System.Windows.Forms.Panel();
             this.scBottom = new System.Windows.Forms.SplitContainer();
             this.lbLog = new System.Windows.Forms.ListBox();
             this.buttonArea = new THOK.XC.Dispatching.View.ButtonArea();
-            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.monitorView = new THOK.MCP.View.MonitorView();
-            this.monitorView1 = new THOK.MCP.View.MonitorView();
             this.pnlMain.SuspendLayout();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.pnlBottom.SuspendLayout();
             this.scBottom.Panel1.SuspendLayout();
             this.scBottom.Panel2.SuspendLayout();
             this.scBottom.SuspendLayout();
-            this.splitContainer1.Panel1.SuspendLayout();
-            this.splitContainer1.Panel2.SuspendLayout();
-            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlTitle
@@ -62,11 +62,11 @@
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("宋体", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            this.lblTitle.Location = new System.Drawing.Point(326, 9);
+            this.lblTitle.Location = new System.Drawing.Point(369, 9);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(375, 35);
+            this.lblTitle.Size = new System.Drawing.Size(303, 35);
             this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = "天海欧康调度监控系统";
+            this.lblTitle.Text = "天海欧康调度系统";
             // 
             // pnlMain
             // 
@@ -76,6 +76,47 @@
             this.pnlMain.Name = "pnlMain";
             this.pnlMain.Size = new System.Drawing.Size(1024, 580);
             this.pnlMain.TabIndex = 2;
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.IsSplitterFixed = true;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.monitorView);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.monitorView1);
+            this.splitContainer1.Size = new System.Drawing.Size(1024, 580);
+            this.splitContainer1.SplitterDistance = 521;
+            this.splitContainer1.SplitterWidth = 1;
+            this.splitContainer1.TabIndex = 1;
+            // 
+            // monitorView
+            // 
+            this.monitorView.BackColor = System.Drawing.SystemColors.Highlight;
+            this.monitorView.BackgroundImage = global::THOK.XC.Dispatching.WCS.Properties.Resources.S2;
+            this.monitorView.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.monitorView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.monitorView.Location = new System.Drawing.Point(0, 0);
+            this.monitorView.Name = "monitorView";
+            this.monitorView.Size = new System.Drawing.Size(521, 580);
+            this.monitorView.TabIndex = 0;
+            // 
+            // monitorView1
+            // 
+            this.monitorView1.BackColor = System.Drawing.SystemColors.Highlight;
+            this.monitorView1.BackgroundImage = global::THOK.XC.Dispatching.WCS.Properties.Resources.S3;
+            this.monitorView1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.monitorView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.monitorView1.Location = new System.Drawing.Point(0, 0);
+            this.monitorView1.Name = "monitorView1";
+            this.monitorView1.Size = new System.Drawing.Size(502, 580);
+            this.monitorView1.TabIndex = 1;
             // 
             // pnlBottom
             // 
@@ -124,47 +165,6 @@
             this.buttonArea.Size = new System.Drawing.Size(500, 130);
             this.buttonArea.TabIndex = 0;
             // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.IsSplitterFixed = true;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.monitorView);
-            // 
-            // splitContainer1.Panel2
-            // 
-            this.splitContainer1.Panel2.Controls.Add(this.monitorView1);
-            this.splitContainer1.Size = new System.Drawing.Size(1024, 580);
-            this.splitContainer1.SplitterDistance = 521;
-            this.splitContainer1.SplitterWidth = 1;
-            this.splitContainer1.TabIndex = 1;
-            // 
-            // monitorView
-            // 
-            this.monitorView.BackColor = System.Drawing.SystemColors.Highlight;
-            this.monitorView.BackgroundImage = global::THOK.XC.Dispatching.WCS.Properties.Resources.S2;
-            this.monitorView.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.monitorView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.monitorView.Location = new System.Drawing.Point(0, 0);
-            this.monitorView.Name = "monitorView";
-            this.monitorView.Size = new System.Drawing.Size(521, 580);
-            this.monitorView.TabIndex = 0;
-            // 
-            // monitorView1
-            // 
-            this.monitorView1.BackColor = System.Drawing.SystemColors.Highlight;
-            this.monitorView1.BackgroundImage = global::THOK.XC.Dispatching.WCS.Properties.Resources.S3;
-            this.monitorView1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.monitorView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.monitorView1.Location = new System.Drawing.Point(0, 0);
-            this.monitorView1.Name = "monitorView1";
-            this.monitorView1.Size = new System.Drawing.Size(502, 580);
-            this.monitorView1.TabIndex = 1;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -187,13 +187,13 @@
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.pnlMain.ResumeLayout(false);
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            this.splitContainer1.ResumeLayout(false);
             this.pnlBottom.ResumeLayout(false);
             this.scBottom.Panel1.ResumeLayout(false);
             this.scBottom.Panel2.ResumeLayout(false);
             this.scBottom.ResumeLayout(false);
-            this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false);
-            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 

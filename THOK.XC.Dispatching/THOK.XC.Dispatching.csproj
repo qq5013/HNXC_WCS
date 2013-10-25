@@ -70,6 +70,10 @@
     <Reference Include="THOK.AF.View">
       <HintPath>..\Libraries\THOK.AF.View.dll</HintPath>
     </Reference>
+    <Reference Include="THOK.ParamUtil, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Libraries\THOK.ParamUtil.dll</HintPath>
+    </Reference>
     <Reference Include="XPanderControl">
       <HintPath>..\Libraries\XPanderControl.dll</HintPath>
     </Reference>
@@ -78,6 +82,48 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OperateView\CellDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateView\CellDialog.designer.cs">
+      <DependentUpon>CellDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OperateView\CellQueryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateView\CellQueryForm.designer.cs">
+      <DependentUpon>CellQueryForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OperateView\SelectDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateView\SelectDialog.designer.cs">
+      <DependentUpon>SelectDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OperateView\StockInWorkQuery.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateView\StockInWorkQuery.Designer.cs">
+      <DependentUpon>StockInWorkQuery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OperateView\StockInWorkQueryDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateView\StockInWorkQueryDialog.Designer.cs">
+      <DependentUpon>StockInWorkQueryDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OperateView\StockOutWorkQuery.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateView\StockOutWorkQuery.Designer.cs">
+      <DependentUpon>StockOutWorkQuery.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OperateView\StockOutWorkQueryDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateView\StockOutWorkQueryDialog.Designer.cs">
+      <DependentUpon>StockOutWorkQueryDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Parameter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -90,6 +136,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="THOKUtil.cs" />
     <Compile Include="Util\GraphicsUtil.cs" />
     <Compile Include="Util\LED2008\EQ2008_DataStruct.cs" />
     <Compile Include="Util\LED2008\LED2008.cs" />
@@ -106,6 +153,18 @@
     </Compile>
     <Compile Include="View\CannelBillSelect.Designer.cs">
       <DependentUpon>CannelBillSelect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\CellError.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\CellError.Designer.cs">
+      <DependentUpon>CellError.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\CellNewBillSelect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\CellNewBillSelect.Designer.cs">
+      <DependentUpon>CellNewBillSelect.cs</DependentUpon>
     </Compile>
     <Compile Include="View\CheckScan.cs">
       <SubType>Form</SubType>
@@ -139,6 +198,28 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="OperateView\CellDialog.resx">
+      <DependentUpon>CellDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OperateView\CellQueryForm.resx">
+      <DependentUpon>CellQueryForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OperateView\SelectDialog.resx">
+      <DependentUpon>SelectDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OperateView\StockInWorkQuery.resx">
+      <DependentUpon>StockInWorkQuery.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OperateView\StockInWorkQueryDialog.resx">
+      <DependentUpon>StockInWorkQueryDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OperateView\StockOutWorkQuery.resx">
+      <DependentUpon>StockOutWorkQuery.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OperateView\StockOutWorkQueryDialog.resx">
+      <DependentUpon>StockOutWorkQueryDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
       <Generator>ResXFileCodeGenerator</Generator>
@@ -146,6 +227,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\CannelBillSelect.resx">
       <DependentUpon>CannelBillSelect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\CellError.resx">
+      <DependentUpon>CellError.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\CellNewBillSelect.resx">
+      <DependentUpon>CellNewBillSelect.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\CheckScan.resx">
       <DependentUpon>CheckScan.cs</DependentUpon>
@@ -208,7 +295,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\Add.png" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\THOK.MCP.Service.Siemens\THOK.MCP.Service.Siemens.csproj">
       <Project>{7635ED62-DE46-4ED5-ACC8-367C84ACE1CA}</Project>
@@ -218,10 +307,6 @@
       <Project>{D162AF5E-4A8A-4FEB-AAD2-4E7143CB38A7}</Project>
       <Name>THOK.MCP</Name>
     </ProjectReference>
-    <ProjectReference Include="..\THOK.ParamUtil\THOK.ParamUtil.csproj">
-      <Project>{E5E55D53-F6D8-4644-A534-4036BE112940}</Project>
-      <Name>THOK.ParamUtil</Name>
-    </ProjectReference>
     <ProjectReference Include="..\THOK.Util\THOK.Util.csproj">
       <Project>{BD58139F-8D92-44B9-91B8-851441EB9E18}</Project>
       <Name>THOK.Util</Name>
@@ -230,6 +315,84 @@
       <Project>{A305D90D-4B14-4122-8231-C89216996F47}</Project>
       <Name>THOK.XC.Process</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddRow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Back.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DatePick.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Del.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Delete.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DeleteRow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Email.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Erase.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Excel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Exit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Find.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Import.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Lock.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Modify.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Next.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\PieChart.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Print.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Profile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\query.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Right.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Suspend.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tasks.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\DatePick1.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

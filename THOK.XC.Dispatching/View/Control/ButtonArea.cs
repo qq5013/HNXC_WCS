@@ -18,6 +18,8 @@ namespace THOK.XC.Dispatching.View
         public ButtonArea()
         {
             InitializeComponent();
+            this.btnStop.Enabled = false;
+            this.btnSimulate.Enabled = false;
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -61,7 +63,8 @@ namespace THOK.XC.Dispatching.View
         {
             try
             {
-                SwitchStatus(true);
+                this.btnStart.Enabled = false;
+                this.btnStop.Enabled = true;
 
                 TaskDal taskDal = new TaskDal();
                 DataTable dt = taskDal.TaskOutToDetail();
@@ -80,9 +83,6 @@ namespace THOK.XC.Dispatching.View
                 Context.Processes["CraneProcess"].Start();
                 Context.ProcessDispatcher.WriteToProcess("CraneProcess", "StockOutRequest", dtSend);
                 IndexStar++;
-
-
-
                
                 timer1.Enabled = true;
                 timer1.Start();
@@ -98,9 +98,18 @@ namespace THOK.XC.Dispatching.View
 
         private void btnStop_Click(object sender, EventArgs e)
         {
-            Context.ProcessDispatcher.WriteToProcess("OrderDataStateProcess", "Stop", null);
+            if (Context.Processes["CraneProcess"] != null)
+            {
+                Context.Processes["CraneProcess"].Suspend();
+            }
+
             SwitchStatus(false);
+
+            this.btnStop.Enabled = false;
+            this.btnStart.Enabled = false;
+            this.btnSimulate.Enabled = true;
             timer1.Enabled = false;
+            timer1.Stop();
         }
 
         private void btnHelp_Click(object sender, EventArgs e)
@@ -110,22 +119,28 @@ namespace THOK.XC.Dispatching.View
 
         private void SwitchStatus(bool isStart)
         {
-            btnCheckScan.Enabled = !isStart;
-            btnPalletIn.Enabled = !isStart;
-            btnStart.Enabled = !isStart;
-            btnStop.Enabled = isStart;
-            btnSimulate.Enabled = !isStart;
+             
         }
 
         private void btnSimulate_Click(object sender, EventArgs e)
         {            
             try
             {
-               
+                if (Context.Processes["CraneProcess"] != null)
+                {
+                    Context.Processes["CraneProcess"].Resume();
+                }
+
+                SwitchStatus(false);
+                this.btnStop.Enabled = true;
+                this.btnStart.Enabled = false;
+                this.btnSimulate.Enabled = false;
+                timer1.Enabled = true;
+                timer1.Start();
             }
             catch (Exception ee)
             {
-                Logger.Error("清除PLC未扫码件烟信息处理失败，原因：" + ee.Message);
+                Logger.Error("恢复出库任务失败：" + ee.Message);
             }
         }
         private void timer1_Tick(object sender, EventArgs e)
@@ -228,7 +243,7 @@ namespace THOK.XC.Dispatching.View
             string[] strInfo = dal.GetTaskInfo(strTaskNo);
             DataTable dt = dal.TaskInfo(string.Format("TASK_ID='{0}'", strInfo[0]));
             DataTable dtProductInfo = dal.GetProductInfoByTaskID(strInfo[0]);
-            this.Stop(); //线程停止
+             //线程停止
             string strValue = "";
             while ((strValue = FormDialog.ShowDialog(str, dtProductInfo)) != "")
             {
@@ -244,8 +259,7 @@ namespace THOK.XC.Dispatching.View
                 }
                 break;
             }
-            this.Resume();
-
+            
         }
         /// <summary>
         /// 盘点
@@ -259,50 +273,53 @@ namespace THOK.XC.Dispatching.View
                 return;
             string strTaskNo = obj.ToString().PadLeft(4, '0');
 
-            string[] str = new string[3];
-           
-            str[0] = "4";
-           
-
-            str[1] = "";
-            str[2] = "";
-            TaskDal dal = new TaskDal(); //更具任务号，获取TaskID及BILL_NO
-            string[] strInfo = dal.GetTaskInfo(strTaskNo);
-            DataTable dt = dal.TaskInfo(string.Format("TASK_ID='{0}'", strInfo[0]));
-            DataTable dtProductInfo = dal.GetProductInfoByTaskID(strInfo[0]);
-            this.Stop(); //线程停止
-            string strValue = "";
-            while ((strValue = FormDialog.ShowDialog(str, dtProductInfo)) != "")
+            if ( int.Parse(obj.ToString()) >= 9800 && int.Parse(obj.ToString()) < 9999) //盘点
             {
-                dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=2", strInfo[0]), "2");
-                string writeItem = "01_2_195_";
+                string[] str = new string[3];
 
-                DataTable dtTask = dal.TaskInfo(string.Format("TASK_ID='{0}'", strInfo[0]));
+                str[0] = "6";
 
-                DataRow dr = dtTask.Rows[0];
-                SysStationDal sysdal = new SysStationDal();
-                DataTable dtstation = sysdal.GetSationInfo(dr["CELL_CODE"].ToString(), "11");
 
-                if (strValue != "1")
+                str[1] = "";
+                str[2] = "";
+                TaskDal dal = new TaskDal(); //更具任务号，获取TaskID及BILL_NO
+                string[] strInfo = dal.GetTaskInfo(strTaskNo);
+                DataTable dt = dal.TaskInfo(string.Format("TASK_ID='{0}'", strInfo[0]));
+                DataTable dtProductInfo = dal.GetProductInfoByTaskID(strInfo[0]);
+                //线程停止
+                string strValue = "";
+                while ((strValue = FormDialog.ShowDialog(str, dtProductInfo)) != "")
                 {
-                    CellDal celldal = new CellDal();
-                    celldal.UpdateCellNewPalletCode(dr["CELL_CODE"].ToString(), strValue);
+                    dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=2", strInfo[0]), "2");
+                    string writeItem = "01_2_195_";
+
+                    DataTable dtTask = dal.TaskInfo(string.Format("TASK_ID='{0}'", strInfo[0]));
+
+                    DataRow dr = dtTask.Rows[0];
+                    SysStationDal sysdal = new SysStationDal();
+                    DataTable dtstation = sysdal.GetSationInfo(dr["CELL_CODE"].ToString(), "11");
+
+                    if (strValue != "1")
+                    {
+                        CellDal celldal = new CellDal();
+                        celldal.UpdateCellErrFlag(dr["CELL_CODE"].ToString(), "条码扫描不一致");
+                    }
+
+
+                    int[] ServiceW = new int[3];
+                    ServiceW[0] = int.Parse(strInfo[1]); //任务号
+                    ServiceW[1] = int.Parse(dtstation.Rows[0]["STATION_NO"].ToString());//目的地址
+                    ServiceW[2] = 1;
+
+                    Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "1", ServiceW); //PLC写入任务
+                    Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "3", 1); //PLC写入任务
+
+                    dal.UpdateTaskDetailStation("195", dtstation.Rows[0]["STATION_NO"].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=3", strInfo[0]));//更新货位到达入库站台，
+                    dal.UpdateTaskDetailCrane(dtstation.Rows[0]["STATION_NO"].ToString(), dr["CELL_CODE"].ToString(), "0", dtstation.Rows[0]["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO=4", strInfo[0]));//更新调度堆垛机的其实位置及目标地址。
+                    break;
                 }
-
-
-                int[] ServiceW = new int[3];
-                ServiceW[0] = int.Parse(strInfo[1]); //任务号
-                ServiceW[1] = int.Parse(dtstation.Rows[0]["STATION_NO"].ToString());//目的地址
-                ServiceW[2] = 1;
-
-                Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "1", ServiceW); //PLC写入任务
-                Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "3", 1); //PLC写入任务
-
-                dal.UpdateTaskDetailStation("195", dtstation.Rows[0]["STATION_NO"].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=3", strInfo[0]));//更新货位到达入库站台，
-                dal.UpdateTaskDetailCrane(dtstation.Rows[0]["STATION_NO"].ToString(), dr["CELL_CODE"].ToString(), "0", dtstation.Rows[0]["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO=4", strInfo[0]));//更新调度堆垛机的其实位置及目标地址。
-                break;
             }
-            this.Resume();
+            
         }
 
         /// <summary>
@@ -352,6 +369,141 @@ namespace THOK.XC.Dispatching.View
             catch (Exception ex)
             {
                 Logger.Error("THOK.XC.Process.Process_01.NotReadBarcodeProcess:" + ex.Message);
+            }
+        }
+        /// <summary>
+        /// 校验处理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnVerficate_Click(object sender, EventArgs e)
+        {
+            string ServiceName = "StockPLC_02";
+            string[] ItemName = new string[6];
+            ItemName[0] = "02_1_304_1";
+            ItemName[1] = "02_1_308_1";
+            ItemName[2] = "02_1_312_1";
+            ItemName[3] = "02_1_316_1";
+            ItemName[4] = "02_1_320_1";
+            ItemName[5] = "02_1_322_1";
+            for (int i = 0; i < ItemName.Length; i++)
+            {
+                object[] obj = ObjectUtil.GetObjects(Context.ProcessDispatcher.WriteToService(ServiceName, ItemName[i]));
+                if (obj[0] == null || obj[0].ToString() == "0")
+                    continue;
+                if (obj[1].ToString() == "1")
+                    continue;
+
+              
+                string ReadItem2 = "";
+
+                switch (ItemName[i])
+                {
+                    case "02_1_304_1":
+                        ReadItem2 = "02_1_304_2";
+                        break;
+                    case "02_1_308_1":
+                        ReadItem2 = "02_1_308_2";
+                        break;
+                    case "02_1_312_1":
+                        ReadItem2 = "02_1_312_2";
+                        break;
+                    case "02_1_316_1":
+                        ReadItem2 = "02_1_316_2";
+                        break;
+                    case "02_1_320_1":
+                        ReadItem2 = "02_1_320_2";
+                        break;
+                    case "02_1_322_1":
+                        ReadItem2 = "02_1_322_2";
+                        break;
+
+                }
+
+                TaskDal dal = new TaskDal();
+                string[] strTask = dal.GetTaskInfo(obj[0].ToString().PadLeft(4, '0'));
+                if (!string.IsNullOrEmpty(strTask[0]))
+                {
+                    string NewPalletCode = THOK.XC.Process.Common.ConvertStringChar.BytesToString((object[])ObjectUtil.GetObjects(Context.ProcessDispatcher.WriteToService("StockPLC_02", ReadItem2)));
+                    string[] StationState = new string[2];
+
+                    DataTable dtProductInfo = dal.GetProductInfoByTaskID(strTask[0]);
+                    DataTable dtTask = dal.TaskInfo(string.Format("TASK_ID='{0}'", strTask[0]));
+
+                    string strBillNo = "";
+                    string[] strMessage = new string[3];
+                    strMessage[0] = "5";
+                    strMessage[1] = strTask[0];
+                    strMessage[2] = NewPalletCode;
+                    ProductStateDal psdal = new ProductStateDal();
+                    if (psdal.ExistsPalletCode(dtTask.Rows[0]["PALLET_CODE"].ToString())) //已经产生替代单号
+                        continue;
+                    while ((strBillNo = FormDialog.ShowDialog(strMessage, dtProductInfo)) != "")
+                    {
+
+                        string strNewBillNo = strBillNo;
+                        BillDal bdal = new BillDal();
+                        string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo, dtTask.Rows[0]["PALLET_CODE"].ToString());
+                        DataTable dtOutTask = dal.CraneOutTask(string.Format("TASK_ID='{0}'", strOutTaskID));
+
+                        Context.ProcessDispatcher.WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
+
+
+                        int j = 0;
+                        while (j < 100)  //延迟
+                        {
+                            i++;
+                        }
+                        StationState[0] = strTask[0];//TaskID;
+                        StationState[1] = "4";
+                        Context.ProcessDispatcher.WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为4.
+
+                        break;
+                    }
+                }
+            }
+
+        }
+        /// <summary>
+        /// 倒库出库
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnMoveOut_Click(object sender, EventArgs e)
+        {
+            object obj = ObjectUtil.GetObject(Context.ProcessDispatcher.WriteToService("StockPLC_01", "01_1_122"));
+
+            if (obj == null || obj.ToString() == "0")
+                return;
+            string[] str = new string[3];
+            str[0] = "4";
+            str[1] = "";
+            str[2] = "";
+
+            TaskDal dal = new TaskDal(); //更具任务号，获取TaskID及BILL_NO
+            string[] strInfo = dal.GetTaskInfo(obj.ToString().PadLeft(4, '0'));
+            DataTable dt = dal.TaskInfo(string.Format("TASK_ID='{0}'", strInfo[0]));
+            DataTable dtProductInfo = dal.GetProductInfoByTaskID(strInfo[0]);
+            ; //线程停止
+            while (FormDialog.ShowDialog(str, dtProductInfo) != "")
+            {
+                dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=2", strInfo[0]), "2");
+                dal.UpdateTaskState(strInfo[0], "2");
+
+                BillDal billdal = new BillDal();
+                billdal.UpdateBillMasterFinished(strInfo[1], "1");
+
+                string writeItem = "01_2_122_";
+
+                int[] ServiceW = new int[3];
+                ServiceW[0] = int.Parse(strInfo[1]); //任务号
+                ServiceW[1] = 131;//目的地址
+                ServiceW[2] = 4;
+
+                Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "1", ServiceW); //PLC写入任务
+
+                Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "2", 1); //PLC写入任务
+                break;
             }
         }
     }

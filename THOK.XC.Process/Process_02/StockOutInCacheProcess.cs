@@ -15,9 +15,9 @@ namespace THOK.XC.Process.Process_02
              * 二层小车进入缓存站台
             */
 
-            object obj = ObjectUtil.GetObject(stateItem.State);
+            object[] obj = ObjectUtil.GetObjects(stateItem.State);
 
-            if (obj == null || obj.ToString() == "0")
+            if (obj[0] == null || obj[0].ToString() == "0")
                 return;
 
             string WriteItem = "";
@@ -52,7 +52,7 @@ namespace THOK.XC.Process.Process_02
                         ChannelNo = "471";
                         break;
                 }
-                string TaskNo = ((int)stateItem.State).ToString().PadLeft(4, '0');
+                string TaskNo = obj[0].ToString().PadLeft(4, '0');
                 TaskDal dal = new TaskDal();
                 string[] strValue = dal.GetTaskInfo(TaskNo);
                 if (!string.IsNullOrEmpty(strValue[0]))
@@ -61,15 +61,9 @@ namespace THOK.XC.Process.Process_02
                     ChannelDal Cdal = new ChannelDal();
                     int value = Cdal.UpdateInChannelTime(strValue[0], strValue[1], ChannelNo);
 
-                    dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEMNO=5", strValue[0]), "2"); //更新
-                    dal.UpdateTaskState(strValue[0], "2"); //更新任务
-
-                   
-
-                    int[] intvalue = new int[2];
-                    intvalue[0] = value;
-                    intvalue[1] = 1;
-                    WriteToService("StockPLC_02", WriteItem, intvalue);
+                    dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=5", strValue[0]), "2"); //更新
+                    WriteToService("StockPLC_02", WriteItem + "_1", value);
+                    WriteToService("StockPLC_02", WriteItem + "_2", 1);
                 }
                 
                

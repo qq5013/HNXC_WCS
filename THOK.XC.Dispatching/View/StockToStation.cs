@@ -53,7 +53,6 @@ namespace THOK.XC.Dispatching.View
             this.txtSTYLE_NAME.Text = dr["STYLE_NAME"].ToString();
             this.txtWeight.Text = dr["WEIGHT"].ToString();
 
-
         }
 
         private void btnOK_Click(object sender, EventArgs e)

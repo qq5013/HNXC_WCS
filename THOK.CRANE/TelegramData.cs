@@ -9,6 +9,7 @@ namespace THOK.CRANE
         private TelegramType _telegramType = TelegramType.ACK;
         private string _craneNo = "01";
         private string _assignmenID = "00000000";
+        private string _assignmentType = "CM";
         //MMRRRSSSHHDD
         //RRR RACK 货架编号
         //SSS 横向坐标
@@ -61,6 +62,17 @@ namespace THOK.CRANE
             set
             {
                 this._assignmenID = value;
+            }
+        }
+        public string AssignmentType
+        {
+            get
+            {
+                return this._assignmentType;
+            }
+            set
+            {
+                this._assignmentType = value;
             }
         }
         public string StartPosition
