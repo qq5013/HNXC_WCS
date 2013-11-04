@@ -22,7 +22,7 @@ namespace THOK.XC.Process.Dal
         }
 
         /// <summary>
-        /// 入库---解除货位锁定，更新货位储存信息。
+        /// 入库---解除货位锁定，更新货位储存信息。blnRemove=true，表示移库，使用NewCELL_CODE
         /// </summary>
         public void UpdateCellInFinishUnLock(string TaskID)
         {
@@ -94,6 +94,15 @@ namespace THOK.XC.Process.Dal
             {
                 CellDao cellDao = new CellDao();
                 return cellDao.GetShelf();
+            }
+        }
+
+        public void UpdateCellRemoveFinish(string NewCellCode,string oldCellCode)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                CellDao cellDao = new CellDao();
+                cellDao.GetShelf();
             }
         }
     }

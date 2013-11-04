@@ -81,14 +81,18 @@ namespace THOK.XC.Process.Dao
             string where = strWhere;
             if (strWhere.Trim() == "")
                 where = "1=1";
-            string strSQL = "SELECT TASK.TASK_ID,'' AS TASK_NO,DETAIL.ITEM_NO，''AS  ASSIGNMENT_ID,DETAIL.CRANE_NO, '30'||TASK.CELL_CODE||'01' AS FROM_STATION,SYS_STATION.CRANE_POSITION TO_STATION ,DETAIL.STATE,TASK.BILL_NO," +
+            string strSQL = "SELECT TASK.TASK_ID,TASK_NO,SYS_TASK_ROUTE.ITEM_NO，ASSIGNMENT_ID,CMD_SHELF.CRANE_NO, '30'||TASK.CELL_CODE||'01' AS FROM_STATION,SYS_STATION.CRANE_POSITION TO_STATION  ,'0' AS STATE,TASK.BILL_NO," +
                            "TASK.PRODUCT_CODE,TASK.CELL_CODE,TASK.TASK_TYPE,TASK.TASK_LEVEL,TASK.TASK_DATE,STYLE.SORT_LEVEL,TASK.IS_MIX,PRODUCT.STYLE_NO,SYS_STATION.SERVICE_NAME,SYS_STATION.ITEM_NAME_1," +
-                           "SYS_STATION.ITEM_NAME_2,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE,'' AS SQUENCE_NO,TASK.TARGET_CODE,SYS_STATION.STATION_NO,SYS_STATION.MEMO,TASK.PRODUCT_TYPE " +
+                           "SYS_STATION.ITEM_NAME_2,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE,'' AS SQUENCE_NO,TASK.TARGET_CODE,SYS_STATION.STATION_NO,SYS_STATION.MEMO,TASK.PRODUCT_TYPE,CMD_SHELF_NEW.CRANE_NO AS NEW_CRANE_NO,TASK.NEWCELL_CODE, " +
+                            "DECODE(TASK.NEWCELL_CODE,NULL,'',  '30'||TASK.NEWCELL_CODE||'01') AS NEW_TO_STATION,SYS_STATION_NEW.STATION_NO AS NEW_TARGET_CODE " +
                             "FROM WCS_TASK_DETAIL DETAIL " +
                             "LEFT JOIN WCS_TASK TASK  ON DETAIL.TASK_ID=TASK.TASK_ID " +
                             "LEFT JOIN CMD_PRODUCT  PRODUCT ON TASK.PRODUCT_CODE=PRODUCT.PRODUCT_CODE " +
                             "LEFT JOIN CMD_PRODUCT_STYLE STYLE ON STYLE.STYLE_NO=PRODUCT.STYLE_NO " +
                             "LEFT JOIN SYS_STATION ON DETAIL.CRANE_NO=SYS_STATION.CRANE_NO AND SYS_STATION.STATION_TYPE=TASK.TASK_TYPE " +
+                            "LEFT JOIN CMD_CELL CMD_CELL_NEW on CMD_CELL_NEW.CELL_CODE=TASK.NEWCELL_CODE " +
+                            "LEFT JOIN CMD_SHELF CMD_SHELF_NEW on CMD_CELL_NEW.SHELF_CODE=CMD_SHELF_NEW.SHELF_CODE " +
+                            "LEFT JOIN SYS_STATION SYS_STATION_NEW ON   SYS_STATION_NEW.STATION_TYPE='11' and SYS_STATION_NEW.CRANE_NO=CMD_SHELF_NEW.CRANE_NO " +
                             "WHERE DETAIL.CRANE_NO IS NOT NULL AND " + where +
                             "ORDER BY TASK.TASK_LEVEL,TASK.TASK_DATE,TASK.BILL_NO, TASK.IS_MIX,TASK.PRODUCT_CODE,TASK_ID";
 
@@ -107,12 +111,16 @@ namespace THOK.XC.Process.Dao
                 where = "1=1";
             string strSQL = "SELECT TASK.TASK_ID,'' AS TASK_NO,SYS_TASK_ROUTE.ITEM_NO，''AS  ASSIGNMENT_ID,CMD_SHELF.CRANE_NO, '30'||TASK.CELL_CODE||'01' AS FROM_STATION,SYS_STATION.CRANE_POSITION TO_STATION  ,'0' AS STATE,TASK.BILL_NO," +
                            "TASK.PRODUCT_CODE,TASK.CELL_CODE,TASK.TASK_TYPE,TASK.TASK_LEVEL,TASK.TASK_DATE,STYLE.SORT_LEVEL,TASK.IS_MIX,PRODUCT.STYLE_NO,SYS_STATION.SERVICE_NAME,SYS_STATION.ITEM_NAME_1," +
-                           "SYS_STATION.ITEM_NAME_2,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE,'' AS SQUENCE_NO,TASK.TARGET_CODE,SYS_STATION.STATION_NO,SYS_STATION.MEMO,TASK.PRODUCT_TYPE " +
+                           "SYS_STATION.ITEM_NAME_2,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE,'' AS SQUENCE_NO,TASK.TARGET_CODE,SYS_STATION.STATION_NO,SYS_STATION.MEMO,TASK.PRODUCT_TYPE,CMD_SHELF_NEW.CRANE_NO AS NEW_CRANE_NO,TASK.NEWCELL_CODE, " +
+                           "DECODE(TASK.NEWCELL_CODE,NULL,'',  '30'||TASK.NEWCELL_CODE||'01') AS NEW_TO_STATION,SYS_STATION_NEW.STATION_NO AS NEW_TARGET_CODE " +
                            "FROM WCS_TASK TASK " +
                            "LEFT JOIN CMD_CELL on CMD_CELL.CELL_CODE=TASK.CELL_CODE " +
                            "LEFT JOIN CMD_SHELF on CMD_CELL.SHELF_CODE=CMD_SHELF.SHELF_CODE " +
                            "LEFT JOIN SYS_TASK_ROUTE on SYS_TASK_ROUTE.TASK_TYPE=TASK.TASK_TYPE and SYS_TASK_ROUTE.ITEM_NO=1 " +
+                           "LEFT JOIN CMD_CELL CMD_CELL_NEW on CMD_CELL_NEW.CELL_CODE=TASK.NEWCELL_CODE "+ 
+                           "LEFT JOIN CMD_SHELF CMD_SHELF_NEW on CMD_CELL_NEW.SHELF_CODE=CMD_SHELF_NEW.SHELF_CODE "+
                            "LEFT JOIN SYS_STATION SYS_STATION on SYS_STATION.STATION_TYPE=TASK.TASK_TYPE and SYS_STATION.CRANE_NO=cmd_shelf.CRANE_NO " +
+                           "LEFT JOIN SYS_STATION SYS_STATION_NEW ON   SYS_STATION_NEW.STATION_TYPE='11' and SYS_STATION_NEW.CRANE_NO=CMD_SHELF_NEW.CRANE_NO " +
                            "LEFT JOIN CMD_PRODUCT  PRODUCT ON TASK.PRODUCT_CODE=PRODUCT.PRODUCT_CODE " +
                            "LEFT JOIN CMD_PRODUCT_STYLE STYLE ON STYLE.STYLE_NO=PRODUCT.STYLE_NO " +
                            "WHERE STATE='0' AND " + where;
@@ -347,12 +355,12 @@ namespace THOK.XC.Process.Dao
         }
 
         /// <summary>
-        /// 分配货位,返回 0:TaskID，1:任务号，2:货物到达入库站台的目的地址--平面号,3:堆垛机入库站台，4:货位，5:堆垛机编号
+        /// 分配货位,返回 0:TaskID，1:货位 
         /// </summary>
         /// <param name="strWhere"></param>
         public string[] AssignCell(string strWhere, string ApplyStation)
         {
-            string[] strValue = new string[6];
+            
             string where = "1=1";
             if (!string.IsNullOrEmpty(strWhere))
                 where = strWhere;
@@ -389,29 +397,18 @@ namespace THOK.XC.Process.Dao
             {
                 throw new Exception("没有可分配的货位！");
             }
-
             strSQL = string.Format("UPDATE CMD_CELL SET IS_LOCK='1' WHERE CELL_CODE='{0}'", VCell);
             ExecuteNonQuery(strSQL);
 
             strSQL = string.Format("UPDATE WCS_TASK SET CELL_CODE='{0}' WHERE {1}", VCell, where);
             ExecuteNonQuery(strSQL);
 
-
-            SysStationDao sysdao = new SysStationDao();
-
-            dt = sysdao.GetSationInfo(VCell, "11");
-            string TaskNo = InsertTaskDetail(TaskID);
-
+            string[] strValue = new string[2];
             strValue[0] = TaskID;
-            strValue[1] = TaskNo;
-            strValue[2] = dt.Rows[0]["STATION_NO"].ToString();
-            strValue[3] = dt.Rows[0]["CRANE_POSITION"].ToString();
-            strValue[4] = VCell;
-            strValue[5] = dt.Rows[0]["CRANE_NO"].ToString();
+            strValue[1] = VCell;
 
-
+         
             return strValue;
-
         }
         public string[] GetTaskInfo(string TaskNo)
         {
