@@ -1,7 +1,7 @@
 ﻿<?xml version='1.0' ?>
 <Config>
   <OPCServer ConnectionString="OPC.SimaticNET;192.168.2.110">
-    <OPCGroup GroupName="DefaultGroup" GroupString="S7:[S7 connection_1]" UpdateRate="350">
+    <OPCGroup GroupName="DefaultGroup" GroupString="S7:[S7 connection_2]" UpdateRate="350">
       <!--一层入库请求-->      
       <OPCItem ItemName="01_1_110_1" ClientHandler="1" OPCItemName="DB80,INT40,1"  ItemType="READ"/>
       <OPCItem ItemName="01_1_110_2" ClientHandler="2" OPCItemName="DB1,CHAR0,40"  ItemType="READ" IsActive="false"/>
