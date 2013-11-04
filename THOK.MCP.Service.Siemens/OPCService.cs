@@ -14,8 +14,8 @@ namespace THOK.MCP.Service.Siemens
             opcServer = new OPCServer(Name);
 
             Config.Configuration config = new Config.Configuration(file);
-            opcServer.Connect(config.ConnectionString);
-
+            opcServer.Connect(config.ProgID, config.ServerName);// opcServer.Connect(config.ConnectionString);
+           
             OPCGroup group = opcServer.AddGroup(config.GroupName, config.UpdateRate);
             foreach (Config.ItemInfo item in config.Items)
             {

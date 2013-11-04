@@ -20,6 +20,9 @@ namespace THOK.MCP.Service.Siemens.Config
 
 		private ItemInfo[] items;
 
+        private string progid;
+        private string servername;
+
 		public string ConnectionString
 		{
 			get
@@ -27,6 +30,20 @@ namespace THOK.MCP.Service.Siemens.Config
 				return connectionString;
 			}
 		}
+        public string ProgID
+        {
+            get
+            {
+                return progid;
+            }
+        }
+        public string ServerName
+        {
+            get
+            {
+                return servername;
+            }
+        }
 
 		public string GroupName
 		{
@@ -73,6 +90,9 @@ namespace THOK.MCP.Service.Siemens.Config
 			if (nodeList.Count != 0)
 			{
 				connectionString = nodeList[0].Attributes["ConnectionString"].Value;
+                string[] str = connectionString.Split(';');
+                progid = str[0];
+                servername = str[1];
 			}
 			else
 			{
