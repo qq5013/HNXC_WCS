@@ -34,21 +34,16 @@ namespace THOK.XC.Dispatching.OperateView
             Exit();
         }
 
-        
-        
 
-        private void dgvMain_RowStateChanged(object sender, DataGridViewRowStateChangedEventArgs e)
+        private void dgvMain_CurrentCellChanged(object sender, EventArgs e)
         {
-            if (e.Row.Index > -1)
+            if (this.dgvMain.CurrentRow != null)
             {
-                if (e.StateChanged == DataGridViewElementStates.Selected)
-                {
-                    string TaskID = this.dgvMain.Rows[e.Row.Index].Cells["colTaskID"].Value.ToString();
+                string TaskID = this.dgvMain.Rows[this.dgvMain.CurrentRow.Index].Cells["colTaskID"].Value.ToString();
 
-                    Process.Dal.BillDal dal = new Process.Dal.BillDal();
-                    DataTable dt = dal.GetBillTaskDetail(TaskID);
-                    this.dgSub.DataSource = dt;
-                }
+                Process.Dal.BillDal dal = new Process.Dal.BillDal();
+                DataTable dt = dal.GetBillTaskDetail(TaskID);
+                this.dgSub.DataSource = dt;
             }
         }
     }

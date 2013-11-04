@@ -151,9 +151,7 @@
             this.dgvMain.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvMain.Size = new System.Drawing.Size(1062, 132);
             this.dgvMain.TabIndex = 11;
-            
-            this.dgvMain.RowStateChanged += new System.Windows.Forms.DataGridViewRowStateChangedEventHandler(this.dgvMain_RowStateChanged);
-            // 
+            this.dgvMain.CurrentCellChanged += new System.EventHandler(this.dgvMain_CurrentCellChanged);
             // colBILL_NO
             // 
             this.colBILL_NO.DataPropertyName = "BILL_NO";
