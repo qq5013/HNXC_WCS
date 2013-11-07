@@ -130,27 +130,41 @@ namespace THOK.XC.Process.Process_02
                         {
 
                             string strNewBillNo = strBillNo;
-
-                            string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo, dtTask.Rows[0]["PALLET_CODE"].ToString());
-                            DataTable dtOutTask = dal.CraneOutTask(string.Format("TASK_ID='{0}'", strOutTaskID));
-
-                            WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
-
-
-                            int i = 0;
-                            while (i < 100)  //延迟
+                            if (string.IsNullOrEmpty(strNewBillNo))
                             {
-                                i++;
-                            }
-                            StationState[0] = strTask[0];//TaskID;
-                            StationState[1] = "4";
-                            WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为4.
+                                if (strNewBillNo == "1")
+                                {
+                                    StationState[0] = obj[0].ToString();//任务号;
+                                    StationState[1] = "3";
 
+                                    //this.Context.Processes["CraneProcess"].Start();
+                                    WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为3.
+                                    Celldal.UpdateCellOutFinishUnLock(CellCode);//解除货位锁定
+                                    ProductStateDal psdal = new ProductStateDal();
+                                    psdal.UpdateOutBillNo(strTask[0]); //更新出库单
+
+                                    DataTable dtCar = dal.TaskCarDetail(string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=3", strTask[0])); //获取任务ID
+                                    WriteToProcess("CarProcess", "CarOutRequest", dtCar);  //调度小车；
+                                }
+                                else
+                                {
+                                    string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo, dtTask.Rows[0]["PALLET_CODE"].ToString());
+                                    DataTable dtOutTask = dal.CraneOutTask(string.Format("TASK_ID='{0}'", strOutTaskID));
+
+                                    WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
+                                    int i = 0;
+                                    while (i < 100)  //延迟
+                                    {
+                                        i++;
+                                    }
+                                    StationState[0] = strTask[0];//TaskID;
+                                    StationState[1] = "4";
+                                    WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为4.
+
+                                }
+                            }
                             break;
                         }
-
-
-
                     }
                 }
             }

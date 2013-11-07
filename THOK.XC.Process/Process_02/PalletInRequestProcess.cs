@@ -39,18 +39,15 @@ namespace THOK.XC.Process.Process_02
 
 
                     string strWhere = string.Format("TASK_ID='{0}'", TaskID);
-                    string[] strValue = dal.AssignCellTwo(strWhere);//货位申请
+                    string[] CellValue = dal.AssignCellTwo(strWhere);//货位申请
+                    string TaskNo = dal.InsertTaskDetail(CellValue[0]);
 
-                    dal.UpdateTaskState(strValue[0], "1");//更新任务开始执行
+                    dal.UpdateTaskState(CellValue[0], "1");//更新任务开始执行
+
                     ProductStateDal StateDal = new ProductStateDal();
-                    StateDal.UpdateProductCellCode(strValue[0], strValue[4]); //更新Product_State 货位
-                    dal.UpdateTaskDetailStation("357", "359", "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", strValue[0])); //更新货位申请起始地址及目标地址。
-
-
-                    //dal.UpdateTaskDetailStation("359", strValue[6], "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", strValue[0]));//更新货位到达入库站台，
-                    //dal.UpdateTaskDetailStation(strValue[6], strValue[2], "0", string.Format("TASK_ID='{0}' AND ITEM_NO=3", strValue[0]));//更新货位到达入库站台，
-                    //dal.UpdateTaskDetailCrane(strValue[3], "30" + strValue[4], "0", strValue[5], string.Format("TASK_ID='{0}' AND ITEM_NO=4", strValue[0]));//更新调度堆垛机的其实位置及目标地址。
-
+                    StateDal.UpdateProductCellCode(CellValue[0], CellValue[1]); //更新Product_State 货位
+                    dal.UpdateTaskDetailStation("357", "359", "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", CellValue[0])); //更新货位申请起始地址及目标地址。
+ 
 
 
                     strWhere = string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=2", TaskID);
