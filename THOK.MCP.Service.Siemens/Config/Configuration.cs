@@ -91,8 +91,16 @@ namespace THOK.MCP.Service.Siemens.Config
 			{
 				connectionString = nodeList[0].Attributes["ConnectionString"].Value;
                 string[] str = connectionString.Split(';');
-                progid = str[0];
-                servername = str[1];
+                if (str.Length == 1)
+                {
+                    progid = null;
+                    servername = str[0];
+                }
+                else
+                {
+                    progid = str[0];
+                    servername = str[1];
+                }
 			}
 			else
 			{
