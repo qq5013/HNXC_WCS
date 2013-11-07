@@ -224,7 +224,7 @@ namespace THOK.XC.Process.Process_Crane
             else
             {
 
-                drs = dtOrderCrane.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and ISMIX={2} and SORT_LEVEL={3} and PRODUCT_CODE={4}", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["ISMIX"], drTaskID["SORT_LEVEL"], drTaskID["PRODUCT_CODE"] }));
+                drs = dtOrderCrane.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and ISMIX={2} and FORDER={3} and PRODUCT_CODE={4}", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["ISMIX"], drTaskID["FORDER"], drTaskID["PRODUCT_CODE"] }));
                 if (drs.Length > 0)
                 {
                     drs = dtOrderCrane.Select(string.Format("Index<{0}", drs[0]["Index"]));
@@ -232,7 +232,7 @@ namespace THOK.XC.Process.Process_Crane
                     {
                         for (int i = 0; i < drs.Length; i++)
                         {
-                            drs = dtCrane.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and ISMIX={2} and SORT_LEVEL={3} and PRODUCT_CODE={4} and TASK_TYPE='22' and STATE in (0,1,2)", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["ISMIX"], drTaskID["SORT_LEVEL"], drTaskID["PRODUCT_CODE"] }));//判断小于当前Index的出库任务，是否有未完成的出库任务，如果没有，则返回True.
+                            drs = dtCrane.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and ISMIX={2} and FORDER={3} and PRODUCT_CODE={4} and TASK_TYPE='22' and STATE in (0,1,2)", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["ISMIX"], drTaskID["FORDER"], drTaskID["PRODUCT_CODE"] }));//判断小于当前Index的出库任务，是否有未完成的出库任务，如果没有，则返回True.
                             if (drs.Length == 0)
                             {
                                 blnvalue = true;
@@ -340,7 +340,7 @@ namespace THOK.XC.Process.Process_Crane
             {
                 dtCrane = dt.Clone();
             }
-            DataRow[] drs = dt.Select("", "TASK_LEVEL desc,IS_MIX,SORT_LEVEL,PRODUCT_CODE,TASK_ID");
+            DataRow[] drs = dt.Select("", "TASK_LEVEL desc,IS_MIX,FORDER,PRODUCT_CODE,TASK_ID");
             object[] obj = new object[dt.Columns.Count]; 
             for (int i = 0; i < drs.Length; i++)
             {
@@ -354,13 +354,13 @@ namespace THOK.XC.Process.Process_Crane
             dtCrane.AcceptChanges();
             if (drs.Length > 0) //重新排序
             {
-                DataTable dtOrder = dtCrane.DefaultView.ToTable(true, new string[] {"TASK_TYPE", "TASK_LEVEL", "IS_MIX", "SORT_LEVEL", "PRODUCT_CODE" });
+                DataTable dtOrder = dtCrane.DefaultView.ToTable(true, new string[] { "TASK_TYPE", "TASK_LEVEL", "IS_MIX", "FORDER", "PRODUCT_CODE" });
                 dtOrderCrane = new DataTable();
                 dtOrderCrane = dtOrder.Clone();
                 DataColumn dc = new DataColumn("Index", Type.GetType("System.Int32"));
                 dtOrderCrane.Columns.Add(dc);
 
-                drs = dtOrder.Select("TASK_TYPE=22", "TASK_LEVEL desc,IS_MIX,SORT_LEVEL,PRODUCT_CODE");
+                drs = dtOrder.Select("TASK_TYPE=22", "TASK_LEVEL desc,IS_MIX,FORDER,PRODUCT_CODE");
                 obj = new object[dtOrderCrane.Columns.Count];
                 for (int i = 0; i < drs.Length; i++)
                 {

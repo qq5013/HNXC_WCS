@@ -60,9 +60,11 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.cmbBill = new System.Windows.Forms.ComboBox();
+            this.rbt1 = new System.Windows.Forms.RadioButton();
+            this.rbt2 = new System.Windows.Forms.RadioButton();
+            this.label16 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -373,19 +375,10 @@
             this.label15.TabIndex = 22;
             this.label15.Text = "货物出库RFID校验不一致，请确认";
             // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(269, 228);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(137, 12);
-            this.label16.TabIndex = 23;
-            this.label16.Text = "请选择补货的入库批次：";
-            // 
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(269, 257);
+            this.label17.Location = new System.Drawing.Point(506, 256);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(149, 12);
             this.label17.TabIndex = 24;
@@ -394,19 +387,54 @@
             // cmbBill
             // 
             this.cmbBill.FormattingEnabled = true;
-            this.cmbBill.Location = new System.Drawing.Point(400, 225);
+            this.cmbBill.Location = new System.Drawing.Point(296, 253);
             this.cmbBill.Name = "cmbBill";
             this.cmbBill.Size = new System.Drawing.Size(204, 20);
             this.cmbBill.TabIndex = 25;
+            // 
+            // rbt1
+            // 
+            this.rbt1.AutoSize = true;
+            this.rbt1.Location = new System.Drawing.Point(151, 254);
+            this.rbt1.Name = "rbt1";
+            this.rbt1.Size = new System.Drawing.Size(143, 16);
+            this.rbt1.TabIndex = 26;
+            this.rbt1.Text = "请选择补货的入库批次";
+            this.rbt1.UseVisualStyleBackColor = true;
+            // 
+            // rbt2
+            // 
+            this.rbt2.AutoSize = true;
+            this.rbt2.Checked = true;
+            this.rbt2.Location = new System.Drawing.Point(151, 230);
+            this.rbt2.Name = "rbt2";
+            this.rbt2.Size = new System.Drawing.Size(95, 16);
+            this.rbt2.TabIndex = 27;
+            this.rbt2.TabStop = true;
+            this.rbt2.Text = "烟包继续出库";
+            this.rbt2.UseVisualStyleBackColor = true;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("SimSun", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label16.ForeColor = System.Drawing.Color.Red;
+            this.label16.Location = new System.Drawing.Point(18, 233);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(127, 15);
+            this.label16.TabIndex = 28;
+            this.label16.Text = "请选择处理方式：";
             // 
             // CannelBillSelect
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(860, 324);
+            this.Controls.Add(this.label16);
+            this.Controls.Add(this.rbt2);
+            this.Controls.Add(this.rbt1);
             this.Controls.Add(this.cmbBill);
             this.Controls.Add(this.label17);
-            this.Controls.Add(this.label16);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -460,8 +488,10 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.ComboBox cmbBill;
+        private System.Windows.Forms.RadioButton rbt1;
+        private System.Windows.Forms.RadioButton rbt2;
+        private System.Windows.Forms.Label label16;
     }
 }
