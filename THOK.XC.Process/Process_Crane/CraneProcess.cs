@@ -605,7 +605,7 @@ namespace THOK.XC.Process.Process_Crane
 
                         string strOutTaskID = bdal.CreateCancelBillOutTask(drs[0]["TASK_ID"].ToString(), drs[0]["BILL_NO"].ToString(), strNewBillNo,"");
                         
-                        DataTable dtOutTask = dal.CraneOutTask(string.Format("TASK_ID='{0}'", strOutTaskID));
+                        DataTable dtOutTask = dal.CraneTaskOut(string.Format("TASK_ID='{0}'", strOutTaskID));
 
                         WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
                         CellDal cdal = new CellDal();

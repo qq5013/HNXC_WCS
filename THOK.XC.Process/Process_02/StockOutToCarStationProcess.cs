@@ -147,7 +147,7 @@ namespace THOK.XC.Process.Process_02
                                     WriteToProcess("CarProcess", "CarInRequest", dt);//调度穿梭车入库。
 
                                     string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo, dtTask.Rows[0]["PALLET_CODE"].ToString());
-                                    DataTable dtOutTask = dal.CraneOutTask(string.Format("TASK_ID='{0}'", strOutTaskID));
+                                    DataTable dtOutTask = dal.CraneTaskOut(string.Format("TASK_ID='{0}'", strOutTaskID));
 
                                     WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
                                     int i = 0;

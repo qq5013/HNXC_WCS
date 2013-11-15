@@ -17,28 +17,28 @@ namespace THOK.XC.Process.Dal
             }
         }
          /// <summary>
-        /// 获取正在出库，或者出库完成的Task_Detail，主表 WCS_TASK_DETAIL ,WCS_TASK 
+        /// 获取入库的堆垛机信息
         /// </summary>
         /// <returns></returns>
-        public DataTable TaskCraneDetail(string strWhere)
+        public DataTable CraneTaskIn(string strWhere)
         {
             using (PersistentManager pm = new PersistentManager())
             {
                 TaskDao dao = new TaskDao();
-                return dao.TaskCraneDetail(strWhere);
+                return dao.CraneTaskIn(strWhere);
             }
         }
          /// <summary>
-        /// 根据TASKID获取，要出库的堆垛机相关任务信息。主表，WCS_TASK 
+        /// 获取出库的堆垛机信息。主表，WCS_TASK，Item_NO=1堆垛机为起始动作
         /// </summary>
         /// <param name="strWhere"></param>
         /// <returns></returns>
-        public DataTable CraneOutTask(string strWhere)
+        public DataTable CraneTaskOut(string strWhere)
         {
             using (PersistentManager pm = new PersistentManager())
             {
                 TaskDao dao = new TaskDao();
-                return dao.CraneOutTask(strWhere);
+                return dao.CraneTaskOut(strWhere);
             }
         }
         /// <summary>

@@ -16,7 +16,7 @@ namespace THOK.XC.Process.Dao
         public DataTable TaskOutToDetail()
         {
             //处理一楼出库，生成Task_Detail。
-            DataTable dtCraneTask = CraneOutTask("TASK.TASK_TYPE IN('12','13'，'14') AND TASK.STATE='0'");
+            DataTable dtCraneTask = CraneTaskOut("TASK.TASK_TYPE IN('12','13'，'14') AND TASK.STATE='0'");
 
             string strBillNo = "";
             string strSQL = "SELECT * FROM WCS_TASK_DETAIL LEFT JOIN WCS_TASK ON WCS_TASK_DETAIL.TASK_ID=WCS_TASK.TASK_ID WHERE TASK_TYPE=22 AND CRANE_NO IS NOT NULL AND WCS_TASK_DETAIL.STATE IN (1,2)";
@@ -34,7 +34,7 @@ namespace THOK.XC.Process.Dao
             {
                 strBillNo = dt.Rows[0]["BILL_NO"].ToString();
                 string strWhere = string.Format("PRODUCT_CODE<>'0000' and TASK.TASK_TYPE='22' and TASK.BILL_NO ='{0}' AND TASK.STATE='0'", strBillNo);
-                dt = CraneOutTask(strWhere);
+                dt = CraneTaskOut(strWhere);
                 dtCraneTask.Merge(dt);
             }
             return dtCraneTask;
@@ -76,7 +76,7 @@ namespace THOK.XC.Process.Dao
         /// 获取已经插入Task_Detail 中，堆垛机调度程序。
         /// </summary>
         /// <returns></returns>
-        public DataTable TaskCraneDetail(string strWhere)
+        public DataTable CraneTaskIn(string strWhere)
         {
             string where = strWhere;
             if (strWhere.Trim() == "")
@@ -89,10 +89,10 @@ namespace THOK.XC.Process.Dao
                             "LEFT JOIN WCS_TASK TASK  ON DETAIL.TASK_ID=TASK.TASK_ID " +
                             "LEFT JOIN WMS_BILL_MASTER BMASTER ON TASK.BILL_NO=BMASTER.BILL_NO "+
                             "LEFT JOIN WMS_FORMULA_DETAIL FDETAIL ON BMASTER.FORMULA_CODE=FDETAIL.FORMULA_CODE AND FDETAIL.PRODUCT_CODE=TASK.PRODUCT_CODE "+
-                            "LEFT JOIN SYS_STATION ON DETAIL.CRANE_NO=SYS_STATION.CRANE_NO AND SYS_STATION.STATION_TYPE=TASK.TASK_TYPE " +
+                            "LEFT JOIN SYS_STATION on SYS_STATION.STATION_TYPE=TASK.TASK_TYPE  and SYS_STATION.CRANE_NO=DETAIL.CRANE_NO and SYS_STATION.ITEM=DETAIL.ITEM_NO " +
                             "LEFT JOIN CMD_CELL CMD_CELL_NEW on CMD_CELL_NEW.CELL_CODE=TASK.NEWCELL_CODE " +
                             "LEFT JOIN CMD_SHELF CMD_SHELF_NEW on CMD_CELL_NEW.SHELF_CODE=CMD_SHELF_NEW.SHELF_CODE " +
-                            "LEFT JOIN SYS_STATION SYS_STATION_NEW ON   SYS_STATION_NEW.STATION_TYPE='11' and SYS_STATION_NEW.CRANE_NO=CMD_SHELF_NEW.CRANE_NO " +
+                            "LEFT JOIN SYS_STATION SYS_STATION_NEW ON   SYS_STATION_NEW.STATION_TYPE='11' and SYS_STATION_NEW.ITEM=SYS_TASK_ROUTE.ITEM_NO  and SYS_STATION_NEW.CRANE_NO=CMD_SHELF_NEW.CRANE_NO  " +
                             "WHERE " + where +
                             "ORDER BY TASK.TASK_LEVEL,TASK.TASK_DATE,TASK.BILL_NO, TASK.IS_MIX,FDETAIL.FORDER";
 
@@ -104,7 +104,7 @@ namespace THOK.XC.Process.Dao
         /// </summary>
         /// <param name="strWhere"></param>
         /// <returns></returns>
-        public DataTable CraneOutTask(string strWhere)
+        public DataTable CraneTaskOut(string strWhere)
         {
             string where = strWhere;
             if (strWhere == "")
@@ -121,8 +121,8 @@ namespace THOK.XC.Process.Dao
                            "LEFT JOIN SYS_TASK_ROUTE on SYS_TASK_ROUTE.TASK_TYPE=TASK.TASK_TYPE and SYS_TASK_ROUTE.ITEM_NO=1 " +
                            "LEFT JOIN CMD_CELL CMD_CELL_NEW on CMD_CELL_NEW.CELL_CODE=TASK.NEWCELL_CODE "+ 
                            "LEFT JOIN CMD_SHELF CMD_SHELF_NEW on CMD_CELL_NEW.SHELF_CODE=CMD_SHELF_NEW.SHELF_CODE "+
-                           "LEFT JOIN SYS_STATION SYS_STATION on SYS_STATION.STATION_TYPE=TASK.TASK_TYPE and SYS_STATION.CRANE_NO=cmd_shelf.CRANE_NO " +
-                           "LEFT JOIN SYS_STATION SYS_STATION_NEW ON   SYS_STATION_NEW.STATION_TYPE='11' and SYS_STATION_NEW.CRANE_NO=CMD_SHELF_NEW.CRANE_NO " +
+                           "LEFT JOIN SYS_STATION SYS_STATION on SYS_STATION.STATION_TYPE=TASK.TASK_TYPE  and SYS_STATION.CRANE_NO=cmd_shelf.CRANE_NO and SYS_STATION.ITEM=SYS_TASK_ROUTE.ITEM_NO " +
+                           "LEFT JOIN SYS_STATION SYS_STATION_NEW ON   SYS_STATION_NEW.STATION_TYPE='11' and SYS_STATION_NEW.ITEM=SYS_TASK_ROUTE.ITEM_NO  and SYS_STATION_NEW.CRANE_NO=CMD_SHELF_NEW.CRANE_NO  " +
                            "WHERE  "+ where;
             return ExecuteQuery(strSQL).Tables[0];
         }

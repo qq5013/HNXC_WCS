@@ -72,9 +72,9 @@ namespace THOK.XC.Dispatching.View
                 if (IndexStar == 0)
                 {
                     string strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1})  AND DETAIL.CRANE_NO IS NOT NULL ", "11,21,12,13,14", "0,1");
-                    dt2 = taskDal.TaskCraneDetail(strWhere);
+                    dt2 = taskDal.CraneTaskIn(strWhere);
                     strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1}) AND DETAIL.CRANE_NO IS NOT NULL ", "22", "1");
-                    DataTable dtout = taskDal.TaskCraneDetail(strWhere);
+                    DataTable dtout = taskDal.CraneTaskIn(strWhere);
                     dt2.Merge(dtout);
                 }
                 DataTable[] dtSend = new DataTable[2];
@@ -151,9 +151,9 @@ namespace THOK.XC.Dispatching.View
             if (IndexStar == 0)
             {
                 string strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1})  AND DETAIL.CRANE_NO IS NOT NULL ", "11,21,12,13,14", "0,1");
-                dt2 = taskDal.TaskCraneDetail(strWhere);
+                dt2 = taskDal.CraneTaskIn(strWhere);
                 strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1}) AND DETAIL.CRANE_NO IS NOT NULL ", "22", "0,1,2");
-                DataTable dtout = taskDal.TaskCraneDetail(strWhere);
+                DataTable dtout = taskDal.CraneTaskIn(strWhere);
                 dt2.Merge(dtout);
             }
             DataTable[] dtSend = new DataTable[2];
@@ -497,7 +497,7 @@ namespace THOK.XC.Dispatching.View
                                 Context.ProcessDispatcher.WriteToProcess("CarProcess", "CarInRequest", dt);//调度穿梭车入库。
 
                                 string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo, dtTask.Rows[0]["PALLET_CODE"].ToString());
-                                DataTable dtOutTask = dal.CraneOutTask(string.Format("TASK_ID='{0}'", strOutTaskID));
+                                DataTable dtOutTask = dal.CraneTaskOut(string.Format("TASK_ID='{0}'", strOutTaskID));
 
                                 Context.ProcessDispatcher.WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
                                 int jj = 0;
