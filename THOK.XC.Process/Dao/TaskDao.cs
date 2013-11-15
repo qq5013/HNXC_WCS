@@ -161,22 +161,22 @@ namespace THOK.XC.Process.Dao
 
                 switch (BType)
                 {
-                    case "2002"://紧急补料单  9000-9299
+                    case "2195"://紧急补料单  9000-9299
                         strWhere = "TASK_NO BETWEEN '9000' AND '9299'";
                         Count = 300;
                         StarNo = 9000;
                         break;
-                    case "3002"://抽检        9300-9499 
+                    case "3195"://抽检        9300-9499 
                         strWhere = "TASK_NO BETWEEN '9300' AND '9499'";
                         Count = 200;
                         StarNo = 9300;
                         break;
-                    case "2003"://倒库        9500-9799
+                    case "2122"://倒库        9500-9799
                         strWhere = "TASK_NO BETWEEN '9500' AND '9799'";
                         Count = 300;
                         StarNo = 9500;
                         break;
-                    case "4002": //盘点单     9800--9998
+                    case "4195": //盘点单     9800--9998
                         strWhere = "TASK_NO BETWEEN '9800' AND '9998'";
                         Count = 1999;
                         StarNo = 9800;
