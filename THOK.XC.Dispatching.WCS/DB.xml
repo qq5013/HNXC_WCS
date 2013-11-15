@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Connections>
   <Connection Name="DefaultConnection" DatabaseType="ORACLE">
-    <ConnectionString Value="DATA SOURCE=localhost:1521/orcl;PERSIST SECURITY INFO=True;POOLING=False;USER ID=HNXC" />
+    <ConnectionString Value="DATA SOURCE=localhost:1521/orcl;PERSIST SECURITY INFO=True;POOLING=False;USER ID=THOK" />
     <Password Name="password" Value="65CED0851FFD283F" />
   </Connection>
   <Connection Name="ServerConnection" DatabaseType="SQLSERVER">

@@ -64,7 +64,7 @@ namespace THOK.XC.Dispatching.View
             {
                 if (this.txtProductBarCode.Text.Trim() == this.txtScanCode.Text.Trim())
                 {
-                    strBarCode = this.txtLeftBarcode.Text.Trim();
+                    strBarCode = this.txtProductBarCode.Text.Trim();
                     this.DialogResult = DialogResult.OK;
                 }
                 else

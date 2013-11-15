@@ -79,13 +79,13 @@ namespace THOK.XC.Process.Process_01
 
                 dal.UpdateTaskDetailStation(FromStation, ToStation, "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", CellValue[0])); //更新货位申请起始地址及目标地址。
 
-                int[] ServiceW = new int[2];
+                int[] ServiceW = new int[3];
                 ServiceW[0] = int.Parse(TaskNo); //任务号
                 ServiceW[1] = int.Parse(dt.Rows[0]["STATION_NO"].ToString());//目的地址
-                //if (stateItem.ItemName == "01_1_131")
-                //    ServiceW[2] = 2;                 //货物类型
-                //else
-                //    ServiceW[2] = 1;
+                if (stateItem.ItemName == "01_1_131")
+                    ServiceW[2] = 2;                 //货物类型
+                else
+                    ServiceW[2] = 1;
                 WriteToService("StockPLC_01", writeItem + "1", ServiceW); //PLC写入任务
                 if (stateItem.ItemName == "01_1_131")
                 {
@@ -93,9 +93,15 @@ namespace THOK.XC.Process.Process_01
                 }
                 else
                 {
-                    WriteToService("StockPLC_01", writeItem + "2", BarCode); //PLC写入任务
+                    sbyte[] b = new sbyte[50];
+                    Common.ConvertStringChar.stringToBytes(BarCode, 50).CopyTo(b, 0);
+
+                    WriteToService("StockPLC_01", writeItem + "2", b); //PLC写入任务
                     WriteToService("StockPLC_01", writeItem + "3", 1); //PLC写入任务
+
+                    //更新RFID
                 }
+                //更新单据开始
                 dal.UpdateTaskDetailStation(ToStation, dt.Rows[0]["STATION_NO"].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", CellValue[0]));//更新货位到达入库站台，
 
 

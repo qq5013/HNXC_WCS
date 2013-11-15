@@ -157,7 +157,7 @@ namespace THOK.XC.Process.Process_Crane
             if (drTaskID==null) //出库任务调用堆垛机
             {
                 //读取二楼出库站台是否有烟包，PLC
-                DataRow[] drs = dtCrane.Select(string.Format("CRANE_NO='{0}' and STATE=0 and TASK_TYPE in ('12','22','13','14')", CraneNo), "TASK_LEVEL,TASK_DATE,BILL_NO,ISMIX,PRODUCT_CODE,TASK_ID"); //按照任务等级，任务时间，产品形态，
+                DataRow[] drs = dtCrane.Select(string.Format("CRANE_NO='{0}' and STATE=0 and TASK_TYPE in ('12','22','13','14')", CraneNo), "TASK_LEVEL,TASK_DATE,BILL_NO,IS_MIX,PRODUCT_CODE,TASK_ID"); //按照任务等级，任务时间，产品形态，
                 for (int i = 0; i < drs.Length; i++)
                 {
                     //判断能否出库
@@ -224,7 +224,7 @@ namespace THOK.XC.Process.Process_Crane
             else
             {
 
-                drs = dtOrderCrane.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and ISMIX={2} and FORDER={3} and PRODUCT_CODE={4}", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["ISMIX"], drTaskID["FORDER"], drTaskID["PRODUCT_CODE"] }));
+                drs = dtOrderCrane.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and IS_MIX={2} and FORDER={3} and PRODUCT_CODE={4}", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["IS_MIX"], drTaskID["FORDER"], drTaskID["PRODUCT_CODE"] }));
                 if (drs.Length > 0)
                 {
                     drs = dtOrderCrane.Select(string.Format("Index<{0}", drs[0]["Index"]));
@@ -232,7 +232,7 @@ namespace THOK.XC.Process.Process_Crane
                     {
                         for (int i = 0; i < drs.Length; i++)
                         {
-                            drs = dtCrane.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and ISMIX={2} and FORDER={3} and PRODUCT_CODE={4} and TASK_TYPE='22' and STATE in (0,1,2)", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["ISMIX"], drTaskID["FORDER"], drTaskID["PRODUCT_CODE"] }));//判断小于当前Index的出库任务，是否有未完成的出库任务，如果没有，则返回True.
+                            drs = dtCrane.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and IS_MIX={2} and FORDER={3} and PRODUCT_CODE={4} and TASK_TYPE='22' and STATE in (0,1,2)", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["IS_MIX"], drTaskID["FORDER"], drTaskID["PRODUCT_CODE"] }));//判断小于当前Index的出库任务，是否有未完成的出库任务，如果没有，则返回True.
                             if (drs.Length == 0)
                             {
                                 blnvalue = true;
@@ -745,7 +745,7 @@ namespace THOK.XC.Process.Process_Crane
                     dal.UpdateTaskDetailCrane(strValue[3], "30" + strValue[4], "1", strValue[5], string.Format("TASK_ID='{0}' AND ITEM_NO=3", strValue[0]));//更新调度堆垛机的其实位置及目标地址。
 
                     drs[0].BeginEdit();
-                    drs[0]["TO_STATION"] = "30" + strValue[4];
+                    drs[0]["CRANESTATION"] = "30" + strValue[4];
                     drs[0].EndEdit();
 
                     SendTelegramARQ(drs[0], false);
@@ -778,15 +778,37 @@ namespace THOK.XC.Process.Process_Crane
             string TaskType = dr["TASK_TYPE"].ToString();
             string ItemNo = dr["ITEM_NO"].ToString();
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             if (TaskType.Substring(1, 1) == "4" && ItemNo == "1" && dr["CRANE_NO"].ToString() == dr["NEW_CRANE_NO"].ToString())
             {
-                tgd.StartPosition = dr["FROM_STATION"].ToString();
+                tgd.StartPosition = dr["CRANESTATION"].ToString();
                 tgd.DestinationPosition = dr["NEW_TO_STATION"].ToString();
             }
             else
             {
-                tgd.StartPosition = dr["FROM_STATION"].ToString();
-                tgd.DestinationPosition = dr["TO_STATION"].ToString();
+                if (TaskType.Substring(1, 1) == "1" || (TaskType.Substring(1, 1) == "4" && ItemNo == "3") || TaskType.Substring(1, 1) == "3" && ItemNo == "4") //入库
+                {
+                    tgd.StartPosition = dr["CRANESTATION"].ToString();
+                    tgd.DestinationPosition = dr["CELLSTATION"].ToString();
+                }
+                else //出库
+                {
+                    tgd.StartPosition = dr["CELLSTATION"].ToString();
+                    tgd.DestinationPosition = dr["CRANESTATION"].ToString();
+                }
             }
 
             THOK.CRANE.TelegramFraming tf = new CRANE.TelegramFraming();

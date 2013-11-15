@@ -49,6 +49,10 @@ namespace THOK.XC.Process.Process_01
                     switch(taskType)
                     {
                         case "11":
+                              ItemNo = "2";
+                            NextItemNo = "3";
+                            CellCode = dr["CELL_CODE"].ToString();
+                            break;
                         case "14":
                             ItemNo = "2";
                             NextItemNo = "3";
