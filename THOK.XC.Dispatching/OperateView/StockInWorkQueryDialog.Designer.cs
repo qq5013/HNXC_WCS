@@ -47,11 +47,13 @@
             this.txtFormulaCode = new System.Windows.Forms.TextBox();
             this.btnFormulaCode = new System.Windows.Forms.Button();
             this.btnCigaretteCode = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.txtBarCode = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(281, 215);
+            this.btnCancel.Location = new System.Drawing.Point(272, 238);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 35);
             this.btnCancel.TabIndex = 0;
@@ -61,7 +63,7 @@
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(200, 215);
+            this.btnOK.Location = new System.Drawing.Point(191, 238);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 35);
             this.btnOK.TabIndex = 1;
@@ -82,7 +84,7 @@
             // 
             this.txtBillNo.Location = new System.Drawing.Point(107, 26);
             this.txtBillNo.Name = "txtBillNo";
-            this.txtBillNo.Size = new System.Drawing.Size(109, 21);
+            this.txtBillNo.Size = new System.Drawing.Size(240, 21);
             this.txtBillNo.TabIndex = 19;
             // 
             // label2
@@ -120,7 +122,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(51, 180);
+            this.label4.Location = new System.Drawing.Point(51, 208);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 12);
             this.label4.TabIndex = 29;
@@ -129,7 +131,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(51, 149);
+            this.label3.Location = new System.Drawing.Point(51, 177);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(29, 12);
             this.label3.TabIndex = 28;
@@ -138,7 +140,7 @@
             // lblBillType
             // 
             this.lblBillType.AutoSize = true;
-            this.lblBillType.Location = new System.Drawing.Point(51, 88);
+            this.lblBillType.Location = new System.Drawing.Point(51, 116);
             this.lblBillType.Name = "lblBillType";
             this.lblBillType.Size = new System.Drawing.Size(53, 12);
             this.lblBillType.TabIndex = 33;
@@ -149,7 +151,7 @@
             this.cbBillType.DisplayMember = "BTYPE_NAME";
             this.cbBillType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbBillType.FormattingEnabled = true;
-            this.cbBillType.Location = new System.Drawing.Point(107, 83);
+            this.cbBillType.Location = new System.Drawing.Point(107, 111);
             this.cbBillType.Name = "cbBillType";
             this.cbBillType.Size = new System.Drawing.Size(109, 20);
             this.cbBillType.TabIndex = 32;
@@ -158,7 +160,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(51, 118);
+            this.label5.Location = new System.Drawing.Point(51, 146);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(53, 12);
             this.label5.TabIndex = 35;
@@ -171,21 +173,21 @@
             this.cbBillMethod.Items.AddRange(new object[] {
             "批次",
             "等级"});
-            this.cbBillMethod.Location = new System.Drawing.Point(107, 113);
+            this.cbBillMethod.Location = new System.Drawing.Point(107, 141);
             this.cbBillMethod.Name = "cbBillMethod";
             this.cbBillMethod.Size = new System.Drawing.Size(109, 20);
             this.cbBillMethod.TabIndex = 34;
             // 
             // txtCigaretteCode
             // 
-            this.txtCigaretteCode.Location = new System.Drawing.Point(106, 143);
+            this.txtCigaretteCode.Location = new System.Drawing.Point(106, 171);
             this.txtCigaretteCode.Name = "txtCigaretteCode";
             this.txtCigaretteCode.Size = new System.Drawing.Size(109, 21);
             this.txtCigaretteCode.TabIndex = 36;
             // 
             // txtFormulaCode
             // 
-            this.txtFormulaCode.Location = new System.Drawing.Point(106, 175);
+            this.txtFormulaCode.Location = new System.Drawing.Point(106, 203);
             this.txtFormulaCode.Name = "txtFormulaCode";
             this.txtFormulaCode.Size = new System.Drawing.Size(109, 21);
             this.txtFormulaCode.TabIndex = 37;
@@ -193,7 +195,7 @@
             // btnFormulaCode
             // 
             this.btnFormulaCode.Image = ((System.Drawing.Image)(resources.GetObject("btnFormulaCode.Image")));
-            this.btnFormulaCode.Location = new System.Drawing.Point(216, 175);
+            this.btnFormulaCode.Location = new System.Drawing.Point(216, 203);
             this.btnFormulaCode.Name = "btnFormulaCode";
             this.btnFormulaCode.Size = new System.Drawing.Size(27, 22);
             this.btnFormulaCode.TabIndex = 31;
@@ -204,7 +206,7 @@
             // btnCigaretteCode
             // 
             this.btnCigaretteCode.Image = ((System.Drawing.Image)(resources.GetObject("btnCigaretteCode.Image")));
-            this.btnCigaretteCode.Location = new System.Drawing.Point(216, 143);
+            this.btnCigaretteCode.Location = new System.Drawing.Point(216, 171);
             this.btnCigaretteCode.Name = "btnCigaretteCode";
             this.btnCigaretteCode.Size = new System.Drawing.Size(25, 22);
             this.btnCigaretteCode.TabIndex = 27;
@@ -212,11 +214,29 @@
             this.btnCigaretteCode.UseVisualStyleBackColor = true;
             this.btnCigaretteCode.Click += new System.EventHandler(this.btnCigaretteCode_Click);
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(51, 88);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(53, 12);
+            this.label6.TabIndex = 39;
+            this.label6.Text = "烟包条码";
+            // 
+            // txtBarCode
+            // 
+            this.txtBarCode.Location = new System.Drawing.Point(107, 84);
+            this.txtBarCode.Name = "txtBarCode";
+            this.txtBarCode.Size = new System.Drawing.Size(240, 21);
+            this.txtBarCode.TabIndex = 38;
+            // 
             // StockInWorkQueryDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(368, 267);
+            this.ClientSize = new System.Drawing.Size(368, 285);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.txtBarCode);
             this.Controls.Add(this.txtFormulaCode);
             this.Controls.Add(this.txtCigaretteCode);
             this.Controls.Add(this.label5);
@@ -266,5 +286,7 @@
         private System.Windows.Forms.ComboBox cbBillMethod;
         private System.Windows.Forms.TextBox txtCigaretteCode;
         private System.Windows.Forms.TextBox txtFormulaCode;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox txtBarCode;
     }
 }

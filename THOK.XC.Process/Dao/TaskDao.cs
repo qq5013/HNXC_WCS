@@ -595,6 +595,17 @@ namespace THOK.XC.Process.Dao
             return strValue;
 
         }
+
+        /// <summary>
+        ///  烟包替换记录
+        /// </summary>
+        /// <param name="strWhere"></param>
+        public void InsertChangeProduct(string ProductBarcode, string ProductCode, string NewProductBarcode, string NewProductCode)
+        {
+            string strSQL = string.Format("INSERT INTO WCS_CHANGEPRODUCT(PRODUCT_BARCODE,PRODUCT_CODE,NEWPRODUCT_BARCODE,NEWPRODUCT_CODE,CHANGE_TIME,IS_CHANGE) VALUES('{0}','{1}','{2}','{3}',SYSDATE,'0')", new string[] { ProductBarcode, ProductCode, NewProductBarcode, NewProductCode });
+            ExecuteNonQuery(strSQL);
+
+        }
        
 
 
