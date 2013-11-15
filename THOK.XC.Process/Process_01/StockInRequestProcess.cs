@@ -71,7 +71,8 @@ namespace THOK.XC.Process.Process_01
                 string TaskNo = dal.InsertTaskDetail(CellValue[0]);
                 SysStationDal sysDal = new SysStationDal();
                 DataTable dt = sysDal.GetSationInfo(CellValue[1], "11");
-             
+
+                DataTable dtTask = dal.TaskInfo(string.Format("TASK_ID='{0}'", CellValue[0]));
 
                 dal.UpdateTaskState(CellValue[0], "1");//更新任务开始执行
                 ProductStateDal StateDal = new ProductStateDal();
@@ -94,14 +95,15 @@ namespace THOK.XC.Process.Process_01
                 else
                 {
                     sbyte[] b = new sbyte[50];
-                    Common.ConvertStringChar.stringToBytes(BarCode, 50).CopyTo(b, 0);
+                    Common.ConvertStringChar.stringToBytes(dtTask.Rows[0]["PALLET_CODE"].ToString(), 50).CopyTo(b, 0);
 
                     WriteToService("StockPLC_01", writeItem + "2", b); //PLC写入任务
                     WriteToService("StockPLC_01", writeItem + "3", 1); //PLC写入任务
 
                     //更新RFID
                 }
-                //更新单据开始
+                BillDal Bdal = new BillDal();
+                Bdal.UpdateBillMasterStart(dtTask.Rows[0]["BILL_NO"].ToString(), ServiceW[2] == 1 ? true : false);
                 dal.UpdateTaskDetailStation(ToStation, dt.Rows[0]["STATION_NO"].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", CellValue[0]));//更新货位到达入库站台，
 
 

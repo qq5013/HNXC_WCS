@@ -397,7 +397,7 @@ namespace THOK.XC.Process.Dao
             {
                 throw new Exception("没有可分配的货位！");
             }
-            strSQL = string.Format("UPDATE CMD_CELL SET IS_LOCK='1' WHERE CELL_CODE='{0}'", VCell);
+            strSQL = string.Format("UPDATE CMD_CELL SET IS_LOCK='1',BILL_NO='{1}' WHERE CELL_CODE='{0}'", VCell, billNo);
             ExecuteNonQuery(strSQL);
 
             strSQL = string.Format("UPDATE WCS_TASK SET CELL_CODE='{0}' WHERE {1}", VCell, where);
@@ -459,7 +459,7 @@ namespace THOK.XC.Process.Dao
                 throw new Exception("没有可分配的货位！");
             }
 
-            strSQL = string.Format("UPDATE CMD_CELL SET IS_LOCK='1' WHERE CELL_CODE='{0}'", VCell);
+            strSQL = string.Format("UPDATE CMD_CELL SET IS_LOCK='1',BILL_NO='{1}' WHERE CELL_CODE='{0}'", VCell, billNo);
             ExecuteNonQuery(strSQL);
 
             strSQL = string.Format("UPDATE WCS_TASK SET CELL_CODE='{0}' WHERE {1}", VCell, where);
@@ -571,8 +571,7 @@ namespace THOK.XC.Process.Dao
             {
                 throw new Exception("没有可分配的货位！");
             }
-
-            strSQL = string.Format("UPDATE CMD_CELL SET IS_LOCK='1' WHERE CELL_CODE='{0}'", VCell);
+            strSQL = string.Format("UPDATE CMD_CELL SET IS_LOCK='1',BILL_NO='{1}' WHERE CELL_CODE='{0}'", VCell, billNo);
             ExecuteNonQuery(strSQL);
 
             strSQL = string.Format("UPDATE WCS_TASK SET CELL_CODE='{0}' WHERE {1}", VCell, where);

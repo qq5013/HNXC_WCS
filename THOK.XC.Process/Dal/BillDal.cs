@@ -68,13 +68,30 @@ namespace THOK.XC.Process.Dal
                 return dao.CreatePalletOutBillTask(TARGET_CODE);
             }
         }
-
+        /// <summary>
+        /// 单据完成
+        /// </summary>
+        /// <param name="BillNo"></param>
+        /// <param name="IsBill"></param>
         public void UpdateBillMasterFinished(string BillNo,string IsBill)
         {
             using (PersistentManager pm = new PersistentManager())
             {
                 BillDao dao = new BillDao();
                 dao.UpdateBillMasterFinished(BillNo,IsBill);
+            }
+        }
+        /// <summary>
+        /// 单据开始运行
+        /// </summary>
+        /// <param name="BillNo"></param>
+        /// <param name="IsBill"></param>
+        public void UpdateBillMasterStart(string BillNo, bool IsBill)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                BillDao dao = new BillDao();
+                dao.UpdateBillMasterStart(BillNo, IsBill);
             }
         }
 

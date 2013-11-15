@@ -45,26 +45,20 @@ namespace THOK.XC.Process.Process_02
                 }
                 TaskDal dal = new TaskDal();
                 string[] strValue = dal.GetTaskInfo(TaskNo);
+
                 if (!string.IsNullOrEmpty(strValue[1]))
                 {
-
-
-
-
-
-
-
-
-
-
-
+                    DataTable dtTask = dal.TaskInfo(string.Format("TASK_ID='{0}'", strValue[0]));
+                    string CellCode = dtTask.Rows[0]["CELL_CODE"].ToString();
 
                     dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO='3'", strValue[0]), "2");//更新小车站台到达入库站台任务完成。
-                    DataTable dt = dal.TaskInCraneStation(string.Format("TASK_ID='{0}'", strValue[0]));
+                    SysStationDal sysdal = new SysStationDal();
+                    DataTable dtstation = sysdal.GetSationInfo(CellCode, "21");
+                    dal.UpdateTaskDetailCrane(dtstation.Rows[0]["STATION_NO"].ToString(), CellCode, "0", dtstation.Rows[0]["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO=4", strValue[0]));//更新调度堆垛机的其实位置及目标地址。
+
+                    DataTable dt = dal.CraneTaskIn(string.Format("TASK_ID='{0}' and ITEM_NO='4'", strValue[0]));
                     if (dt.Rows.Count > 0)
                     {
-                        DataRow dr = dt.Rows[0];
-                        dal.UpdateTaskDetailCrane(dr["CELLSTATION"].ToString(), dr["CRANESTATION"].ToString(), "0", dr["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO='4'", strValue[0]));
                         dt = dal.CraneTaskIn(string.Format("TASK.TASK_ID='{0}' AND ITEM_NO='4'", strValue[0]));
                         WriteToProcess("CraneProcess", "CraneInRequest", dt);
                     }

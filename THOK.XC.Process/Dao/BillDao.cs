@@ -244,6 +244,23 @@ namespace THOK.XC.Process.Dao
              ExecuteNonQuery("CONFIRMBILLFINSHED", parameters);
 
          }
+         /// <summary>
+         /// 更新单号开始标志。
+         /// </summary>
+         /// <param name="BillNo"></param>
+         public void UpdateBillMasterStart(string BillNo, bool IsBill)
+         {
+             string strSQL = "";
+             if (IsBill)
+             {
+                 strSQL = string.Format("UPDATE WMS_BILL_MASTER SET STATE='4' WHERE BILL_NO='{0}' AND STATE='3'", BillNo);
+             }
+             else
+             {
+                 strSQL = string.Format("UPDATE WMS_PALLET_MASTER SET STATE='4' WHERE BILL_NO='{0}' AND STATE='3'", BillNo);
+             }
+             ExecuteNonQuery(strSQL);
+         }
 
          public DataTable GetBillByType(string BillType)
          {
