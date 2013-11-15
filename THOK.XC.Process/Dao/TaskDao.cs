@@ -92,7 +92,7 @@ namespace THOK.XC.Process.Dao
                             "LEFT JOIN SYS_STATION on SYS_STATION.STATION_TYPE=TASK.TASK_TYPE  and SYS_STATION.CRANE_NO=DETAIL.CRANE_NO and SYS_STATION.ITEM=DETAIL.ITEM_NO " +
                             "LEFT JOIN CMD_CELL CMD_CELL_NEW on CMD_CELL_NEW.CELL_CODE=TASK.NEWCELL_CODE " +
                             "LEFT JOIN CMD_SHELF CMD_SHELF_NEW on CMD_CELL_NEW.SHELF_CODE=CMD_SHELF_NEW.SHELF_CODE " +
-                            "LEFT JOIN SYS_STATION SYS_STATION_NEW ON   SYS_STATION_NEW.STATION_TYPE='11' and SYS_STATION_NEW.ITEM=SYS_TASK_ROUTE.ITEM_NO  and SYS_STATION_NEW.CRANE_NO=CMD_SHELF_NEW.CRANE_NO  " +
+                            "LEFT JOIN SYS_STATION SYS_STATION_NEW ON   SYS_STATION_NEW.STATION_TYPE='11' and SYS_STATION_NEW.ITEM='3' and SYS_STATION_NEW.CRANE_NO=CMD_SHELF_NEW.CRANE_NO  " +
                             "WHERE " + where +
                             "ORDER BY TASK.TASK_LEVEL,TASK.TASK_DATE,TASK.BILL_NO, TASK.IS_MIX,FDETAIL.FORDER";
 
@@ -161,22 +161,22 @@ namespace THOK.XC.Process.Dao
 
                 switch (BType)
                 {
-                    case "2002"://紧急补料单  9000-9299
+                    case "2195"://紧急补料单  9000-9299
                         strWhere = "TASK_NO BETWEEN '9000' AND '9299'";
                         Count = 300;
                         StarNo = 9000;
                         break;
-                    case "3002"://抽检        9300-9499 
+                    case "3195"://抽检        9300-9499 
                         strWhere = "TASK_NO BETWEEN '9300' AND '9499'";
                         Count = 200;
                         StarNo = 9300;
                         break;
-                    case "2003"://倒库        9500-9799
+                    case "2122"://倒库        9500-9799
                         strWhere = "TASK_NO BETWEEN '9500' AND '9799'";
                         Count = 300;
                         StarNo = 9500;
                         break;
-                    case "4002": //盘点单     9800--9998
+                    case "4195": //盘点单     9800--9998
                         strWhere = "TASK_NO BETWEEN '9800' AND '9998'";
                         Count = 1999;
                         StarNo = 9800;

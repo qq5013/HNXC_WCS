@@ -19,8 +19,8 @@ namespace THOK.TCP.Util
             {
                 case "ACK":
                 case "NCK":
-                    dictionary.Add("FaultIndicator", telegramData.Substring(13, 1));
-                    dictionary.Add("SequenceNo", telegramData.Substring(14, 4));
+                    dictionary.Add("FaultIndicator", telegramData.Substring(3, 1));
+                    dictionary.Add("SequenceNo", telegramData.Substring(4, 4));
                     break;
                 case "ACP":
                     dictionary.Add("CraneNo", telegramData.Substring(3, 2));

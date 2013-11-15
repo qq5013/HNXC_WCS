@@ -436,10 +436,10 @@ namespace THOK.XC.Process.Process_Crane
                     }
                     int[] WriteValue = new int[3];
                     WriteValue[0] = int.Parse(drs[0]["TASK_NO"].ToString());
-                    if (TaskType == "12")
-                        WriteValue[1] = int.Parse(drs[0]["TARGET_CODE"].ToString());
+                    if (TaskType == "22")
+                        WriteValue[1] = int.Parse(drs[0]["MEMO"].ToString()); 
                     else
-                        WriteValue[1] = int.Parse(drs[0]["MEMO"].ToString());
+                        WriteValue[1] = int.Parse(drs[0]["TARGET_CODE"].ToString());
                     WriteValue[2] = int.Parse(drs[0]["PRODUCT_TYPE"].ToString());
 
 
