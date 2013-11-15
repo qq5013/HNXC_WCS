@@ -280,7 +280,19 @@ namespace THOK.XC.Process.Dal
 
         }
 
+        /// <summary>
+        ///  烟包替换记录
+        /// </summary>
+        /// <param name="strWhere"></param>
+        public void InsertChangeProduct(string ProductBarcode,string ProductCode,string NewProductBarcode,string NewProductCode)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                TaskDao dao = new TaskDao();
+                dao.InsertChangeProduct(ProductBarcode, ProductCode, NewProductBarcode, NewProductCode);
+            }
 
+        }
 
     }
 }

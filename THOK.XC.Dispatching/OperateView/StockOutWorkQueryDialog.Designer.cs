@@ -46,11 +46,13 @@
             this.btnCigaretteCode = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.txtSCHEDULE_NO = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtBarCode = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(281, 246);
+            this.btnCancel.Location = new System.Drawing.Point(190, 242);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 35);
             this.btnCancel.TabIndex = 0;
@@ -60,7 +62,7 @@
             // 
             // btnOK
             // 
-            this.btnOK.Location = new System.Drawing.Point(200, 246);
+            this.btnOK.Location = new System.Drawing.Point(109, 242);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 35);
             this.btnOK.TabIndex = 1;
@@ -81,13 +83,13 @@
             // 
             this.txtBillNo.Location = new System.Drawing.Point(107, 47);
             this.txtBillNo.Name = "txtBillNo";
-            this.txtBillNo.Size = new System.Drawing.Size(109, 21);
+            this.txtBillNo.Size = new System.Drawing.Size(240, 21);
             this.txtBillNo.TabIndex = 19;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(222, 84);
+            this.label2.Location = new System.Drawing.Point(222, 114);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(11, 12);
             this.label2.TabIndex = 25;
@@ -95,7 +97,7 @@
             // 
             // dtpEndBillDate
             // 
-            this.dtpEndBillDate.Location = new System.Drawing.Point(238, 75);
+            this.dtpEndBillDate.Location = new System.Drawing.Point(238, 105);
             this.dtpEndBillDate.Name = "dtpEndBillDate";
             this.dtpEndBillDate.Size = new System.Drawing.Size(109, 21);
             this.dtpEndBillDate.TabIndex = 24;
@@ -103,7 +105,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(51, 78);
+            this.label1.Location = new System.Drawing.Point(51, 108);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(53, 12);
             this.label1.TabIndex = 23;
@@ -111,7 +113,7 @@
             // 
             // dtpStartBillDate
             // 
-            this.dtpStartBillDate.Location = new System.Drawing.Point(107, 74);
+            this.dtpStartBillDate.Location = new System.Drawing.Point(107, 104);
             this.dtpStartBillDate.Name = "dtpStartBillDate";
             this.dtpStartBillDate.Size = new System.Drawing.Size(109, 21);
             this.dtpStartBillDate.TabIndex = 22;
@@ -119,7 +121,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(51, 169);
+            this.label4.Location = new System.Drawing.Point(51, 199);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 12);
             this.label4.TabIndex = 29;
@@ -128,7 +130,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(51, 138);
+            this.label3.Location = new System.Drawing.Point(51, 168);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(29, 12);
             this.label3.TabIndex = 28;
@@ -137,7 +139,7 @@
             // lblBillType
             // 
             this.lblBillType.AutoSize = true;
-            this.lblBillType.Location = new System.Drawing.Point(51, 109);
+            this.lblBillType.Location = new System.Drawing.Point(51, 139);
             this.lblBillType.Name = "lblBillType";
             this.lblBillType.Size = new System.Drawing.Size(53, 12);
             this.lblBillType.TabIndex = 33;
@@ -148,7 +150,7 @@
             this.cbBillType.DisplayMember = "BTYPE_NAME";
             this.cbBillType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbBillType.FormattingEnabled = true;
-            this.cbBillType.Location = new System.Drawing.Point(107, 104);
+            this.cbBillType.Location = new System.Drawing.Point(107, 134);
             this.cbBillType.Name = "cbBillType";
             this.cbBillType.Size = new System.Drawing.Size(109, 20);
             this.cbBillType.TabIndex = 32;
@@ -156,14 +158,14 @@
             // 
             // txtCigaretteCode
             // 
-            this.txtCigaretteCode.Location = new System.Drawing.Point(106, 132);
+            this.txtCigaretteCode.Location = new System.Drawing.Point(106, 162);
             this.txtCigaretteCode.Name = "txtCigaretteCode";
             this.txtCigaretteCode.Size = new System.Drawing.Size(109, 21);
             this.txtCigaretteCode.TabIndex = 36;
             // 
             // txtFormulaCode
             // 
-            this.txtFormulaCode.Location = new System.Drawing.Point(106, 164);
+            this.txtFormulaCode.Location = new System.Drawing.Point(106, 194);
             this.txtFormulaCode.Name = "txtFormulaCode";
             this.txtFormulaCode.Size = new System.Drawing.Size(109, 21);
             this.txtFormulaCode.TabIndex = 37;
@@ -171,7 +173,7 @@
             // btnFormulaCode
             // 
             this.btnFormulaCode.Image = global::THOK.XC.Dispatching.Properties.Resources.DatePick;
-            this.btnFormulaCode.Location = new System.Drawing.Point(216, 164);
+            this.btnFormulaCode.Location = new System.Drawing.Point(216, 194);
             this.btnFormulaCode.Name = "btnFormulaCode";
             this.btnFormulaCode.Size = new System.Drawing.Size(27, 22);
             this.btnFormulaCode.TabIndex = 31;
@@ -182,7 +184,7 @@
             // btnCigaretteCode
             // 
             this.btnCigaretteCode.Image = global::THOK.XC.Dispatching.Properties.Resources.DatePick;
-            this.btnCigaretteCode.Location = new System.Drawing.Point(216, 132);
+            this.btnCigaretteCode.Location = new System.Drawing.Point(216, 162);
             this.btnCigaretteCode.Name = "btnCigaretteCode";
             this.btnCigaretteCode.Size = new System.Drawing.Size(25, 22);
             this.btnCigaretteCode.TabIndex = 27;
@@ -203,14 +205,32 @@
             // 
             this.txtSCHEDULE_NO.Location = new System.Drawing.Point(106, 20);
             this.txtSCHEDULE_NO.Name = "txtSCHEDULE_NO";
-            this.txtSCHEDULE_NO.Size = new System.Drawing.Size(109, 21);
+            this.txtSCHEDULE_NO.Size = new System.Drawing.Size(241, 21);
             this.txtSCHEDULE_NO.TabIndex = 38;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(50, 81);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(53, 12);
+            this.label5.TabIndex = 41;
+            this.label5.Text = "烟包条码";
+            // 
+            // txtBarCode
+            // 
+            this.txtBarCode.Location = new System.Drawing.Point(106, 77);
+            this.txtBarCode.Name = "txtBarCode";
+            this.txtBarCode.Size = new System.Drawing.Size(240, 21);
+            this.txtBarCode.TabIndex = 40;
             // 
             // StockOutWorkQueryDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(368, 296);
+            this.ClientSize = new System.Drawing.Size(368, 287);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.txtBarCode);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.txtSCHEDULE_NO);
             this.Controls.Add(this.txtFormulaCode);
@@ -260,6 +280,8 @@
         private System.Windows.Forms.TextBox txtFormulaCode;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox txtSCHEDULE_NO;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox txtBarCode;
 
         
     }
