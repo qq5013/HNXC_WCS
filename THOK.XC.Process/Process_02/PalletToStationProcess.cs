@@ -53,7 +53,7 @@ namespace THOK.XC.Process.Process_02
 
                     dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO='3'", strValue[0]), "2");//更新小车站台到达入库站台任务完成。
                     SysStationDal sysdal = new SysStationDal();
-                    DataTable dtstation = sysdal.GetSationInfo(CellCode, "21");
+                    DataTable dtstation = sysdal.GetSationInfo(CellCode, "21","4");
                     dal.UpdateTaskDetailCrane(dtstation.Rows[0]["STATION_NO"].ToString(), CellCode, "0", dtstation.Rows[0]["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO=4", strValue[0]));//更新调度堆垛机的其实位置及目标地址。
 
                     DataTable dt = dal.CraneTaskIn(string.Format("TASK_ID='{0}' and ITEM_NO='4'", strValue[0]));

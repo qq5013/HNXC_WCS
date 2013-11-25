@@ -206,7 +206,7 @@ namespace THOK.XC.Dispatching.View
 
                      string TaskNo = dal.InsertTaskDetail(CellValue[0]);
                      SysStationDal sysDal = new SysStationDal();
-                     DataTable dt = sysDal.GetSationInfo(CellValue[1], "11");
+                     DataTable dt = sysDal.GetSationInfo(CellValue[1], "11","3");
 
 
                      dal.UpdateTaskState(CellValue[0], "1");//更新任务开始执行
@@ -307,7 +307,7 @@ namespace THOK.XC.Dispatching.View
 
                     DataRow dr = dtTask.Rows[0];
                     SysStationDal sysdal = new SysStationDal();
-                    DataTable dtstation = sysdal.GetSationInfo(dr["CELL_CODE"].ToString(), "11");
+                    DataTable dtstation = sysdal.GetSationInfo(dr["CELL_CODE"].ToString(), "11","3");
 
                     if (strValue != "1")
                     {

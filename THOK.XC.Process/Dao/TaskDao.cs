@@ -580,7 +580,7 @@ namespace THOK.XC.Process.Dao
 
             SysStationDao sysdao = new SysStationDao();
 
-            dt = sysdao.GetSationInfo(VCell, "11");
+            dt = sysdao.GetSationInfo(VCell, "11","3");
             string TaskNo = InsertTaskDetail(TaskID);
 
             strValue[0] = TaskID;

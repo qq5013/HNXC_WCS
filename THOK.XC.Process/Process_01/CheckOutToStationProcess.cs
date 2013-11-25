@@ -62,7 +62,7 @@ namespace THOK.XC.Process.Process_01
 
                         DataRow dr = dtTask.Rows[0];
                         SysStationDal sysdal = new SysStationDal();
-                        DataTable dtstation = sysdal.GetSationInfo(dr["CELL_CODE"].ToString(), "11");
+                        DataTable dtstation = sysdal.GetSationInfo(dr["CELL_CODE"].ToString(), "11", "3");
 
                         if (strValue != "1")
                         {

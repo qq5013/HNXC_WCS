@@ -70,7 +70,7 @@ namespace THOK.XC.Process.Process_01
 
                 string TaskNo = dal.InsertTaskDetail(CellValue[0]);
                 SysStationDal sysDal = new SysStationDal();
-                DataTable dt = sysDal.GetSationInfo(CellValue[1], "11");
+                DataTable dt = sysDal.GetSationInfo(CellValue[1], "11","3");
 
                 DataTable dtTask = dal.TaskInfo(string.Format("TASK_ID='{0}'", CellValue[0]));
 

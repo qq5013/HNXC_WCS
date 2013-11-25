@@ -20,7 +20,7 @@ namespace THOK.XC.Process.Dao
         }
 
         /// <summary>
-        /// 入库-- 更新货位存储信息,blnRemove=true，表示移库，使用NewCELL_CODE
+        /// 入库-- 更新货位存储信息
         /// </summary>
         /// <param name="strCell"></param>
         public void UpdateCellInFinishUnLock(string TaskID)
@@ -28,7 +28,7 @@ namespace THOK.XC.Process.Dao
 
             string strSQL = string.Format("UPDATE CMD_CELL CELL " +
                                 "SET (PRODUCT_CODE,PRODUCT_BARCODE,REAL_WEIGHT,PALLET_CODE,BILL_NO,IN_DATE,IS_LOCK)= " +
-                                "(SELECT PRODUCT_CODE,PRODUCT_BARCODE,REAL_WEIGHT,PALLET_CODE,BILL_NO,SYSDATE AS IN_DATE,'0' FROM WCS_TASK TASK WHERE CELL.CELL_CODE=TASK.CELL_CODE AND TASK.TASK_ID='{0}' ) " +
+                                "(SELECT PRODUCT_CODE,PRODUCT_BARCODE,REAL_WEIGHT,PALLET_CODE,DECODE(SOURCE_BILLNO,NULL,BILL_NO,SOURCE_BILLNO) AS BILL_NO,SYSDATE AS IN_DATE,'0' FROM WCS_TASK TASK WHERE CELL.CELL_CODE=TASK.CELL_CODE AND TASK.TASK_ID='{0}' ) " +
                                 "WHERE EXISTS(SELECT 1 FROM WCS_TASK T WHERE CELL.CELL_CODE=T.CELL_CODE AND T.TASK_ID='{0}' ) ", TaskID);
 
             ExecuteNonQuery(strSQL);

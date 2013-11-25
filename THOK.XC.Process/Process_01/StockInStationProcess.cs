@@ -69,7 +69,7 @@ namespace THOK.XC.Process.Process_01
                     taskDal.UpdateTaskDetailState(string.Format("TASK_NO='{0}' AND ITEM_NO='{1}'", TaskNo, ItemNo), "2");
 
                     SysStationDal sysdal = new SysStationDal();
-                    DataTable dtstation = sysdal.GetSationInfo(CellCode, "11");
+                    DataTable dtstation = sysdal.GetSationInfo(CellCode, "11","3");
                     taskDal.UpdateTaskDetailCrane(dtstation.Rows[0]["STATION_NO"].ToString(), CellCode, "0", dtstation.Rows[0]["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO={1}", TaskInfo[0],NextItemNo));//更新调度堆垛机的其实位置及目标地址。
 
                     string strWhere = string.Format("TASK_NO='{0}'AND DETAIL.STATE='0' and ITEM_NO='{1}'", TaskNo, NextItemNo);
