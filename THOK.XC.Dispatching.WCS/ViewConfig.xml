@@ -14,6 +14,6 @@
 		  <Menu Name="货位明细查询" Type="THOK.XC.Dispatching.OperateView.CellQueryForm,THOK.XC.Dispatching.dll"/>
 	  </Menus>
   <Menus Name="系统">
-    <Menu Name="参数设置" Type="THOK.XC.Dispatching.View.ParameterForm,THOK.XC.Dispatching.dll"/>
+    <Menu Name="参数设置" Type="THOK.XC.Dispatching.OperateView.ParameterForm,THOK.XC.Dispatching.dll"/>
   </Menus>
 </Application>
