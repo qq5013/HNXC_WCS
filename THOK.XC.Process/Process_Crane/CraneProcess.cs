@@ -514,9 +514,9 @@ namespace THOK.XC.Process.Process_Crane
                             string Barcode = drs[0]["PRODUCT_BARCODE"].ToString();
                             string PalletCode = drs[0]["PALLET_CODE"].ToString();
 
-                            sbyte[] b = new sbyte[90];
-                            Common.ConvertStringChar.stringToBytes(Barcode, 40).CopyTo(b, 0);
-                            Common.ConvertStringChar.stringToBytes(PalletCode, 50).CopyTo(b, 40);
+                            sbyte[] b = new sbyte[190];
+                            Common.ConvertStringChar.stringToBytes(Barcode, 80).CopyTo(b, 0);
+                            Common.ConvertStringChar.stringToBytes(PalletCode, 110).CopyTo(b, 80);
 
                             dal.UpdateTaskDetailStation(drs[0]["STATION_NO"].ToString(), WriteValue[1].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", TASK_ID));
 
