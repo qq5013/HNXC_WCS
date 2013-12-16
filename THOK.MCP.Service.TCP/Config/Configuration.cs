@@ -30,6 +30,10 @@ namespace THOK.MCP.Service.TCP.Config
 			{
 				return ip;
 			}
+            set
+            {
+                this.ip = value;
+            }
 		}
 
 		public int Port
@@ -38,6 +42,10 @@ namespace THOK.MCP.Service.TCP.Config
 			{
 				return port;
 			}
+            set
+            {
+                this.port = value;
+            }
 		}
         private string configFile = "";
 
@@ -51,7 +59,7 @@ namespace THOK.MCP.Service.TCP.Config
 
         public void Save()
         {
-            XmlNodeList nodeList = doc.GetElementsByTagName("UDPServer");
+            XmlNodeList nodeList = doc.GetElementsByTagName("TCPServer");
             if (nodeList.Count != 0)
             {
                 XmlNode xmlNode = nodeList[0];

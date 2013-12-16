@@ -10,25 +10,25 @@ namespace THOK.XC.Dispatching
     {
         private string serverName;
 
-        [CategoryAttribute("本机数据库连接参数"), DescriptionAttribute("数据库服务器名称"), Chinese("服务器名称")]
+        [CategoryAttribute("服务器数据库连接参数"), DescriptionAttribute("数据库服务器名称"), Chinese("服务器名称")]
         public string ServerName
         {
             get { return serverName; }
             set { serverName = value; }
         }
 
-        private string dbName;
+        //private string dbName;
 
-        [CategoryAttribute("本机数据库连接参数"), DescriptionAttribute("数据库名称"), Chinese("数据库名")]
-        public string DBName
-        {
-            get { return dbName; }
-            set { dbName = value; }
-        }
+        //[CategoryAttribute("服务器数据库连接参数"), DescriptionAttribute("数据库名称"), Chinese("数据库名")]
+        //public string DBName
+        //{
+        //    get { return dbName; }
+        //    set { dbName = value; }
+        //}
 
         private string dbUser;
 
-        [CategoryAttribute("本机数据库连接参数"), DescriptionAttribute("数据库连接用户名"), Chinese("用户名")]
+        [CategoryAttribute("服务器数据库连接参数"), DescriptionAttribute("数据库连接用户名"), Chinese("用户名")]
         public string DBUser
         {
             get { return dbUser; }
@@ -36,145 +36,123 @@ namespace THOK.XC.Dispatching
         }
         private string password;
 
-        [CategoryAttribute("本机数据库连接参数"), DescriptionAttribute("数据库连接密码"), Chinese("密码")]
+        [CategoryAttribute("服务器数据库连接参数"), DescriptionAttribute("数据库连接密码"), Chinese("密码")]
         public string Password
         {
             get { return password; }
             set { password = value; }
         }
 
-        private string remoteServerName;
 
-        [CategoryAttribute("服务器数据库连接参数"), DescriptionAttribute("数据库服务器名称"), Chinese("服务器名称")]
-        public string RemoteServerName
+
+
+        private string scanPortName;
+
+        [CategoryAttribute("扫码器通信参数"), DescriptionAttribute("扫码器串口号"), Chinese("串口号")]
+        public string ScanPortName
         {
-            get { return remoteServerName; }
-            set { remoteServerName = value; }
+            get { return scanPortName; }
+            set { scanPortName = value; }
         }
 
-        private string remoteDBName;
+        private string scanBaudRate;
 
-        [CategoryAttribute("服务器数据库连接参数"), DescriptionAttribute("数据库名称"), Chinese("数据库名")]
-        public string RemoteDBName
+        [CategoryAttribute("扫码器通信参数"), DescriptionAttribute("扫码器波特率"), Chinese("波特率")]
+        public string ScanBaudRate
         {
-            get { return remoteDBName; }
-            set { remoteDBName = value; }
+            get { return scanBaudRate; }
+            set { scanBaudRate = value; }
         }
 
-        private string remoteDBUser;
-
-        [CategoryAttribute("服务器数据库连接参数"), DescriptionAttribute("数据库连接用户名"), Chinese("用户名")]
-        public string RemoteDBUser
-        {
-            get { return remoteDBUser; }
-            set { remoteDBUser = value; }
-        }
-        private string remotePassword;
-
-        [CategoryAttribute("服务器数据库连接参数"), DescriptionAttribute("数据库连接密码"), Chinese("密码")]
-        public string RemotePassword
-        {
-            get { return remotePassword; }
-            set { remotePassword = value; }
-        }
-
-        private int port;
-
-        [CategoryAttribute("备货系统通信参数"), DescriptionAttribute("备货系统监听端口"), Chinese("监听端口")]
-        public int Port
-        {
-            get { return port; }
-            set { port = value; }
-        }
 
         private string ip;
 
-        [CategoryAttribute("备货系统通信参数"), DescriptionAttribute("备货系统IP地址"), Chinese("IP地址")]
+        [CategoryAttribute("堆垛机通信参数"), DescriptionAttribute("地址IP"), Chinese("IP")]
         public string IP
         {
             get { return ip; }
             set { ip = value; }
         }
 
-        private string portName;
+        private int port;
 
-        [CategoryAttribute("扫码器通信参数"), DescriptionAttribute("扫码器串口号"), Chinese("串口号")]
-        public string PortName
+        [CategoryAttribute("堆垛机通信参数"), DescriptionAttribute("通信端口"), Chinese("端口")]
+        public int Port
         {
-            get { return portName; }
-            set { portName = value; }
+            get { return port; }
+            set { port = value; }
         }
 
-        private string baudRate;
 
-        [CategoryAttribute("扫码器通信参数"), DescriptionAttribute("扫码器波特率"), Chinese("波特率")]
-        public string BaudRate
+        private string plc1ServerName;
+        [CategoryAttribute("一楼PLC通信参数"), DescriptionAttribute("服务名称"), Chinese("服务名称")]
+        public string PLC1ServerName
         {
-            get { return baudRate; }
-            set { baudRate = value; }
+            get { return plc1ServerName; }
+            set { plc1ServerName = value; }
         }
 
-        private string parity;
-
-        [CategoryAttribute("扫码器通信参数"), DescriptionAttribute("扫码器较验位"), Chinese("较验位")]
-        public string Parity
+        private string plc1ServerIp;
+        [CategoryAttribute("一楼PLC通信参数"), DescriptionAttribute("服务地址IP"), Chinese("服务IP")]
+        public string PLC1ServerIP
         {
-            get { return parity; }
-            set { parity = value; }
+            get { return plc1ServerIp; }
+            set { plc1ServerIp = value; }
         }
 
-        private string dataBits;
 
-        [CategoryAttribute("扫码器通信参数"), DescriptionAttribute("扫码器数据位"), Chinese("数据位")]
-        public string DataBits 
+        private string plc1GroupString;
+        [CategoryAttribute("一楼PLC通信参数"), DescriptionAttribute("一楼PLC通讯连接名称"), Chinese("连接名称")]
+        public string PLC1GroupString
         {
-            get { return dataBits; }
-            set { dataBits = value; }
+            get { return plc1GroupString; }
+            set { plc1GroupString = value; }
         }
 
-        private string stopBits;
-
-        [CategoryAttribute("扫码器通信参数"), DescriptionAttribute("扫码器停止位"), Chinese("停止位")]
-        public string StopBits 
+        private int plc1UpdateRate;
+        [CategoryAttribute("一楼PLC通信参数"), DescriptionAttribute("一楼PLC刷新频率"), Chinese("刷新频率")]
+        public int PLC1UpdateRate
         {
-            get { return stopBits; }
-            set { stopBits = value; }
+            get { return plc1UpdateRate; }
+            set { plc1UpdateRate = value; }
         }
 
-        private string led_01_ChannelCode = "";
 
-        [CategoryAttribute("LED显示屏参数"), DescriptionAttribute("一号屏烟道编码"), Chinese("一号屏烟道编码")]
-        public string LED_01_CHANNELCODE
+        private string plc2ServerName;
+        [CategoryAttribute("二楼PLC通信参数"), DescriptionAttribute("服务名称"), Chinese("服务名称")]
+        public string PLC2ServerName
         {
-            get { return led_01_ChannelCode; }
-            set { led_01_ChannelCode = value; }
+            get { return plc2ServerName; }
+            set { plc2ServerName = value; }
         }
 
-        private string led_02_ChannelCode = "";
-
-        [CategoryAttribute("LED显示屏参数"), DescriptionAttribute("二号屏烟道编码"), Chinese("二号屏烟道编码")]
-        public string LED_02_CHANNELCODE
+        private string plc2ServerIp;
+        [CategoryAttribute("二楼PLC通信参数"), DescriptionAttribute("服务地址IP"), Chinese("服务IP")]
+        public string PLC2ServerIP
         {
-            get { return led_02_ChannelCode; }
-            set { led_02_ChannelCode = value; }
+            get { return plc2ServerIp; }
+            set { plc2ServerIp = value; }
         }
 
-        private string led_03_ChannelCode = "";
 
-        [CategoryAttribute("LED显示屏参数"), DescriptionAttribute("三号屏烟道编码"), Chinese("三号屏烟道编码")]
-        public string LED_03_CHANNELCODE
+        private string plc2GroupString;
+        [CategoryAttribute("二楼PLC通信参数"), DescriptionAttribute("二楼PLC通讯连接名称"), Chinese("连接名称")]
+        public string PLC2GroupString
         {
-            get { return led_03_ChannelCode; }
-            set { led_03_ChannelCode = value; }
+            get { return plc2GroupString; }
+            set { plc2GroupString = value; }
         }
 
-        private string supplyToSortLine = "";
-
-        [CategoryAttribute("补货方向强制干预控制"), DescriptionAttribute("分拣线代码［00：自动（不干预）；01：一号线；02：二号线；］"), Chinese("分拣线代码［00：自动（不干预）；01：一号线；02：二号线；］")]
-        public string SupplyToSortLine
+        private int plc2UpdateRate;
+        [CategoryAttribute("二楼PLC通信参数"), DescriptionAttribute("二楼PLC刷新频率"), Chinese("刷新频率")]
+        public int PLC2UpdateRate
         {
-            get { return supplyToSortLine; }
-            set { supplyToSortLine = value; }
+            get { return plc2UpdateRate; }
+            set { plc2UpdateRate = value; }
         }
+
+
+
+
     }
 }

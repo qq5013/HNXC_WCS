@@ -217,9 +217,9 @@ namespace THOK.XC.Process.Process_Car
                                 palletcode = dr["PALLET_CODE"].ToString();
                             }
                          
-                            sbyte[] b = new sbyte[90];
-                            Common.ConvertStringChar.stringToBytes(barcode, 40).CopyTo(b, 0);
-                            Common.ConvertStringChar.stringToBytes(palletcode, 50).CopyTo(b, 40);
+                            sbyte[] b = new sbyte[190];
+                            Common.ConvertStringChar.stringToBytes(barcode, 80).CopyTo(b, 0);
+                            Common.ConvertStringChar.stringToBytes(palletcode, 110).CopyTo(b, 80);
 
                             WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_2", b);
                             WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_3", 1);
@@ -429,9 +429,9 @@ namespace THOK.XC.Process.Process_Car
                         palletcode = dr["PALLET_CODE"].ToString();
                     }
 
-                    sbyte[] b = new sbyte[90];
-                    Common.ConvertStringChar.stringToBytes(barcode, 40).CopyTo(b, 0);
-                    Common.ConvertStringChar.stringToBytes(palletcode, 50).CopyTo(b, 40);
+                    sbyte[] b = new sbyte[190];
+                    Common.ConvertStringChar.stringToBytes(barcode, 80).CopyTo(b, 0);
+                    Common.ConvertStringChar.stringToBytes(palletcode, 110).CopyTo(b, 80);
 
                     WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_1", WriteValue);//下达小车任务。
                     WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_2", b);
