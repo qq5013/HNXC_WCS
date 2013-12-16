@@ -23,7 +23,7 @@ namespace THOK.MCP
             InitializeService(context);            
             configuration.Release();
 
-            InitializeResourceManager(context);
+            //InitializeResourceManager(context);
 
             context.CompleteInitialize();
         }

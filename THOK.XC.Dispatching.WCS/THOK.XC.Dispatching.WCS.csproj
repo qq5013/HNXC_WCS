@@ -115,6 +115,7 @@
     </Content>
     <Content Include="DB.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Crane.xml">
       <SubType>Designer</SubType>
@@ -128,6 +129,9 @@
     <None Include="Resources\S3.jpg" />
     <None Include="Resources\S1_1.jpg" />
     <None Include="Resources\S1_2.jpg" />
+    <Content Include="Monitor.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scanner.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>

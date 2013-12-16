@@ -7,15 +7,22 @@
   </Attributes>
   <Services>
     <Service Name="StockPLC_01" Type="THOK.MCP.Service.Siemens.dll, THOK.MCP.Service.Siemens.OPCService" ConfigFile="StockPLC_01.xml" />
-    <Service Name="StockPLC_02" Type="THOK.MCP.Service.Siemens.dll, THOK.MCP.Service.Siemens.OPCService" ConfigFile="StockPLC_02.xml" />
     <Service Name="Crane" Type="THOK.MCP.Service.TCP.dll, THOK.MCP.Service.TCP.TCPService" ConfigFile="Crane.xml" />
   </Services>
   <Processes>
     <!--堆垛机Process-->
-    <Process Name="CraneProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_Crane.CraneProcess">      
+    <Process Name="CraneProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_Crane.CraneProcess">
+      <Item ServiceName="Crane" ItemName="ACP" />
+      <Item ServiceName="Crane" ItemName="CSR" />
+      <Item ServiceName="Crane" ItemName="ACK" />
+      <Item ServiceName="Crane" ItemName="DUM" />
+      <Item ServiceName="Crane" ItemName="NCK" />
+      <Item ServiceName="Crane" ItemName="DEC" />
+      <Item ServiceName="Crane" ItemName="PDA" />
     </Process>
     <!--一层入库申请-->
     <Process Name="StockInRequestProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.StockInRequestProcess">
+      <Item ServiceName="StockPLC_01" ItemName="abc" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_218_1" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_110_1" />
       <Item ServiceName="StockPLC_01" ItemName="01_1_126_1" />

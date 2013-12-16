@@ -102,11 +102,15 @@ namespace THOK.XC.Dispatching.OperateView
             if (cbBillMethod.Text.Trim() != "")
                 strWhere += string.Format(" AND A.BILL_METHOD='{0}'", cbBillMethod.SelectedIndex);
 
+            if (this.txtBarCode.Text.Trim() != "")
+            {
+                strWhere += string.Format(" AND B.PRODUCT_BARCODE LIKE '{0}'", this.txtBarCode.Text.Trim());
+            }
+
             if (this.txtCigaretteCode.Text != "")
             {
                 strWhere += string.Format(" AND A.CIGARETTE_CODE='{0}'", txtCigaretteCode.Tag);
             }
-
             if (this.txtFormulaCode.Text != "")
             {
                 strWhere += string.Format(" AND A.FORMULA_CODE='{0}'", txtFormulaCode.Tag);

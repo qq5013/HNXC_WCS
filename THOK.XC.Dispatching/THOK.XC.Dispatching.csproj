@@ -94,6 +94,12 @@
     <Compile Include="OperateView\CellQueryForm.designer.cs">
       <DependentUpon>CellQueryForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="OperateView\ParameterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateView\ParameterForm.designer.cs">
+      <DependentUpon>ParameterForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="OperateView\SelectDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -204,6 +210,9 @@
     <EmbeddedResource Include="OperateView\CellQueryForm.resx">
       <DependentUpon>CellQueryForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="OperateView\ParameterForm.resx">
+      <DependentUpon>ParameterForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="OperateView\SelectDialog.resx">
       <DependentUpon>SelectDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -216,6 +225,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="OperateView\StockOutWorkQuery.resx">
       <DependentUpon>StockOutWorkQuery.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="OperateView\StockOutWorkQueryDialog.resx">
       <DependentUpon>StockOutWorkQueryDialog.cs</DependentUpon>
@@ -302,6 +312,10 @@
     <ProjectReference Include="..\THOK.MCP.Service.Siemens\THOK.MCP.Service.Siemens.csproj">
       <Project>{7635ED62-DE46-4ED5-ACC8-367C84ACE1CA}</Project>
       <Name>THOK.MCP.Service.Siemens</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\THOK.MCP.Service.TCP\THOK.MCP.Service.TCP.csproj">
+      <Project>{D146305C-952B-422E-B438-936DA46DD669}</Project>
+      <Name>THOK.MCP.Service.TCP</Name>
     </ProjectReference>
     <ProjectReference Include="..\THOK.MCP\THOK.MCP.csproj">
       <Project>{D162AF5E-4A8A-4FEB-AAD2-4E7143CB38A7}</Project>

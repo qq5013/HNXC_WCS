@@ -15,10 +15,13 @@ namespace THOK.XC.Process.Dal
         /// <param name="CellCode"></param>
         /// <param name="TaskType"></param>
         /// <returns></returns>
-        public DataTable GetSationInfo(string CellCode, string TaskType)
+        public DataTable GetSationInfo(string CellCode, string TaskType,string Item)
         {
-            SysStationDao dao = new SysStationDao();
-            return dao.GetSationInfo(CellCode, TaskType);
+            using (PersistentManager pm = new PersistentManager())
+            {
+                SysStationDao dao = new SysStationDao();
+                return dao.GetSationInfo(CellCode, TaskType,Item);
+            }
         }
     }
 }

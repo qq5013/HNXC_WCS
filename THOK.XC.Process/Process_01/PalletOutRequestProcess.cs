@@ -39,7 +39,7 @@ namespace THOK.XC.Process.Process_01
                 PalletBillDal dal = new PalletBillDal();
                 string Taskid = dal.CreatePalletOutBillTask(TARGET_CODE);
                 TaskDal task = new TaskDal();
-                DataTable dt = task.CraneOutTask(string.Format("TASK_ID='{0}'", Taskid));
+                DataTable dt = task.CraneTaskOut(string.Format("TASK_ID='{0}'", Taskid));
                 if (dt.Rows.Count > 0)
                     WriteToProcess("CraneProcess", "CraneInRequest", dt);
 

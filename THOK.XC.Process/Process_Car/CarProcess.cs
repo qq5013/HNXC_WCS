@@ -217,9 +217,9 @@ namespace THOK.XC.Process.Process_Car
                                 palletcode = dr["PALLET_CODE"].ToString();
                             }
                          
-                            sbyte[] b = new sbyte[90];
-                            Common.ConvertStringChar.stringToBytes(barcode, 40).CopyTo(b, 0);
-                            Common.ConvertStringChar.stringToBytes(palletcode, 50).CopyTo(b, 40);
+                            sbyte[] b = new sbyte[190];
+                            Common.ConvertStringChar.stringToBytes(barcode, 80).CopyTo(b, 0);
+                            Common.ConvertStringChar.stringToBytes(palletcode, 110).CopyTo(b, 80);
 
                             WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_2", b);
                             WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_3", 1);
@@ -318,7 +318,7 @@ namespace THOK.XC.Process.Process_Car
             else
             {
 
-                drs = dtOrder.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and ISMIX={2} and SORT_LEVEL={3} and PRODUCT_CODE={4}", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["ISMIX"], drTaskID["SORT_LEVEL"], drTaskID["PRODUCT_CODE"] }));
+                drs = dtOrder.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and IS_MIX={2} and SORT_LEVEL={3} and PRODUCT_CODE={4}", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["IS_MIX"], drTaskID["SORT_LEVEL"], drTaskID["PRODUCT_CODE"] }));
                 if (drs.Length > 0)
                 {
                     drs = dtOrder.Select(string.Format("Index<{0}", drs[0]["Index"]));
@@ -326,7 +326,7 @@ namespace THOK.XC.Process.Process_Car
                     {
                         for (int i = 0; i < drs.Length; i++)
                         {
-                            drs = dtOrder.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and ISMIX={2} and SORT_LEVEL={3} and PRODUCT_CODE={4} and TASK_TYPE='22' and STATE in (0,1,2)", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["ISMIX"], drTaskID["SORT_LEVEL"], drTaskID["PRODUCT_CODE"] }));//判断小于当前Index的出库任务，是否有未完成的出库任务，如果没有，则返回True.
+                            drs = dtOrder.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and IS_MIX={2} and SORT_LEVEL={3} and PRODUCT_CODE={4} and TASK_TYPE='22' and STATE in (0,1,2)", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["IS_MIX"], drTaskID["SORT_LEVEL"], drTaskID["PRODUCT_CODE"] }));//判断小于当前Index的出库任务，是否有未完成的出库任务，如果没有，则返回True.
                             if (drs.Length == 0)
                             {
                                 blnvalue = true;
@@ -429,9 +429,9 @@ namespace THOK.XC.Process.Process_Car
                         palletcode = dr["PALLET_CODE"].ToString();
                     }
 
-                    sbyte[] b = new sbyte[90];
-                    Common.ConvertStringChar.stringToBytes(barcode, 40).CopyTo(b, 0);
-                    Common.ConvertStringChar.stringToBytes(palletcode, 50).CopyTo(b, 40);
+                    sbyte[] b = new sbyte[190];
+                    Common.ConvertStringChar.stringToBytes(barcode, 80).CopyTo(b, 0);
+                    Common.ConvertStringChar.stringToBytes(palletcode, 110).CopyTo(b, 80);
 
                     WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_1", WriteValue);//下达小车任务。
                     WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_2", b);

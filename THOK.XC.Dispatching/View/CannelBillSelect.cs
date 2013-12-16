@@ -64,10 +64,17 @@ namespace THOK.XC.Dispatching.View
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if (this.cmbBill.Items.Count > 0)
+            if (this.rbt2.Checked)
             {
-                this.strBillNo = this.cmbBill.SelectedText;
-                this.DialogResult = DialogResult.OK;
+                this.strBillNo = "1";
+            }
+            else
+            {
+                if (this.cmbBill.Items.Count > 0)
+                {
+                    this.strBillNo = this.cmbBill.SelectedText;
+                    this.DialogResult = DialogResult.OK;
+                }
             }
 
         }

@@ -20,6 +20,9 @@ namespace THOK.MCP.Service.Siemens.Config
 
 		private ItemInfo[] items;
 
+        private string progid;
+        private string servername;
+
 		public string ConnectionString
 		{
 			get
@@ -27,6 +30,28 @@ namespace THOK.MCP.Service.Siemens.Config
 				return connectionString;
 			}
 		}
+        public string ProgID
+        {
+            get
+            {
+                return progid;
+            }
+            set
+            {
+                this.progid = value;
+            }
+        }
+        public string ServerName
+        {
+            get
+            {
+                return servername;
+            }
+            set
+            {
+                this.servername = value;
+            }
+        }
 
 		public string GroupName
 		{
@@ -42,6 +67,10 @@ namespace THOK.MCP.Service.Siemens.Config
 			{
 				return groupString;
 			}
+            set
+            {
+                this.groupString = value;
+            }
 		}
 
 		public int UpdateRate
@@ -50,6 +79,10 @@ namespace THOK.MCP.Service.Siemens.Config
 			{
 				return updateRate;
 			}
+            set
+            {
+                this.updateRate = value;
+            }
 		}
 		
 		public ItemInfo[] Items
@@ -59,13 +92,44 @@ namespace THOK.MCP.Service.Siemens.Config
 				return items;
 			}
 		}
-
+        private string ConfigFile = "";
 		public Configuration(string configFile)
 		{
+            this.ConfigFile = configFile;
 			doc = new XmlDocument();
 			doc.Load(configFile);
 			Initialize();
 		}
+        public void Save()
+        {
+            XmlNodeList nodeList = doc.GetElementsByTagName("OPCServer");
+            if (nodeList.Count != 0)
+            {
+                XmlNode xmlNode = nodeList[0];
+                xmlNode.Attributes["ConnectionString"].Value = servername + (string.IsNullOrEmpty(progid) ? "" : ";" + progid);
+                doc.Save(ConfigFile);
+            }
+            else
+            {
+                throw new Exception("在配置文件中找不到关于OPCServer的信息");
+            }
+
+            nodeList = doc.GetElementsByTagName("OPCGroup");
+
+            if (nodeList.Count != 0)
+            {
+                XmlNode xmlNode = nodeList[0];
+                xmlNode.Attributes["GroupName"].Value = groupName;
+                xmlNode.Attributes["GroupString"].Value = groupString;
+                xmlNode.Attributes["UpdateRate"].Value = updateRate.ToString();   
+                doc.Save(ConfigFile);
+            }
+            else
+            {
+                throw new Exception("在配置文件中找不到关于OPCGroup的信息");
+            }
+
+        }
 
 		private void Initialize()
 		{
@@ -73,6 +137,17 @@ namespace THOK.MCP.Service.Siemens.Config
 			if (nodeList.Count != 0)
 			{
 				connectionString = nodeList[0].Attributes["ConnectionString"].Value;
+                string[] str = connectionString.Split(';');
+                if (str.Length == 1)
+                {
+                    progid = null;
+                    servername = str[0];
+                }
+                else
+                {
+                    progid = str[0];
+                    servername = str[1];
+                }
 			}
 			else
 			{

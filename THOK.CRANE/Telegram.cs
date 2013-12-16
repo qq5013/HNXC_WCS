@@ -117,7 +117,7 @@ namespace THOK.CRANE
         }
         public override string ToString()
         {
-            return this.ETX + this.RequestFlag.ToString() + this.SequenceNo + this.Receiver + this.Sender + this.TelegramData + this.CRC + this.ETX;
+            return this.STX + this.RequestFlag.ToString() + this.SequenceNo + this.Receiver + this.Sender + this.TelegramData + this.CRC + this.ETX;
         }
     }
 }

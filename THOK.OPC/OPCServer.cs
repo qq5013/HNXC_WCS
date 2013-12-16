@@ -68,6 +68,17 @@
             this.pIOPCServer = (IOPCServer) Activator.CreateInstance(typeFromProgID);
             this.groups = new OPCGroupCollection();
         }
+        public void Connect(string ProgID,string ServerName)
+        {
+            this.itemMgtInterface = typeof(IOPCItemMgt).GUID;
+            Type typeFromProgID;
+            if (ProgID == null)
+                typeFromProgID = Type.GetTypeFromProgID(ServerName);
+            else
+                typeFromProgID = Type.GetTypeFromProgID(ProgID, ServerName);
+            this.pIOPCServer = (IOPCServer)Activator.CreateInstance(typeFromProgID);
+            this.groups = new OPCGroupCollection();
+        }
 
         internal string GetLastError(int errorID)
         {

@@ -17,28 +17,28 @@ namespace THOK.XC.Process.Dal
             }
         }
          /// <summary>
-        /// 获取正在出库，或者出库完成的Task_Detail，主表 WCS_TASK_DETAIL ,WCS_TASK 
+        /// 获取入库的堆垛机信息
         /// </summary>
         /// <returns></returns>
-        public DataTable TaskCraneDetail(string strWhere)
+        public DataTable CraneTaskIn(string strWhere)
         {
             using (PersistentManager pm = new PersistentManager())
             {
                 TaskDao dao = new TaskDao();
-                return dao.TaskCraneDetail(strWhere);
+                return dao.CraneTaskIn(strWhere);
             }
         }
          /// <summary>
-        /// 根据TASKID获取，要出库的堆垛机相关任务信息。主表，WCS_TASK 
+        /// 获取出库的堆垛机信息。主表，WCS_TASK，Item_NO=1堆垛机为起始动作
         /// </summary>
         /// <param name="strWhere"></param>
         /// <returns></returns>
-        public DataTable CraneOutTask(string strWhere)
+        public DataTable CraneTaskOut(string strWhere)
         {
             using (PersistentManager pm = new PersistentManager())
             {
                 TaskDao dao = new TaskDao();
-                return dao.CraneOutTask(strWhere);
+                return dao.CraneTaskOut(strWhere);
             }
         }
         /// <summary>
@@ -160,10 +160,10 @@ namespace THOK.XC.Process.Dal
         }
 
          /// <summary>
-        ///  分配货位,返回 0:TaskID，1:任务号，2:货物到达入库站台的目的地址--平面号,3:堆垛机入库站台，4:货位，5:堆垛机编号
+        ///  分配货位,返回 0:TaskID，1:货位;
         /// </summary>
         /// <param name="strWhere"></param>
-        public string [] AssignCell(string strWhere,string ApplyStation)
+        public string[] AssignCell(string strWhere,string ApplyStation)
         {
             using (PersistentManager pm = new PersistentManager())
             {
@@ -280,7 +280,19 @@ namespace THOK.XC.Process.Dal
 
         }
 
+        /// <summary>
+        ///  烟包替换记录
+        /// </summary>
+        /// <param name="strWhere"></param>
+        public void InsertChangeProduct(string ProductBarcode,string ProductCode,string NewProductBarcode,string NewProductCode)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                TaskDao dao = new TaskDao();
+                dao.InsertChangeProduct(ProductBarcode, ProductCode, NewProductBarcode, NewProductCode);
+            }
 
+        }
 
     }
 }

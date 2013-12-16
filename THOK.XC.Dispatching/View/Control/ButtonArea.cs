@@ -71,10 +71,10 @@ namespace THOK.XC.Dispatching.View
                 DataTable dt2 = null;
                 if (IndexStar == 0)
                 {
-                    string strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1})", "11,21,12,13", "0,1");
-                    dt2 = taskDal.TaskCraneDetail(strWhere);
-                    strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1})", "22", "0,1,2");
-                    DataTable dtout = taskDal.TaskCraneDetail(strWhere);
+                    string strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1})  AND DETAIL.CRANE_NO IS NOT NULL ", "11,21,12,13,14", "0,1");
+                    dt2 = taskDal.CraneTaskIn(strWhere);
+                    strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1}) AND DETAIL.CRANE_NO IS NOT NULL ", "22", "1");
+                    DataTable dtout = taskDal.CraneTaskIn(strWhere);
                     dt2.Merge(dtout);
                 }
                 DataTable[] dtSend = new DataTable[2];
@@ -86,7 +86,7 @@ namespace THOK.XC.Dispatching.View
                
                 timer1.Enabled = true;
                 timer1.Start();
-                timer1.Interval = 300000;
+                timer1.Interval = 3000000;
                 timer1.Tick += new EventHandler(timer1_Tick);
             }
             catch (Exception ex)
@@ -150,10 +150,10 @@ namespace THOK.XC.Dispatching.View
             DataTable dt2 = null;
             if (IndexStar == 0)
             {
-                string strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1})", "11,21,12", "0,1");
-                dt2 = taskDal.TaskCraneDetail(strWhere);
-                strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1})", "22", "0,1,2");
-                DataTable dtout = taskDal.TaskCraneDetail(strWhere);
+                string strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1})  AND DETAIL.CRANE_NO IS NOT NULL ", "11,21,12,13,14", "0,1");
+                dt2 = taskDal.CraneTaskIn(strWhere);
+                strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1}) AND DETAIL.CRANE_NO IS NOT NULL ", "22", "0,1,2");
+                DataTable dtout = taskDal.CraneTaskIn(strWhere);
                 dt2.Merge(dtout);
             }
             DataTable[] dtSend = new DataTable[2];
@@ -172,8 +172,14 @@ namespace THOK.XC.Dispatching.View
         private void btnPalletIn_Click(object sender, EventArgs e)
         {
              PalletSelect frm = new PalletSelect();
+
+          
+
              if (frm.ShowDialog() == DialogResult.OK)
              {
+                 object obj = ObjectUtil.GetObject(Context.ProcessDispatcher.WriteToService("StockPLC_01", "01_1_122_1"));
+                 if (obj == null || obj.ToString() != "0")
+                     return;
                  if (frm.Flag == 1) //单托盘入库
                  {
                      string writeItem = "01_2_122_";
@@ -194,27 +200,31 @@ namespace THOK.XC.Dispatching.View
                      string ToStation = "122";
                      string writeItem = "01_2_122_";
 
-
                      string strWhere = string.Format("TASK_ID='{0}'", TaskID);
                      TaskDal dal = new TaskDal();
-                     string[] strValue = dal.AssignCell(strWhere,"122");//货位申请
+                     string[] CellValue = dal.AssignCell(strWhere, ToStation);//货位申请
 
-                     dal.UpdateTaskState(strValue[0], "1");//更新任务开始执行
+                     string TaskNo = dal.InsertTaskDetail(CellValue[0]);
+                     SysStationDal sysDal = new SysStationDal();
+                     DataTable dt = sysDal.GetSationInfo(CellValue[1], "11","3");
+
+
+                     dal.UpdateTaskState(CellValue[0], "1");//更新任务开始执行
                      ProductStateDal StateDal = new ProductStateDal();
-                     StateDal.UpdateProductCellCode(strValue[0], strValue[4]); //更新Product_State 货位
-                     dal.UpdateTaskDetailStation(FromStation, ToStation, "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", strValue[0])); //更新货位申请起始地址及目标地址。
+                     StateDal.UpdateProductCellCode(CellValue[0], CellValue[1]); //更新Product_State 货位
 
+                     dal.UpdateTaskDetailStation(FromStation, ToStation, "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", CellValue[0])); //更新货位申请起始地址及目标地址。
                      int[] ServiceW = new int[3];
-                     ServiceW[0] = int.Parse(strValue[1]); //任务号
-                     ServiceW[1] = int.Parse(strValue[2]);//目的地址
+                     ServiceW[0] = int.Parse(TaskNo); //任务号
+                     ServiceW[1] = int.Parse(dt.Rows[0]["STATION_NO"].ToString());//目的地址
                      ServiceW[2] = 2;
-                    
 
                      Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "1", ServiceW); //PLC写入任务
                      Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "2", 1); //PLC写入任务
-
-                     dal.UpdateTaskDetailStation(ToStation, strValue[2], "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", strValue[0]));//更新货位到达入库站台，
-                     dal.UpdateTaskDetailCrane(strValue[3], "30" + strValue[4], "0", strValue[5], string.Format("TASK_ID='{0}' AND ITEM_NO=3", strValue[0]));//更新调度堆垛机的其实位置及目标地址。
+                     dal.UpdateTaskDetailStation(ToStation, dt.Rows[0]["STATION_NO"].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", CellValue[0]));//更新货位到达入库站台，
+                     
+                     //更新单据开始
+                 
                  }
              }
 
@@ -297,7 +307,7 @@ namespace THOK.XC.Dispatching.View
 
                     DataRow dr = dtTask.Rows[0];
                     SysStationDal sysdal = new SysStationDal();
-                    DataTable dtstation = sysdal.GetSationInfo(dr["CELL_CODE"].ToString(), "11");
+                    DataTable dtstation = sysdal.GetSationInfo(dr["CELL_CODE"].ToString(), "11","3");
 
                     if (strValue != "1")
                     {
@@ -394,27 +404,40 @@ namespace THOK.XC.Dispatching.View
                 if (obj[1].ToString() == "1")
                     continue;
 
-              
+                string ToStation = "";
+                string FromStation = "";
                 string ReadItem2 = "";
 
                 switch (ItemName[i])
                 {
                     case "02_1_304_1":
+                        FromStation = "303";
+                        ToStation = "304";
                         ReadItem2 = "02_1_304_2";
                         break;
                     case "02_1_308_1":
+                        FromStation = "307";
+                        ToStation = "308";
                         ReadItem2 = "02_1_308_2";
                         break;
                     case "02_1_312_1":
+                        FromStation = "311";
+                        ToStation = "313";
                         ReadItem2 = "02_1_312_2";
                         break;
                     case "02_1_316_1":
+                        FromStation = "315";
+                        ToStation = "316";
                         ReadItem2 = "02_1_316_2";
                         break;
                     case "02_1_320_1":
+                        FromStation = "319";
+                        ToStation = "320";
                         ReadItem2 = "02_1_320_2";
                         break;
                     case "02_1_322_1":
+                        FromStation = "321";
+                        ToStation = "322";
                         ReadItem2 = "02_1_322_2";
                         break;
 
@@ -426,10 +449,10 @@ namespace THOK.XC.Dispatching.View
                 {
                     string NewPalletCode = THOK.XC.Process.Common.ConvertStringChar.BytesToString((object[])ObjectUtil.GetObjects(Context.ProcessDispatcher.WriteToService("StockPLC_02", ReadItem2)));
                     string[] StationState = new string[2];
-
+                    CellDal Celldal = new CellDal(); //更新货位，新托盘RFID，错误标志。
                     DataTable dtProductInfo = dal.GetProductInfoByTaskID(strTask[0]);
                     DataTable dtTask = dal.TaskInfo(string.Format("TASK_ID='{0}'", strTask[0]));
-
+                    string CellCode = dtTask.Rows[0]["CELL_CODE"].ToString();
                     string strBillNo = "";
                     string[] strMessage = new string[3];
                     strMessage[0] = "5";
@@ -442,21 +465,54 @@ namespace THOK.XC.Dispatching.View
                     {
 
                         string strNewBillNo = strBillNo;
-                        BillDal bdal = new BillDal();
-                        string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo, dtTask.Rows[0]["PALLET_CODE"].ToString());
-                        DataTable dtOutTask = dal.CraneOutTask(string.Format("TASK_ID='{0}'", strOutTaskID));
-
-                        Context.ProcessDispatcher.WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
-
-
-                        int j = 0;
-                        while (j < 100)  //延迟
+                        if (string.IsNullOrEmpty(strNewBillNo))
                         {
-                            i++;
+                            if (strNewBillNo == "1")
+                            {
+                                StationState[0] = obj[0].ToString();//任务号;
+                                StationState[1] = "3";
+
+                                //this.Context.Processes["CraneProcess"].Start();
+                              Context.ProcessDispatcher.WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为3.
+                              
+                                Celldal.UpdateCellOutFinishUnLock(CellCode);//解除货位锁定
+
+                                psdal.UpdateOutBillNo(strTask[0]); //更新出库单
+
+                                DataTable dtCar = dal.TaskCarDetail(string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=3", strTask[0])); //获取任务ID
+                                Context.ProcessDispatcher.WriteToProcess("CarProcess", "CarOutRequest", dtCar);  //调度小车；
+                            }
+                            else
+                            {
+                                //生成二楼退库单
+                                BillDal bdal = new BillDal();
+                                string CancelTaskID = bdal.CreateCancelBillInTask(strTask[0], strTask[1], NewPalletCode);//产生退库单，并生成明细。
+                                Celldal.UpdateCellNewPalletCode(CellCode, NewPalletCode);//更新货位错误标志。
+
+                                dal.UpdateTaskDetailStation(FromStation, ToStation, "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", CancelTaskID)); //更新申请货位完成。
+                                dal.UpdateTaskState(strTask[0], "2");//更新出库任务完成
+
+                                string strWhere = string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=2", CancelTaskID);
+                                DataTable dt = dal.TaskCarDetail(strWhere);
+                                Context.ProcessDispatcher.WriteToProcess("CarProcess", "CarInRequest", dt);//调度穿梭车入库。
+
+                                string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo, dtTask.Rows[0]["PALLET_CODE"].ToString());
+                                DataTable dtOutTask = dal.CraneTaskOut(string.Format("TASK_ID='{0}'", strOutTaskID));
+
+                                Context.ProcessDispatcher.WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
+                                int jj = 0;
+                                while (jj < 100)  //延迟
+                                {
+                                    jj++;
+                                }
+                                StationState[0] = strTask[0];//TaskID;
+                                StationState[1] = "4";
+                                Context.ProcessDispatcher.WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为4.
+                                DataTable dtNewProductInfo = dal.GetProductInfoByTaskID(strOutTaskID);
+                                dal.InsertChangeProduct(dtProductInfo.Rows[0]["PRODUCT_BARCODE"].ToString(), dtProductInfo.Rows[0]["PRODUCT_CODE"].ToString(), dtNewProductInfo.Rows[0]["PRODUCT_BARCODE"].ToString(), dtNewProductInfo.Rows[0]["PRODUCT_CODE"].ToString());
+
+                            }
                         }
-                        StationState[0] = strTask[0];//TaskID;
-                        StationState[1] = "4";
-                        Context.ProcessDispatcher.WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为4.
 
                         break;
                     }
