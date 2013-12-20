@@ -11,11 +11,14 @@ namespace THOK.XC.Process.Process_Car
     {
         private DataTable dtCar;
         private DataTable dtCarOrder;
-        private DataTable dtOrder;
         private DataTable dtCarAddress;
+        private Dictionary<string, string> dBillTargetCode = new Dictionary<string, string>();
+        private Dictionary<string, bool> dBillUseTarget = new Dictionary<string, bool>();
+        private int OrderIndex;
 
         public override void Initialize(Context context)
         {
+            OrderIndex = 0;
             if (dtCarAddress == null)
             {
                 SysCarAddressDal cad = new SysCarAddressDal();
@@ -26,12 +29,12 @@ namespace THOK.XC.Process.Process_Car
                 dtCarOrder = new DataTable();
                 DataColumn dc1 = new DataColumn("CarNo", Type.GetType("System.String"));
                 DataColumn dc2 = new DataColumn("State", Type.GetType("System.String"));
-                DataColumn dc3 = new DataColumn("CurStation", Type.GetType("System.Int16"));
-                DataColumn dc4 = new DataColumn("OrderNo", Type.GetType("System.Int16"));
-                DataColumn dc5 = new DataColumn("ToStation", Type.GetType("System.Int16"));
+                DataColumn dc3 = new DataColumn("CurStation", Type.GetType("System.Int32"));
+                DataColumn dc4 = new DataColumn("OrderNo", Type.GetType("System.Int32"));
+                DataColumn dc5 = new DataColumn("ToStation", Type.GetType("System.Int32"));
 
                 DataColumn dc6 = new DataColumn("WriteItem", Type.GetType("System.String"));
-                DataColumn dc7 = new DataColumn("cc", Type.GetType("System.Int16"));
+                DataColumn dc7 = new DataColumn("cc", Type.GetType("System.Int32"));
 
                 dtCarOrder.Columns.Add(dc1);
                 dtCarOrder.Columns.Add(dc2);
@@ -48,9 +51,6 @@ namespace THOK.XC.Process.Process_Car
 
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
         {
-           
-
-
             bool blnChange = false;
             string strState = "";
             string strCarNo = "";
@@ -60,31 +60,32 @@ namespace THOK.XC.Process.Process_Car
             {
                 case "CarOutRequest":
                 case "CarInRequest":
+                    OrderIndex++;
                     blnChange = false;
                     InsertdtCar((DataTable)stateItem.State);
                     break;
-                case "02_1_C01_2":
+                case "02_1_C01_5":
                     strState = ObjectUtil.GetObject(stateItem.State).ToString();
                     blnChange = true;
                     strCarNo = "01";
                     strReadItem = "02_1_C01_1";
                     strWriteItem = "02_2_C01";
                     break;
-                case "02_1_C02_2":
+                case "02_1_C02_5":
                     strState = ObjectUtil.GetObject(stateItem.State).ToString();
                     blnChange = true;
                     strCarNo = "02";
                     strReadItem = "02_1_C02_1";
                     strWriteItem = "02_2_C02";
                     break;
-                case "02_1_C03_2":
+                case "02_1_C03_5":
                     strState = ObjectUtil.GetObject(stateItem.State).ToString();
                      blnChange = true;
                     strCarNo = "03";
                     strReadItem = "02_1_C03_1";
                     strWriteItem = "02_2_C03";
                     break;
-                case "02_1_C04_2":
+                case "02_1_C04_5":
                     strState = ObjectUtil.GetObject(stateItem.State).ToString();
                      blnChange = true;
                     strCarNo = "04";
@@ -106,13 +107,15 @@ namespace THOK.XC.Process.Process_Car
             {
                 dtCar = new DataTable();
                 dtCar = dt.Clone();
+                DataColumn dcIndex = new DataColumn("Index", Type.GetType("System.Int16"));
+                dtCar.Columns.Add(dcIndex);
             }
 
-           //插入
+            //插入
 
-         //调用小车任务插入缓存表
-          
-            object[] obj = new object[dt.Columns.Count];
+            //调用小车任务插入缓存表
+
+            object[] obj = new object[dt.Columns.Count + 1];
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 DataRow[] drsExist = dtCar.Select(string.Format("TASK_ID='{0}'", dt.Rows[i]["TASK_ID"]));
@@ -120,15 +123,18 @@ namespace THOK.XC.Process.Process_Car
                     continue;
 
                 dt.Rows[i].ItemArray.CopyTo(obj, 0);
+                obj[dt.Columns.Count] = OrderIndex + i;
                 dtCar.Rows.Add(obj);
-              
+
             }
             dtCar.AcceptChanges();
-            DataRow dr = dt.Rows[0];
+            DataRow dr = dtCar.Select(string.Format("TASK_ID='{0}'", dt.Rows[0]["TASK_ID"]))[0];
+
             int CurPostion = 0;
             int ToPostion = 0;
             string FromStation = "";
             string ToStation = "";
+            string TargetCode = "";
             if (dr["TASK_TYPE"].ToString() == "21")
             {
 
@@ -141,110 +147,171 @@ namespace THOK.XC.Process.Process_Car
             else
             {
                 CurPostion = int.Parse(dr["STATION_NO_ADDRESS"].ToString());
-                //判断使用哪个出口？
-
                 ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
                 ToStation = dr["OUT_STATION_1"].ToString();
 
                 FromStation = dr["STATION_NO"].ToString();
             }
 
-            while (dr["CAR_NO"].ToString() == "")
+
+            TaskDal dal = new TaskDal();
+
+            DataTable dtorder = GetCarOrder(CurPostion);
+            DataRow[] drsOrder = dtorder.Select("", "orderNo desc");
+            for (int i = 0; i < drsOrder.Length; i++)
             {
-                DataTable dtorder = GetCarOrder(CurPostion);
-                DataRow[] drsOrder = dtorder.Select("", "orderNo desc");
-                for (int i = 0; i < drsOrder.Length; i++)
+                if (drsOrder[i]["State"].ToString() == "0") //小车空闲
                 {
-                    if (drsOrder[i]["State"].ToString() == "0") //小车空闲
+                    #region 小车空闲
+                    if (dr["TASK_TYPE"].ToString() == "22")
                     {
-                        if (dr["TASK_TYPE"].ToString() == "22")
+                        ToPostion = -1;
+
+                        //判断二楼能否出库
+                        bool blnCan = dal.ProductCanToCar(dr["FORDERBILLNO"].ToString(), dr["FORDER"].ToString(), dr["IS_MIX"].ToString());
+                        if (blnCan)
                         {
-                            ToPostion = -1;
-                            if (dr["TARGET_CODE"].ToString() == "01")
+                            if (!dBillUseTarget.ContainsKey(dr["FORDERBILLNO"].ToString()))
                             {
-                                int objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_370")).ToString());
-                                if (objstate == 0)
+                                dBillUseTarget.Add(dr["FORDERBILLNO"].ToString(), false);
+                                dBillTargetCode.Add(dr["FORDERBILLNO"].ToString(), "");
+                            }
+
+                            if (dBillUseTarget[dr["FORDERBILLNO"].ToString()]) //已经使用过两次
+                            {
+                                if (dBillTargetCode[dr["FORDERBILLNO"].ToString()] == "370")
                                 {
                                     ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
                                     ToStation = dr["OUT_STATION_1"].ToString();
                                 }
                                 else
                                 {
-                                    objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_390")).ToString());
+                                    ToPostion = int.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
+                                    ToStation = dr["OUT_STATION_2"].ToString();
+                                }
+
+
+                            }
+                            else
+                            {
+                                if (dr["TARGET_CODE"].ToString() == "01")
+                                {
+                                    int objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_370")).ToString());
+                                    if (objstate == 0)
+                                    {
+                                        ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
+                                        ToStation = dr["OUT_STATION_1"].ToString();
+                                        TargetCode = "370";
+                                    }
+                                    else
+                                    {
+                                        objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_390")).ToString());
+                                        if (objstate == 0)
+                                        {
+                                            ToPostion = int.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
+                                            ToStation = dr["OUT_STATION_2"].ToString();
+                                            TargetCode = "390";
+                                        }
+
+                                    }
+                                }
+                                else
+                                {
+                                    int objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_390")).ToString());
                                     if (objstate == 0)
                                     {
                                         ToPostion = int.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
                                         ToStation = dr["OUT_STATION_2"].ToString();
+                                        TargetCode = "390";
                                     }
+                                    else
+                                    {
+                                        objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_370")).ToString());
+                                        if (objstate == 0)
+                                        {
+                                            ToStation = dr["OUT_STATION_1"].ToString();
+                                            ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
+                                            TargetCode = "370";
+                                        }
 
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                int objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_390")).ToString());
-                                if (objstate == 0)
+
+                                if (dBillTargetCode[dr["FORDERBILLNO"].ToString()] != "" && dBillTargetCode[dr["FORDERBILLNO"].ToString()] != TargetCode)
                                 {
-                                    ToPostion = int.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
-                                    ToStation = dr["OUT_STATION_2"].ToString();
+                                    dBillUseTarget[dr["FORDERBILLNO"].ToString()] = true;
+                                    dBillTargetCode[dr["FORDERBILLNO"].ToString()] = TargetCode;
+
                                 }
                                 else
                                 {
-                                    objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_370")).ToString());
-                                    if (objstate == 0)
-                                    {
-                                        ToStation = dr["OUT_STATION_1"].ToString();
-                                        ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
-                                    }
-
+                                    dBillTargetCode[dr["FORDERBILLNO"].ToString()] = TargetCode;
                                 }
                             }
                         }
-                        if (ToPostion != -1)
-                        {
-
-                            int[] WriteValue = new int[4];
-                            WriteValue[0] = int.Parse(dr["TASK_NO"].ToString());
-                            WriteValue[1] = CurPostion;
-                            WriteValue[2] = ToPostion;
-                            WriteValue[3] = int.Parse(dr["PRODUCT_TYPE"].ToString());
-                            WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_1", WriteValue);//下达小车任务。
-                            //条码及RFID
-                            string barcode = "";
-                            string palletcode = "";
-                            if (dr["PRODUCT_CODE"].ToString() != "0000") //
-                            {
-                                barcode = dr["PRODUCT_BARCODE"].ToString();
-                                palletcode = dr["PALLET_CODE"].ToString();
-                            }
-                         
-                            sbyte[] b = new sbyte[190];
-                            Common.ConvertStringChar.stringToBytes(barcode, 80).CopyTo(b, 0);
-                            Common.ConvertStringChar.stringToBytes(palletcode, 110).CopyTo(b, 80);
-
-                            WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_2", b);
-                            WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_3", 1);
-
-                            dr.BeginEdit();
-                            dr["CARNO"] = drsOrder[i]["CARNO"].ToString();
-                            dr.EndEdit();
-                            TaskDal dal = new TaskDal();
-                            dal.UpdateTaskDetailCar(FromStation, ToStation, "1", dr["CARNO"].ToString(), string.Format("TASK_ID='{0}' and ITEM_NO='{1}'", dr["TASK_ID"], dr["ITEM_NO"]));
-                        }
-                        break;
                     }
-                    else
+                    if (ToPostion != -1)
                     {
-                        if (int.Parse(drsOrder[i]["ToStation"].ToString()) < CurPostion) //小车不空闲，但是目的地小于当前位置
-                        {
 
-                            if (dtCar.Select(string.Format("STATE=0 and CarNo='{0}'", drsOrder[i]["CarNo"].ToString())).Length == 0) //判断当前小车，是否已经有分配未执行的任务，则给小车分配任务
+                        int[] WriteValue = new int[2];
+
+                        WriteValue[0] = CurPostion;
+                        WriteValue[1] = ToPostion;
+
+                        int TaskNo = int.Parse(dr["TASK_NO"].ToString());
+
+                        int ProductType = int.Parse(dr["PRODUCT_TYPE"].ToString());
+
+                        string barcode = "";
+                        string palletcode = "";
+                        if (dr["PRODUCT_CODE"].ToString() != "0000") //
+                        {
+                            barcode = dr["PRODUCT_BARCODE"].ToString();
+                            palletcode = dr["PALLET_CODE"].ToString();
+                        }
+
+                        sbyte[] b = new sbyte[190];
+                        Common.ConvertStringChar.stringToBytes(barcode, 80).CopyTo(b, 0);
+                        Common.ConvertStringChar.stringToBytes(palletcode, 110).CopyTo(b, 80);
+                        WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_1", TaskNo);//任务号。
+                        WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_2", WriteValue);//地址。
+                        WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_3", ProductType);//任务号。
+                        WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_4", b);
+                        WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_5", 1);
+
+                        dr.BeginEdit();
+                        dr["CARNO"] = drsOrder[i]["CARNO"].ToString();
+                        dr.EndEdit();
+
+                        dal.UpdateTaskDetailCar(FromStation, ToStation, "1", dr["CARNO"].ToString(), string.Format("TASK_ID='{0}' and ITEM_NO='{1}'", dr["TASK_ID"], dr["ITEM_NO"]));
+
+                    }
+                    break;
+                    #endregion
+                }
+                else
+                {
+                    #region 小车不空闲，但是目的地小于当前位置
+                    if (int.Parse(drsOrder[i]["ToStation"].ToString()) < CurPostion) //小车不空闲，但是目的地小于当前位置
+                    {
+
+                        if (dtCar.Select(string.Format("STATE=0 and CarNo='{0}'", drsOrder[i]["CarNo"].ToString())).Length == 0) //判断当前小车，是否已经有分配未执行的任务，则给小车分配任务
+                        {
+                            DataRow[] drs = dtCar.Select(string.Format("TASK_ID='{0}'", dr["TASK_ID"]));
+                            //判断二楼能否出库
+                            bool blnCan = false;
+                            if (drs[0][""].ToString() == "21")
+                                blnCan = true;
+                            else
+                                blnCan = dal.ProductCanToCar(drs[0]["FORDERBILLNO"].ToString(), drs[0]["FORDER"].ToString(), drs[0]["IS_MIX"].ToString());
+                            if (blnCan)
                             {
-                                DataRow[] drs = dtCar.Select(string.Format("TASK_ID='{0}'",dr["TASK_ID"]));
+
                                 drs[0].BeginEdit();
                                 drs[0]["CARNO"] = drsOrder[i]["CarNo"];
                                 drs[0]["WriteItem"] = drsOrder[i]["WriteItem"];
                                 drs[0].EndEdit();
-                              
+
                                 dr.BeginEdit();
                                 dr["CARNO"] = drsOrder[i]["CarNo"];
                                 dr.EndEdit();
@@ -252,7 +319,9 @@ namespace THOK.XC.Process.Process_Car
                             }
                         }
                     }
+                    #endregion
                 }
+
 
             }
         }
@@ -267,86 +336,53 @@ namespace THOK.XC.Process.Process_Car
             dt = dtCarOrder.Clone();
 
 
-            object[] obj = ObjectUtil.GetObjects(WriteToService("StockPLC_02", "02_1_C01_1")); //第一辆小车
+            string ReadItem =   "02_1_C01"; //第一辆小车
 
-            InsertCarOrder(dt, "01","02_2_C01", CurStation, obj);
+            InsertCarOrder(dt, "01", "02_2_C01", CurStation, ReadItem);
 
-            obj = ObjectUtil.GetObjects(WriteToService("StockPLC_02", "02_1_C02_1")); //第二辆小车
-            InsertCarOrder(dt, "02","02_2_C02", CurStation, obj);
+            ReadItem ="02_1_C02"; //第二辆小车
+            InsertCarOrder(dt, "02", "02_2_C02", CurStation, ReadItem);
 
-            obj =  ObjectUtil.GetObjects(WriteToService("StockPLC_02", "02_1_C03_1")); //第三辆小车
-            InsertCarOrder(dt, "03", "02_2_C03",CurStation, obj);
-            obj =  ObjectUtil.GetObjects(WriteToService("StockPLC_02", "02_1_C04_1")); //第四辆小车
-            InsertCarOrder(dt, "04","02_2_C04", CurStation, obj);
+            ReadItem =  "02_1_C03"; //第三辆小车
+            InsertCarOrder(dt, "03", "02_2_C03", CurStation, ReadItem);
+            ReadItem = "02_1_C04"; //第四辆小车
+            InsertCarOrder(dt, "04", "02_2_C04", CurStation, ReadItem);
             return dt;
         }
         
-        private void InsertCarOrder(DataTable dt, string CarNo, string WriteItem, int CurStation,  object[] obj)
+        private void InsertCarOrder(DataTable dt, string CarNo, string WriteItem, long CurStation, string ReadItem)
         {
-            if (obj[1].ToString() != "2")//故障
+
+            long Position = long.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", ReadItem + "_1")).ToString()); //小车位置
+            int Status = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", ReadItem + "_2")).ToString());//小车状态
+            long DesPosition = long.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", ReadItem + "_3")).ToString());//小车目的地址
+
+
+            if (Status != 2)//故障
             {
                 DataRow dr = dt.NewRow();
                 dr["CarNo"] = CarNo;
-                dr["State"] = obj[0]; //状态
+                dr["State"] = Status; //状态
                 dr["WriteItem"] = WriteItem;
-                dr["CurStation"] = obj[1];//当前位置
-                if (int.Parse(obj[1].ToString()) <= CurStation)
-                    dr["OrderNo"] = int.Parse(obj[1].ToString()) + 10000; //小车位置小于当前位置，加上最大码尺地址。
+                dr["CurStation"] = Position;//当前位置
+                if (Position <= CurStation)
+                    dr["OrderNo"] = Position + 10000; //小车位置小于当前位置，加上最大码尺地址。
 
 
 
 
 
                 else
-                    dr["OrderNo"] = obj[1];
-                dr["ToStation"] = obj[2]; //目的地
-                dr["ToStationOrder"] = obj[2];
-                if (int.Parse(obj[2].ToString()) < 5000)
-                    dr["ToStationOrder"] = int.Parse(obj[2].ToString()) + 10000;//最大码尺地址
+                    dr["OrderNo"] = Position;
+                dr["ToStation"] = DesPosition; //目的地
+                dr["ToStationOrder"] = DesPosition;
+                if (DesPosition < 5000)
+                    dr["ToStationOrder"] = DesPosition + 10000;//最大码尺地址
                 dt.Rows.Add(dr);
             }
         }
 
-        private bool CanProductToCar(DataRow drTaskID)
-        {
-            bool blnvalue = false;
-            DataRow[] drs = dtCar.Select(string.Format("BILL_NO='{0}' and PRODUCT_CODE='{1}' and IS_MIX='{2}' and STATE=1", drTaskID["BILL_NO"], drTaskID["PRODUCT_CODE"], drTaskID["IS_MIX"]));   //判断当前单号，当前产品，当前形态是否有state=1的出库任务，有则返回true;
-            if (drs.Length > 0)
-            {
-                blnvalue = true;
-            }
-            else
-            {
 
-                drs = dtOrder.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and IS_MIX={2} and SORT_LEVEL={3} and PRODUCT_CODE={4}", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["IS_MIX"], drTaskID["SORT_LEVEL"], drTaskID["PRODUCT_CODE"] }));
-                if (drs.Length > 0)
-                {
-                    drs = dtOrder.Select(string.Format("Index<{0}", drs[0]["Index"]));
-                    if (drs.Length > 0)
-                    {
-                        for (int i = 0; i < drs.Length; i++)
-                        {
-                            drs = dtOrder.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and IS_MIX={2} and SORT_LEVEL={3} and PRODUCT_CODE={4} and TASK_TYPE='22' and STATE in (0,1,2)", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["IS_MIX"], drTaskID["SORT_LEVEL"], drTaskID["PRODUCT_CODE"] }));//判断小于当前Index的出库任务，是否有未完成的出库任务，如果没有，则返回True.
-                            if (drs.Length == 0)
-                            {
-                                blnvalue = true;
-                            }
-                            else
-                            {
-                                blnvalue = false;
-                                break;
-                            }
-
-                        }
-                    }
-                    else
-                    {
-                        blnvalue = true;
-                    }
-                }
-            }
-            return blnvalue;
-        }
 
         private void CarStateChange(string Objstate, string CarNO, string CarItem, string WriteItem)
         {
@@ -354,6 +390,9 @@ namespace THOK.XC.Process.Process_Car
             string CarNo = "";
             if (Objstate == "2") //送货完成
             {
+                TaskDal dal = new TaskDal();
+
+                #region 送货完成,写入站台
                 object[] obj = ObjectUtil.GetObjects(WriteToService("StockPLC_02", CarItem));//读取小车位置
                 DataRow[] drsAddress = dtCarAddress.Select(string.Format("CAR_ADDRESS='{0}'", obj[2].ToString()));
                 if (drsAddress.Length > 0)
@@ -385,10 +424,12 @@ namespace THOK.XC.Process.Process_Car
                     FinshedTaskType = drexist[0]["TASK_TYPE"].ToString();
                     dtCar.Rows.Remove(drexist[0]);
                 }
+                #endregion
 
                 DataRow[] drs = dtCar.Select(string.Format("CARNO='{0}' and STATE=0", CarNo));
                 if (drs.Length > 0) //有待分配的任务
                 {
+                    #region 有待分配的任务
                     DataRow dr = drs[0];
                     dr.BeginEdit();
                     dr["state"] = 1;
@@ -398,6 +439,7 @@ namespace THOK.XC.Process.Process_Car
                     int ToPostion = 0;
                     string FromStation = "";
                     string ToStation = "";
+                    string TargetCode = "";
                     if (dr["TASK_TYPE"].ToString() == "21")
                     {
 
@@ -414,13 +456,95 @@ namespace THOK.XC.Process.Process_Car
                         FromStation = dr["STATION_NO"].ToString();
                         ToStation = dr["OUT_STATION_1"].ToString();
 
+
+
+                        if (!dBillUseTarget.ContainsKey(dr["FORDERBILLNO"].ToString()))
+                        {
+                            dBillUseTarget.Add(dr["FORDERBILLNO"].ToString(), false);
+                            dBillTargetCode.Add(dr["FORDERBILLNO"].ToString(), "");
+                        }
+
+                        if (dBillUseTarget[dr["FORDERBILLNO"].ToString()]) //已经使用过两次
+                        {
+                            if (dBillTargetCode[dr["FORDERBILLNO"].ToString()] == "370")
+                            {
+                                ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
+                                ToStation = dr["OUT_STATION_1"].ToString();
+                            }
+                            else
+                            {
+                                ToPostion = int.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
+                                ToStation = dr["OUT_STATION_2"].ToString();
+                            }
+
+
+                        }
+                        else
+                        {
+                            if (dr["TARGET_CODE"].ToString() == "01")
+                            {
+                                int objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_370")).ToString());
+                                if (objstate == 0)
+                                {
+                                    ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
+                                    ToStation = dr["OUT_STATION_1"].ToString();
+                                    TargetCode = "370";
+                                }
+                                else
+                                {
+                                    objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_390")).ToString());
+                                    if (objstate == 0)
+                                    {
+                                        ToPostion = int.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
+                                        ToStation = dr["OUT_STATION_2"].ToString();
+                                        TargetCode = "390";
+                                    }
+
+                                }
+                            }
+                            else
+                            {
+                                int objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_390")).ToString());
+                                if (objstate == 0)
+                                {
+                                    ToPostion = int.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
+                                    ToStation = dr["OUT_STATION_2"].ToString();
+                                    TargetCode = "390";
+                                }
+                                else
+                                {
+                                    objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_370")).ToString());
+                                    if (objstate == 0)
+                                    {
+                                        ToStation = dr["OUT_STATION_1"].ToString();
+                                        ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
+                                        TargetCode = "370";
+                                    }
+
+                                }
+                            }
+
+                            if (dBillTargetCode[dr["FORDERBILLNO"].ToString()] != "" && dBillTargetCode[dr["FORDERBILLNO"].ToString()] != TargetCode)
+                            {
+                                dBillUseTarget[dr["FORDERBILLNO"].ToString()] = true;
+                                dBillTargetCode[dr["FORDERBILLNO"].ToString()] = TargetCode;
+
+                            }
+                            else
+                            {
+                                dBillTargetCode[dr["FORDERBILLNO"].ToString()] = TargetCode;
+                            }
+                        }
                     }
-                    int[] WriteValue = new int[4];
-                    WriteValue[0] = int.Parse(dr["TASK_NO"].ToString());
-                    WriteValue[1] = CurPostion;
-                    WriteValue[2] = ToPostion;
-                    WriteValue[3] = int.Parse(dr["PRODUCT_TYPE"].ToString());
-                 
+                    int[] WriteValue = new int[2];
+
+                    WriteValue[0] = CurPostion;
+                    WriteValue[1] = ToPostion;
+
+                    int TaskNo = int.Parse(dr["TASK_NO"].ToString());
+
+                    int ProductType = int.Parse(dr["PRODUCT_TYPE"].ToString());
+
                     string barcode = "";
                     string palletcode = "";
                     if (dr["PRODUCT_CODE"].ToString() != "0000") //
@@ -432,60 +556,234 @@ namespace THOK.XC.Process.Process_Car
                     sbyte[] b = new sbyte[190];
                     Common.ConvertStringChar.stringToBytes(barcode, 80).CopyTo(b, 0);
                     Common.ConvertStringChar.stringToBytes(palletcode, 110).CopyTo(b, 80);
+                    WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_1", TaskNo);//任务号。
+                    WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_2", WriteValue);//地址。
+                    WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_3", ProductType);//任务号。
+                    WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_4", b);
+                    WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_5", 1);
 
-                    WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_1", WriteValue);//下达小车任务。
-                    WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_2", b);
-                    WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_3", 1);
 
 
-                    TaskDal dal = new TaskDal();
+
+
+                  
                     dal.UpdateTaskDetailCar(FromStation, ToStation, "1", dr["CARNO"].ToString(), string.Format("TASK_ID='{0}' and ITEM_NO='{1}'", dr["TASK_ID"], dr["ITEM_NO"]));
 
-
+                    #endregion
                 }
                 else  //小车空闲，且没任务。
                 {
+                    #region 小车空闲，且没任务。 按顺序查找任务
+                    int CurPostion = 0;
+                    int ToPostion = -1;
+                    string FromStation = "";
+                    string ToStation = "";
+                    string TargetCode = "";
 
-                    obj = ObjectUtil.GetObjects(WriteToService("StockPLC_02", CarItem));//读取小车位置
-                    //判断当前位置
-
-                    DataTable dtOrder = GetCarOrder(int.Parse(obj[1].ToString()));
-                    DataRow[] drMax = dtOrder.Select("state=1", "ToStationOrder desc");
-                    //按照最大目的地址倒排。最大目的地址大于当前位置，则下任务给小车移动到最大目的地址+1个工位。
-                    if (drMax.Length > 0)
+                    DataRow[] drsNotCar = dtCar.Select("CARNO='' and STATE=0", "Index");
+                    if (drsNotCar.Length > 0)
                     {
-                        if ((int)drMax[0]["ToStation"] > int.Parse(obj[1].ToString()))
+
+
+
+                        for (int i = 0; i < drs.Length; i++)
                         {
-                            int[] WriteValue = new int[4];
-                            WriteValue[0] = 9999;
-                            WriteValue[1] = int.Parse(obj[1].ToString());
-                            WriteValue[2] = (int)drMax[0]["ToStation"] + 10;//下任务给小车移动到最大目的地址+1个工位。
-                            WriteValue[3] = 5;
-                            WriteToService("StockPLC_02", WriteItem + "_1", WriteValue);
-                            string BarCode = "";
-                            WriteToService("StockPLC_02", WriteItem + "_2", BarCode);
-                            WriteToService("StockPLC_02", WriteItem + "_3", 1);
+
+                            DataRow dr = drs[i];
+
+                            if (dr["TASK_TYPE"].ToString() == "21")
+                            {
+
+                                CurPostion = int.Parse(dr["IN_STATION_ADDRESS"].ToString());
+                                ToPostion = int.Parse(dr["STATION_NO_ADDRESS"].ToString());
+                                FromStation = dr["IN_STATION"].ToString();
+                                ToStation = dr["STATION_NO"].ToString();
+
+                            }
+                            else
+                            {
+                                CurPostion = int.Parse(dr["STATION_NO_ADDRESS"].ToString());
+                                //判断使用哪个出口？
+
+                                ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
+                                ToStation = dr["OUT_STATION_1"].ToString();
+
+                                FromStation = dr["STATION_NO"].ToString();
+
+
+
+                                ToPostion = -1;
+
+                                //判断二楼能否出库
+                                bool blnCan = false;
+                                 
+                                blnCan = dal.ProductCanToCar(dr["FORDERBILLNO"].ToString(), dr["FORDE"].ToString(), dr["IS_MIX"].ToString());
+                                if (blnCan)
+                                {
+                                    if (!dBillUseTarget.ContainsKey(dr["FORDERBILLNO"].ToString()))
+                                    {
+                                        dBillUseTarget.Add(dr["FORDERBILLNO"].ToString(), false);
+                                        dBillTargetCode.Add(dr["FORDERBILLNO"].ToString(), "");
+                                    }
+
+                                    if (dBillUseTarget[dr["FORDERBILLNO"].ToString()]) //已经使用过两次
+                                    {
+                                        if (dBillTargetCode[dr["FORDERBILLNO"].ToString()] == "370")
+                                        {
+                                            ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
+                                            ToStation = dr["OUT_STATION_1"].ToString();
+                                        }
+                                        else
+                                        {
+                                            ToPostion = int.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
+                                            ToStation = dr["OUT_STATION_2"].ToString();
+                                        }
+
+
+                                    }
+                                    else
+                                    {
+                                        if (dr["TARGET_CODE"].ToString() == "01")
+                                        {
+                                            int objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_370")).ToString());
+                                            if (objstate == 0)
+                                            {
+                                                ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
+                                                ToStation = dr["OUT_STATION_1"].ToString();
+                                                TargetCode = "370";
+                                            }
+                                            else
+                                            {
+                                                objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_390")).ToString());
+                                                if (objstate == 0)
+                                                {
+                                                    ToPostion = int.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
+                                                    ToStation = dr["OUT_STATION_2"].ToString();
+                                                    TargetCode = "390";
+                                                }
+
+                                            }
+                                        }
+                                        else
+                                        {
+                                            int objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_390")).ToString());
+                                            if (objstate == 0)
+                                            {
+                                                ToPostion = int.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
+                                                ToStation = dr["OUT_STATION_2"].ToString();
+                                                TargetCode = "390";
+                                            }
+                                            else
+                                            {
+                                                objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_370")).ToString());
+                                                if (objstate == 0)
+                                                {
+                                                    ToStation = dr["OUT_STATION_1"].ToString();
+                                                    ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
+                                                    TargetCode = "370";
+                                                }
+
+                                            }
+                                        }
+
+                                        if (dBillTargetCode[dr["FORDERBILLNO"].ToString()] != "" && dBillTargetCode[dr["FORDERBILLNO"].ToString()] != TargetCode)
+                                        {
+                                            dBillUseTarget[dr["FORDERBILLNO"].ToString()] = true;
+                                            dBillTargetCode[dr["FORDERBILLNO"].ToString()] = TargetCode;
+
+                                        }
+                                        else
+                                        {
+                                            dBillTargetCode[dr["FORDERBILLNO"].ToString()] = TargetCode;
+                                        }
+                                    }
+
+                                }
+                            }
+
+                            if (ToPostion != -1)
+                            {
+                                int[] WriteValue = new int[2];
+                               
+                                WriteValue[0] = CurPostion;
+                                WriteValue[1] = ToPostion;
+
+                                int TaskNo = int.Parse(dr["TASK_NO"].ToString());
+
+                                int ProductType = int.Parse(dr["PRODUCT_TYPE"].ToString());
+
+                                string barcode = "";
+                                string palletcode = "";
+                                if (dr["PRODUCT_CODE"].ToString() != "0000") //
+                                {
+                                    barcode = dr["PRODUCT_BARCODE"].ToString();
+                                    palletcode = dr["PALLET_CODE"].ToString();
+                                }
+
+                                sbyte[] b = new sbyte[190];
+                                Common.ConvertStringChar.stringToBytes(barcode, 80).CopyTo(b, 0);
+                                Common.ConvertStringChar.stringToBytes(palletcode, 110).CopyTo(b, 80);
+                                WriteToService("StockPLC_02", WriteItem + "_1", TaskNo);//任务号。
+                                WriteToService("StockPLC_02", WriteItem + "_2", WriteValue);//地址。
+                                WriteToService("StockPLC_02", WriteItem + "_3", ProductType);//任务号。
+                                WriteToService("StockPLC_02", WriteItem + "_4", b);
+                                WriteToService("StockPLC_02", WriteItem + "_5", 1);
+
+                                dal.UpdateTaskDetailCar(FromStation, ToStation, "1", dr["CARNO"].ToString(), string.Format("TASK_ID='{0}' and ITEM_NO='{1}'", dr["TASK_ID"], dr["ITEM_NO"]));
+                                break;
+                            }
+                        }
+
+
+                    }
+                    #endregion
+
+                    #region 小车空闲，且找不到任务，则移动到最大目的地址的下一个工位
+                    if (ToPostion == -1)
+                    {
+                        obj = ObjectUtil.GetObjects(WriteToService("StockPLC_02", CarItem));//读取小车位置
+                        //判断当前位
+                        DataTable dtOrder = GetCarOrder(int.Parse(obj[1].ToString()));
+                        DataRow[] drMax = dtOrder.Select("state=1", "ToStationOrder desc");
+                        //按照最大目的地址倒排。最大目的地址大于当前位置，则下任务给小车移动到最大目的地址+1个工位。
+                        if (drMax.Length > 0)
+                        {
+                            if ((int)drMax[0]["ToStation"] > int.Parse(obj[1].ToString()))
+                            {
+                                int[] WriteValue = new int[2];
+
+                                WriteValue[0] = int.Parse(obj[1].ToString()); ;
+                                WriteValue[1] = (int)drMax[0]["ToStation"] + 10;//下任务给小车移动到最大目的地址+1个工位。;
+
+                                int TaskNo = 9999;
+
+                                int ProductType = 5;
+
+                                string barcode = "";
+                                string palletcode = "";
+                                
+
+                                sbyte[] b = new sbyte[190];
+                                Common.ConvertStringChar.stringToBytes(barcode, 80).CopyTo(b, 0);
+                                Common.ConvertStringChar.stringToBytes(palletcode, 110).CopyTo(b, 80);
+                                WriteToService("StockPLC_02", WriteItem + "_1", TaskNo);//任务号。
+                                WriteToService("StockPLC_02", WriteItem + "_2", WriteValue);//地址。
+                                WriteToService("StockPLC_02", WriteItem + "_3", ProductType);//任务号。
+                                WriteToService("StockPLC_02", WriteItem + "_4", b);
+                                WriteToService("StockPLC_02", WriteItem + "_5", 1);
+
+                            }
 
                         }
 
                     }
-                    else //停放在闲置工位。
-                    {
-
-
-
-
-
-
-
-                    }
-
-
+                    #endregion
                 }
             }
             else
             {
-                if (Objstate == "1")//烟包接货完成，处理目前位置与目的地之间的空闲小车
+                #region 烟包接货完成，处理目前位置与目的地之间的空闲小车
+                if (Objstate == "1")//
                 {
                     int[] obj = (int[])WriteToService("StockPLC_02", CarItem);//读取小车位置
                     //判断当前位置
@@ -508,12 +806,25 @@ namespace THOK.XC.Process.Process_Car
                             WriteToService("StockPLC_02", drMax[i]["WriteItem"].ToString() + "_2", BarCode);
                             WriteToService("StockPLC_02", drMax[i]["WriteItem"].ToString() + "_3", 1);
 
+
+
+
+
+
+
+
+
+
+
+
+
                         }
 
 
                     }
 
                 }
+                #endregion
             }
 
 

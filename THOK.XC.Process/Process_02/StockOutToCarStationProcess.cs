@@ -144,6 +144,17 @@ namespace THOK.XC.Process.Process_02
 
                                     string strWhere = string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=2", CancelTaskID);
                                     DataTable dt = dal.TaskCarDetail(strWhere);
+                                    if (dt.Rows.Count > 0) //更新入库位置
+                                    {
+                                        SysStationDal sysdal = new SysStationDal();
+                                        DataTable dtCarStation = sysdal.GetCarSationInfo(CellCode, "22");
+                                        dt.Rows[0].BeginEdit();
+                                        dt.Rows[0]["IN_STATION_ADDRESS"] = dtCarStation.Rows[0]["IN_STATION_ADDRESS"];
+                                        dt.Rows[0]["IN_STATION"] = dtCarStation.Rows[0]["IN_STATION"];
+                                        dt.Rows[0].EndEdit();
+ 
+
+                                    }
                                     WriteToProcess("CarProcess", "CarInRequest", dt);//调度穿梭车入库。
 
                                     string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo, dtTask.Rows[0]["PALLET_CODE"].ToString());

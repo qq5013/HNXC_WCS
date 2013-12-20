@@ -14,7 +14,7 @@ namespace THOK.XC.Process.Process_Crane
         private Dictionary<string, string> dCraneState = new Dictionary<string, string>(); //堆垛机状态表  ""，表示状态未知，发送报文获取堆垛机状态。 0：空闲，1：执行中
         private DataTable dtOrderCrane;
         private Dictionary<string, DataRow> dCraneWait = new Dictionary<string, DataRow>(); //堆垛机待入库。 0：空闲，1：执行中
-        private string strMaxSQuenceNo = "";
+        
         private DataTable dtSendCRQ;
         private DataTable dtErrMesage;
         
@@ -23,16 +23,6 @@ namespace THOK.XC.Process.Process_Crane
             try
             {
                 base.Initialize(context);
-               
-                if (strMaxSQuenceNo == "")
-                {
-                    TaskDal dal = new TaskDal();
-                    strMaxSQuenceNo = dal.GetMaxSQUENCENO();
-                }
-                if (strMaxSQuenceNo == "")
-                {
-                    strMaxSQuenceNo = DateTime.Now.ToString("yyyyMMdd") + "0000";
-                }
 
                 CraneErrMessageDal errDal = new CraneErrMessageDal();
                 dtErrMesage = errDal.GetErrMessageList();
@@ -171,7 +161,7 @@ namespace THOK.XC.Process.Process_Crane
             }
             if (dCraneState[CraneNo] == "1") //堆垛机正忙。
                 return true;
-
+            TaskDal dal = new TaskDal();
             DataRow drTaskCrane = null;
             if (drTaskID==null) //出库任务调用堆垛机
             {
@@ -182,7 +172,7 @@ namespace THOK.XC.Process.Process_Crane
                     //判断能否出库
                     if (drs[i]["TASK_TYPE"].ToString() == "22") //二楼出库，判断能否出库
                     {
-                        bool blnCan = ProductCanOut(drs[i]);  //判断能否出库
+                        bool blnCan = dal.ProductCanToCar(drs[i]["FORDERBILLNO"].ToString(), drs[i]["FORDER"].ToString(), drs[i]["IS_MIX"].ToString());  //判断能否出库
                         if (!blnCan)
                             continue;
                     }
@@ -213,7 +203,7 @@ namespace THOK.XC.Process.Process_Crane
                     }
                     if (drTaskCrane["ITEM_NO"].ToString() == "1")
                     {
-                        TaskDal dal = new TaskDal();
+                       
                         string strTaskDetailNo = dal.InsertTaskDetail(drTaskCrane["TASK_ID"].ToString());
 
                         DataRow[] drs = dtCrane.Select(string.Format("TASK_ID='{0}'", drTaskCrane["TASK_ID"]));
@@ -741,7 +731,7 @@ namespace THOK.XC.Process.Process_Crane
         {
             Dictionary<string, string> msg = (Dictionary<string, string>)state;
 
-            DataRow dr = dtCrane.Select(string.Format("SUBSTRING(SQUENCE_NO,9,4)='{0}'", msg["SequenceNo"]))[0];
+            DataRow dr = dtCrane.Select(string.Format("SQUENCE_NO='{0}'", msg["SequenceNo"]))[0];
 
             TaskDal dal = new TaskDal();
             string TaskType = dr["TASK_TYPE"].ToString();
@@ -781,7 +771,7 @@ namespace THOK.XC.Process.Process_Crane
             Dictionary<string, string> msg = (Dictionary<string, string>)state;
             if (msg["FaultIndicator"] == "1") //序列号出错，重新发送报文
             {
-                DataRow[] drs = dtCrane.Select(string.Format("substring(SQUENCE_NO,9,4)='{0}'", msg["SequenceNo"]));
+                DataRow[] drs = dtCrane.Select(string.Format("SQUENCE_NO='{0}'", msg["SequenceNo"]));
                 if (drs.Length > 0)
                 {
                     lock (dCraneState)
@@ -792,7 +782,7 @@ namespace THOK.XC.Process.Process_Crane
                 }
                 else
                 {
-                    drs = dtSendCRQ.Select(string.Format("substring(SQUENCE_NO,9,4)='{0}'", msg["SequenceNo"]));
+                    drs = dtSendCRQ.Select(string.Format("SQUENCE_NO='{0}'", msg["SequenceNo"]));
                     if (drs.Length > 0)
                     {
                         SendTelegramCRQ(drs[0]["CRANE_NO"].ToString());
@@ -899,12 +889,12 @@ namespace THOK.XC.Process.Process_Crane
             if (drs.Length > 0)
             {
                 drs[0].BeginEdit();
-                drs[0]["SQUENCE_NO"] = DateTime.Now.ToString("yyyyMMdd") + QuenceNo;
+                drs[0]["SQUENCE_NO"] = QuenceNo;
                 drs[0].EndEdit();
                 dtCrane.AcceptChanges();
 
                 dr.BeginEdit();
-                dr["SQUENCE_NO"] = DateTime.Now.ToString("yyyyMMdd") + QuenceNo;
+                dr["SQUENCE_NO"] = QuenceNo;
                 dr.EndEdit();
             }
 
@@ -941,7 +931,7 @@ namespace THOK.XC.Process.Process_Crane
             DataRow dr = dtSendCRQ.NewRow();
             dr.BeginEdit();
             dr["CRANE_NO"] = CraneNo;
-            dr["SQUENCE_NO"] = DateTime.Now.ToString("yyyyMMdd") + QuenceNo;
+            dr["SQUENCE_NO"] = QuenceNo;
             dr.EndEdit();
             dtSendCRQ.Rows.Add(dr);
             dtSendCRQ.AcceptChanges();
@@ -966,18 +956,8 @@ namespace THOK.XC.Process.Process_Crane
 
         private string GetNextSQuenceNo()
         {
-            string QuenceNo = strMaxSQuenceNo.Substring(8, 4);
-            int i = int.Parse(QuenceNo) + 1;
-            if (i == 0)
-            {
-                i = 1; 
-            }
-            if (i > 9999)
-            {
-                i = 1;
-            }
-            strMaxSQuenceNo = DateTime.Now.ToString("yyyyMMdd") + i.ToString().PadLeft(4, '0');
-            return i.ToString().PadLeft(4, '0');
+            SysStationDal dal = new SysStationDal();
+            return dal.GetTaskNo("S");
         }
         #endregion
 

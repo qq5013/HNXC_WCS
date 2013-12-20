@@ -294,5 +294,35 @@ namespace THOK.XC.Process.Dal
 
         }
 
+         /// <summary>
+        /// 出库任务排序，判断能否给穿梭车下达出库任务
+        /// </summary>
+        /// <param name="ForderBillNo"></param>
+        /// <param name="Forder"></param>
+        /// <param name="IsMix"></param>
+        /// <returns></returns>
+        public bool ProductCanToCar(string ForderBillNo, string Forder, string IsMix)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                TaskDao dao = new TaskDao();
+                return dao.ProductCanToCar(ForderBillNo, Forder, IsMix);
+            }
+        }
+
+         /// <summary>
+        /// 判断二楼出库，任务号到达拆盘处，是否已经执行？
+        /// </summary>
+        /// <param name="TaskID"></param>
+        /// <returns></returns>
+        public bool SeparateTaskDetailStart(string TaskID)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                TaskDao dao = new TaskDao();
+                return dao.SeparateTaskDetailStart(TaskID);
+            }
+        }
+
     }
 }

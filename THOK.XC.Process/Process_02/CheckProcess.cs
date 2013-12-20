@@ -10,7 +10,7 @@ namespace THOK.XC.Process.Process_02
     public class CheckProcess : AbstractProcess
     {
         private System.Timers.Timer PalletTime = new System.Timers.Timer();
-        private string TaskID = "";
+         
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
         {
             /*  处理事项：

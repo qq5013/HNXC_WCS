@@ -16,9 +16,9 @@ namespace THOK.XC.Process.Process_02
              *  stateItem.State ：参数 - 请求的卷烟编码。        
             */
 
-            object[] obj = ObjectUtil.GetObjects(stateItem.State);
+            object obj = ObjectUtil.GetObject(stateItem.State);
 
-            if (obj[0] == null || obj[0].ToString() == "0")
+            if (obj == null || obj.ToString() == "0")
                 return;
 
 
@@ -37,19 +37,24 @@ namespace THOK.XC.Process.Process_02
                         WriteItem = "02_2_392";
                         break;
                 }
-                string TaskNo = obj[0].ToString().PadLeft(4, '0');
+                string TaskNo = obj.ToString().PadLeft(4, '0');
                 TaskDal dal = new TaskDal();
                 string[] strValue = dal.GetTaskInfo(TaskNo);
                 if (!string.IsNullOrEmpty(strValue[0]))
                 {
-                    ChannelDal cdal = new ChannelDal();
-                    string strChannelNo = cdal.InsertChannel(strValue[0],strValue[1]);//分配缓存道
-                    if (strChannelNo != "")
+
+                    bool blnvalue = dal.SeparateTaskDetailStart(strValue[0]); //判断该任务是否开始执行
+                    if (!blnvalue)
                     {
-                        dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=4", strValue[0]), "2");
-                        WriteToService("StockPLC_02", WriteItem + "_1", int.Parse(strChannelNo));
-                        WriteToService("StockPLC_02", WriteItem + "_2", 1);
-                        dal.UpdateTaskDetailStation(FromStation, strChannelNo, "1", string.Format("TASK_ID='{0}' AND ITEM_NO=5", strValue[0]));
+                        ChannelDal cdal = new ChannelDal();
+                        string strChannelNo = cdal.InsertChannel(strValue[0], strValue[1]);//分配缓存道
+                        if (strChannelNo != "")
+                        {
+                            dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=4", strValue[0]), "2");
+                            WriteToService("StockPLC_02", WriteItem + "_1", int.Parse(strChannelNo));
+                            WriteToService("StockPLC_02", WriteItem + "_2", 1);
+                            dal.UpdateTaskDetailStation(FromStation, strChannelNo, "1", string.Format("TASK_ID='{0}' AND ITEM_NO=5", strValue[0]));
+                        }
                     }
 
                 }

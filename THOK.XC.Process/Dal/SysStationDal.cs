@@ -23,5 +23,34 @@ namespace THOK.XC.Process.Dal
                 return dao.GetSationInfo(CellCode, TaskType,Item);
             }
         }
+
+        /// <summary>
+        /// 获取小车出入库位置
+        /// </summary>
+        /// <param name="CellCode"></param>
+        /// <param name="TaskType"></param>
+        /// <returns></returns>
+        public DataTable GetCarSationInfo(string CellCode, string TaskType)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                SysStationDao dao = new SysStationDao();
+                return dao.GetCarSationInfo(CellCode, TaskType);
+            }
+        }
+
+         /// <summary>
+        /// 根据类型返回任务号
+        /// </summary>
+        /// <param name="Module"></param>
+        /// <returns></returns>
+        public string GetTaskNo(string Module)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                SysStationDao dao = new SysStationDao();
+                return dao.GetTaskNo(Module);
+            }
+        }
     }
 }

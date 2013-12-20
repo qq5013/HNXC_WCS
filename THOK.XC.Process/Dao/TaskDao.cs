@@ -84,7 +84,7 @@ namespace THOK.XC.Process.Dao
             string strSQL = "SELECT TASK.TASK_ID,TASK_NO,DETAIL.ITEM_NO,ASSIGNMENT_ID,DETAIL.CRANE_NO, '30'||TASK.CELL_CODE||'01' AS CELLSTATION,SYS_STATION.CRANE_POSITION CRANESTATION  ,'0' AS STATE,TASK.BILL_NO," +
                             "TASK.PRODUCT_CODE,TASK.CELL_CODE,TASK.TASK_TYPE,TASK.TASK_LEVEL,TASK.TASK_DATE,TASK.IS_MIX,SYS_STATION.SERVICE_NAME,SYS_STATION.ITEM_NAME_1," +
                             "SYS_STATION.ITEM_NAME_2,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE,'' AS SQUENCE_NO,TASK.TARGET_CODE,SYS_STATION.STATION_NO,SYS_STATION.MEMO,TASK.PRODUCT_TYPE,CMD_SHELF_NEW.CRANE_NO AS NEW_CRANE_NO,TASK.NEWCELL_CODE,  " +
-                            "DECODE(TASK.NEWCELL_CODE,NULL,'',  '30'||TASK.NEWCELL_CODE||'01') AS NEW_TO_STATION,SYS_STATION_NEW.STATION_NO AS NEW_TARGET_CODE,FDETAIL.FORDER " +
+                            "DECODE(TASK.NEWCELL_CODE,NULL,'',  '30'||TASK.NEWCELL_CODE||'01') AS NEW_TO_STATION,SYS_STATION_NEW.STATION_NO AS NEW_TARGET_CODE,TASK.FORDER,TASK.FORDERBILLNO " +
                             "FROM WCS_TASK_DETAIL DETAIL " +
                             "LEFT JOIN WCS_TASK TASK  ON DETAIL.TASK_ID=TASK.TASK_ID " +
                             "LEFT JOIN WMS_BILL_MASTER BMASTER ON TASK.BILL_NO=BMASTER.BILL_NO "+
@@ -112,7 +112,7 @@ namespace THOK.XC.Process.Dao
             string strSQL = "SELECT TASK.TASK_ID,'' AS TASK_NO,SYS_TASK_ROUTE.ITEM_NO，''AS  ASSIGNMENT_ID,CMD_SHELF.CRANE_NO, '30'||TASK.CELL_CODE||'01' AS CELLSTATION,SYS_STATION.CRANE_POSITION CRANESTATION  ,'0' AS STATE,TASK.BILL_NO," +
                            "TASK.PRODUCT_CODE,TASK.CELL_CODE,TASK.TASK_TYPE,TASK.TASK_LEVEL,TASK.TASK_DATE,TASK.IS_MIX,SYS_STATION.SERVICE_NAME,SYS_STATION.ITEM_NAME_1," +
                            "SYS_STATION.ITEM_NAME_2,TASK.PRODUCT_BARCODE,TASK.PALLET_CODE,'' AS SQUENCE_NO,TASK.TARGET_CODE,SYS_STATION.STATION_NO,SYS_STATION.MEMO,TASK.PRODUCT_TYPE,CMD_SHELF_NEW.CRANE_NO AS NEW_CRANE_NO,TASK.NEWCELL_CODE, " +
-                           "DECODE(TASK.NEWCELL_CODE,NULL,'',  '30'||TASK.NEWCELL_CODE||'01') AS NEW_TO_STATION,SYS_STATION_NEW.STATION_NO AS NEW_TARGET_CODE,FDETAIL.FORDER " +
+                           "DECODE(TASK.NEWCELL_CODE,NULL,'',  '30'||TASK.NEWCELL_CODE||'01') AS NEW_TO_STATION,SYS_STATION_NEW.STATION_NO AS NEW_TARGET_CODE,TASK.FORDER,TASK.FORDERBILLNO " +
                            "FROM WCS_TASK TASK " +
                            "LEFT JOIN WMS_BILL_MASTER BMASTER ON TASK.BILL_NO=BMASTER.BILL_NO "+
                            "LEFT JOIN WMS_FORMULA_DETAIL FDETAIL ON BMASTER.FORMULA_CODE=FDETAIL.FORMULA_CODE AND FDETAIL.PRODUCT_CODE=TASK.PRODUCT_CODE "+ 
@@ -152,80 +152,33 @@ namespace THOK.XC.Process.Dao
                             "LEFT JOIN CMD_BILL_TYPE BTYPE ON BTYPE.BTYPE_CODE=BILL.BTYPE_CODE " +
                             "WHERE TASK_ID='{0}'", TaskID);
             DataTable dt = ExecuteQuery(strSQL).Tables[0];
+            string mode = "";
             if (dt.Rows.Count > 0)
             {
-                string strWhere = "";
                 string BType = dt.Rows[0]["TASKNOTYPE"].ToString();
-                int StarNo = 0;
-                int Count = 0;
-
                 switch (BType)
                 {
                     case "2195"://紧急补料单  9000-9299
-                        strWhere = "TASK_NO BETWEEN '9000' AND '9299'";
-                        Count = 300;
-                        StarNo = 9000;
+                        mode = "F";
                         break;
                     case "3195"://抽检        9300-9499 
-                        strWhere = "TASK_NO BETWEEN '9300' AND '9499'";
-                        Count = 200;
-                        StarNo = 9300;
+                        mode = "R";
                         break;
                     case "2122"://倒库        9500-9799
-                        strWhere = "TASK_NO BETWEEN '9500' AND '9799'";
-                        Count = 300;
-                        StarNo = 9500;
+                        mode = "B";
                         break;
                     case "4195": //盘点单     9800--9998
-                        strWhere = "TASK_NO BETWEEN '9800' AND '9998'";
-                        Count = 1999;
-                        StarNo = 9800;
+                        mode = "C";
                         break;
                     default:
-                        strWhere = "TASK_NO BETWEEN '0001' AND '8999'";
-                        Count = 8999;
-                        StarNo = 1;
+                        mode = "M";
                         break;
 
                 }
-                strSQL = "SELECT MAX(TASK_NO) AS MAXTASKNO  ,COUNT(*) AS TASKCOUNT FROM WCS_TASK_DETAIL WHERE " + strWhere;
-                dt = ExecuteQuery(strSQL).Tables[0];
-                if (dt.Rows[0]["MAXTASKNO"].ToString() == "")
-                {
-                    strValue = StarNo.ToString().PadLeft(4, '0');
-                }
-                else
-                {
-                    int NewTaskNo = 0;
-                    int maxTaskNo = int.Parse(dt.Rows[0]["MAXTASKNO"].ToString());
-                    int TaskCount = int.Parse(dt.Rows[0]["TASKCOUNT"].ToString());
-                    if (maxTaskNo == StarNo + Count - 1)
-                    {
-                        NewTaskNo = maxTaskNo + TaskCount - Count;
-                    }
-                    else
-                    {
-                        NewTaskNo = maxTaskNo + 1;
-                    }
-                    bool blnvalue = false;
-                    while (!blnvalue)
-                    {
-                        strSQL = string.Format("SELECT * FROM WCS_TASK_DETAIL WHERE TASK_NO='{0}'", NewTaskNo.ToString().PadLeft(4, '0'));
-                        DataTable dtNew = ExecuteQuery(strSQL).Tables[0];
-                        if (dtNew.Rows.Count > 0)
-                        {
-                            NewTaskNo++;
-                            if (NewTaskNo > StarNo + Count - 1)
-                                NewTaskNo = StarNo;
-
-                        }
-                        else
-                            blnvalue = true;
-
-                    }
-                    strValue = NewTaskNo.ToString().PadLeft(4, '0');
-                }
             }
+            SysStationDao SysDao = new SysStationDao();
+            strValue = SysDao.GetTaskNo(mode);
+                
             return strValue;
         }
 
@@ -262,8 +215,8 @@ namespace THOK.XC.Process.Dao
             string where = "1=1";
             if (!string.IsNullOrEmpty(strWhere))
                 where = strWhere;
-            string strSQL = "SELECT WCS_TASK.TASK_ID,CMD_CELL.CELL_CODE,STATION.STATION_NO,STATION.IN_STATION,ADDRESS1.CAR_ADDRESS STATION_NO_ADDRESS,ADDRESS2.CAR_ADDRESS IN_STATION_ADDRESS,CMD_SHELF.CRANE_NO,DETAIL.TASK_NO," +
-                            "WCS_TASK.TASK_TYPE,DETAIL.CAR_NO,DETAIL.ITEM_NO,STATION.OUT_STATION_1,ADDRESS3.CAR_ADDRESS  OUT_STATION_1_ADDRESS, STATION.OUT_STATION_2,ADDRESS4.CAR_ADDRESS  OUT_STATION_2_ADDRESS,'' WRITEITEM,WCS_TASK.TARGET_CODE " +
+            string strSQL = "SELECT WCS_TASK.TASK_ID,CMD_CELL.CELL_CODE,STATION.STATION_NO,STATION.IN_STATION,ADDRESS1.CAR_ADDRESS STATION_NO_ADDRESS,ADDRESS2.CAR_ADDRESS IN_STATION_ADDRESS,CMD_SHELF.CRANE_NO,DETAIL.TASK_NO,WCS_TASK.TASK_TYPE,DETAIL.CAR_NO," +
+                            "DETAIL.ITEM_NO,STATION.OUT_STATION_1,ADDRESS3.CAR_ADDRESS  OUT_STATION_1_ADDRESS, STATION.OUT_STATION_2,ADDRESS4.CAR_ADDRESS  OUT_STATION_2_ADDRESS,'' WRITEITEM,WCS_TASK.TARGET_CODE, WCS_TASK.IS_MIX,WCS_TASK.FORDER,WCS_TASK.FORDERBILLNO " +
                             "FROM WCS_TASK " +
                             "LEFT JOIN CMD_CELL ON WCS_TASK.CELL_CODE=CMD_CELL.CELL_CODE " +
                             "LEFT JOIN CMD_SHELF ON CMD_CELL.SHELF_CODE=CMD_SHELF.SHELF_CODE " +
@@ -605,6 +558,72 @@ namespace THOK.XC.Process.Dao
             ExecuteNonQuery(strSQL);
 
         }
+
+        /// <summary>
+        /// 出库任务排序，判断能否给穿梭车下达出库任务
+        /// </summary>
+        /// <param name="ForderBillNo"></param>
+        /// <param name="Forder"></param>
+        /// <param name="IsMix"></param>
+        /// <returns></returns>
+        public bool ProductCanToCar(string ForderBillNo,string Forder,string IsMix)
+        {
+            bool blnValue = false;
+            string strSQL = string.Format("SELECT COUNT(*) FROM WCS_TASK_DETAIL DETAIL LEFT JOIN WCS_TASK TASK ON DETAIL.TASK_ID=TASK.TASK_ID " +
+                            "WHERE DETAIL.ITEM_NO=3 AND DETAIL.STATE=1 AND TASK.IS_MIX='{0}' AND TASK.FORDER ={1} AND TASK.FORDERBILLNO='{2}' ", IsMix, Forder, ForderBillNo);
+
+            DataTable dt = ExecuteQuery(strSQL).Tables[0];
+            if (int.Parse(dt.Rows[0][0].ToString()) > 0)
+            {
+                blnValue = true;
+            }
+            if (!blnValue)
+            {
+                if (IsMix == "1") //混装，先判断整包是否出库完成
+                {
+                    strSQL = string.Format("SELECT COUNT(*) FROM WCS_TASK_DETAIL DETAIL LEFT JOIN WCS_TASK TASK ON DETAIL.TASK_ID=TASK.TASK_ID " +
+                           "WHERE DETAIL.ITEM_NO=3 AND DETAIL.STATE=0 AND TASK.IS_MIX=0 AND TASK.FORDERBILLNO='{0}' ", ForderBillNo);
+                    dt = ExecuteQuery(strSQL).Tables[0];
+                    if (int.Parse(dt.Rows[0][0].ToString()) == 0) //整包未出完
+                    {
+                        strSQL = string.Format("SELECT COUNT(*) FROM WCS_TASK_DETAIL DETAIL LEFT JOIN WCS_TASK TASK ON DETAIL.TASK_ID=TASK.TASK_ID " +
+                                   "WHERE DETAIL.ITEM_NO=3 AND DETAIL.STATE=0 AND TASK.IS_MIX=1 AND TASK.FORDER<{1} AND TASK.FORDERBILLNO='{0}' ", ForderBillNo, Forder);
+                        dt = ExecuteQuery(strSQL).Tables[0];
+                        if (int.Parse(dt.Rows[0][0].ToString()) == 0) //整包未出完
+                        {
+                            blnValue = true;
+                        }
+                    }
+                }
+                else
+                {
+                    strSQL = string.Format("SELECT COUNT(*) FROM WCS_TASK_DETAIL DETAIL LEFT JOIN WCS_TASK TASK ON DETAIL.TASK_ID=TASK.TASK_ID " +
+                                  "WHERE DETAIL.ITEM_NO=3 AND DETAIL.STATE=0 AND TASK.IS_MIX=0 AND TASK.FORDER<{1} AND TASK.FORDERBILLNO='{0}' ", ForderBillNo, Forder);
+                    dt = ExecuteQuery(strSQL).Tables[0];
+                    if (int.Parse(dt.Rows[0][0].ToString()) == 0) //整包未出完
+                    {
+                        blnValue = true;
+                    }
+                }
+            }
+
+            return blnValue;
+        }
+        /// <summary>
+        /// 判断二楼出库，任务号到达拆盘处，是否已经执行？
+        /// </summary>
+        /// <param name="TaskID"></param>
+        /// <returns></returns>
+        public bool SeparateTaskDetailStart(string TaskID)
+        {
+            bool blnValue = false;
+            string strSQL = string.Format("SELECT TASK_ID FROM WCS_TASK_DETAIL WHERE ITEM_NO=5 AND TASK_ID='{0}' AND STATE in (1,2)", TaskID);
+            DataTable dt = ExecuteQuery(strSQL).Tables[0];
+            if (dt.Rows.Count > 0)
+                blnValue = true;
+            return blnValue;
+        }
+
        
 
 
