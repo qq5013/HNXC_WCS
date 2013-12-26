@@ -267,7 +267,9 @@ namespace THOK.XC.Process.Process_Car
                             int TaskNo = int.Parse(dr["TASK_NO"].ToString());
 
                             int ProductType = int.Parse(dr["PRODUCT_TYPE"].ToString());
-
+                            int[] WriteTaskValue = new int[2];
+                            WriteTaskValue[0] = TaskNo;
+                            WriteTaskValue[1] = ProductType;
                             string barcode = "";
                             string palletcode = "";
                             if (dr["PRODUCT_CODE"].ToString() != "0000") //
@@ -279,11 +281,15 @@ namespace THOK.XC.Process.Process_Car
                             sbyte[] b = new sbyte[190];
                             Common.ConvertStringChar.stringToBytes(barcode, 80).CopyTo(b, 0);
                             Common.ConvertStringChar.stringToBytes(palletcode, 110).CopyTo(b, 80);
-                            WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_1", TaskNo);//任务号。
+                            
+
+
+                            WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_1", WriteTaskValue);//任务号。
                             WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_2", WriteValue);//地址。
-                            WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_3", ProductType);//任务号。
-                            WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_4", b);
-                            WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_5", 1);
+                            WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_3", b);
+                            WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_4", 1);
+
+
 
                             dr.BeginEdit();
                             dr["CAR_NO"] = drsOrder[i]["CAR_NO"].ToString();

@@ -17,7 +17,7 @@ namespace THOK.XC.Process.Process_02
              * 
              *  stateItem.State ：参数 - 任务号。        
             */
-            object obj = ObjectUtil.GetObject(stateItem.State);
+            object obj = stateItem.State;
 
             if (obj == null || obj.ToString() == "0")
                 return;
@@ -85,9 +85,9 @@ namespace THOK.XC.Process.Process_02
                         palletcode = dt.Rows[0]["PALLET_CODE"].ToString();
                     }
                     WriteToService("StockPLC_02", WriteItem + "_1", writestate);
-                    sbyte [] b=new sbyte[90];
-                    Common.ConvertStringChar.stringToBytes(barcode, 40).CopyTo(b, 0);
-                    Common.ConvertStringChar.stringToBytes(palletcode, 50).CopyTo(b, 40);
+                    sbyte [] b=new sbyte[190];
+                    Common.ConvertStringChar.stringToBytes(barcode, 80).CopyTo(b, 0);
+                    Common.ConvertStringChar.stringToBytes(palletcode, 110).CopyTo(b, 80);
                     WriteToService("StockPLC_02", WriteItem + "_2", b);
 
                     WriteToService("StockPLC_02", WriteItem + "_3", 1);

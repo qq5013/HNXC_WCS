@@ -226,6 +226,19 @@ namespace THOK.XC.Process.Dal
             }
  
         }
+        /// <summary>
+        /// 小车待出库任务数量
+        /// </summary>
+        /// <param name="strWhere"></param>
+        /// <returns></returns>
+        public int CarTaskInfo()
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                TaskDao dao = new TaskDao();
+                return dao.CarTaskInfo();
+            }
+        }
 
         /// <summary>
         /// 根据单号，返回任务数量

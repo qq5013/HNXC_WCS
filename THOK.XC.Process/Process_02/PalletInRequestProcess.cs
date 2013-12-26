@@ -30,9 +30,9 @@ namespace THOK.XC.Process.Process_02
 
                 //判断是否还有出库任务
                 TaskDal dal = new TaskDal();
-                DataTable dtTask = dal.TaskInfo("TASK_TYPE='22' AND STATE IN (0,1)");
+                int TaskOutCount = dal.CarTaskInfo();
 
-                if (PalletCount >= 5 || dtTask.Rows.Count <= 4)
+                if (PalletCount >= 4 || TaskOutCount <= 4)
                 {
                     PalletBillDal Billdal = new PalletBillDal();
                     TaskID = Billdal.CreatePalletInBillTask(false);

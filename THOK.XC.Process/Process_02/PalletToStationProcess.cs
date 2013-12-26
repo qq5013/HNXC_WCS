@@ -56,10 +56,9 @@ namespace THOK.XC.Process.Process_02
                     DataTable dtstation = sysdal.GetSationInfo(CellCode, "21","4");
                     dal.UpdateTaskDetailCrane(dtstation.Rows[0]["STATION_NO"].ToString(), CellCode, "0", dtstation.Rows[0]["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO=4", strValue[0]));//更新调度堆垛机的其实位置及目标地址。
 
-                    DataTable dt = dal.CraneTaskIn(string.Format("TASK_ID='{0}' and ITEM_NO='4'", strValue[0]));
+                    DataTable dt = dal.CraneTaskIn(string.Format("TASK.TASK_ID='{0}' and ITEM_NO='4'", strValue[0]));
                     if (dt.Rows.Count > 0)
                     {
-                        dt = dal.CraneTaskIn(string.Format("TASK.TASK_ID='{0}' AND ITEM_NO='4'", strValue[0]));
                         WriteToProcess("CraneProcess", "CraneInRequest", dt);
                     }
                 }
