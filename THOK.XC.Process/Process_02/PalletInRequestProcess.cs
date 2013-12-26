@@ -47,10 +47,10 @@ namespace THOK.XC.Process.Process_02
                     ProductStateDal StateDal = new ProductStateDal();
                     StateDal.UpdateProductCellCode(CellValue[0], CellValue[1]); //更新Product_State 货位
                     dal.UpdateTaskDetailStation("357", "359", "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", CellValue[0])); //更新货位申请起始地址及目标地址。
- 
 
 
-                    strWhere = string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=2", TaskID);
+
+                    strWhere = string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=2 AND DETAIL.STATE=0 ", TaskID);
                     DataTable dt = dal.TaskCarDetail(strWhere);
                     WriteToProcess("CarProcess", "CarInRequest", dt);
                 }

@@ -19,11 +19,11 @@ namespace THOK.XC.Process.Process_02
             */
             try
             {
-                object[] obj = ObjectUtil.GetObjects(stateItem.State);
-                if (obj[0] == null || obj[0].ToString() == "0")
+                object obj = ObjectUtil.GetObjects(stateItem.State);
+                if (obj == null || obj.ToString() == "0")
                     return;
 
-                string TaskNo = obj[0].ToString().PadLeft(4, '0');
+                string TaskNo = obj.ToString().PadLeft(4, '0');
                 TaskDal dal = new TaskDal();
                 string[] strValue = dal.GetTaskInfo(TaskNo);
 
@@ -33,17 +33,18 @@ namespace THOK.XC.Process.Process_02
                 {
                     case "02_1_340_1":
                         WriteItem = "02_2_340";
-                        ReadItem = "02_1_340_2";
+                        ReadItem = "02_1_340_";
                         break;
                     case "02_1_360_1":
                         WriteItem = "02_2_360";
-                        ReadItem = "02_1_360_2";
+                        ReadItem = "02_1_360_";
                         break;
 
                 }
-                if (obj[1].ToString() == "1")
+                object objCheck = ObjectUtil.GetObject(WriteToService("StockPLC_02", ReadItem + "2"));
+                if (objCheck.ToString() == "0")
                 {
-                    string BarCode = Common.ConvertStringChar.BytesToString(ObjectUtil.GetObjects(WriteToService("StockPLC_02", ReadItem)));
+                    string BarCode = Common.ConvertStringChar.BytesToString(ObjectUtil.GetObjects(WriteToService("StockPLC_02", ReadItem+"3")));
                     dal.UpdateTaskCheckBarCode(strValue[0], BarCode);
                 }
                 WriteToService("StockPLC_02", WriteItem + "_3", 1);

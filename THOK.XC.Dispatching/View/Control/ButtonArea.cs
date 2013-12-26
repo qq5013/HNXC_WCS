@@ -264,7 +264,7 @@ namespace THOK.XC.Dispatching.View
                     dal.UpdateTaskState(strInfo[0], "2");
 
                     BillDal billdal = new BillDal();
-                    billdal.UpdateBillMasterFinished(strInfo[1],"1");
+                    billdal.UpdateInBillMasterFinished(strInfo[1],"1");
                     Context.ProcessDispatcher.WriteToService("StockPLC_01", writeItem + "1", 1); //PLC写入任务
                 }
                 break;
@@ -479,7 +479,7 @@ namespace THOK.XC.Dispatching.View
 
                                 psdal.UpdateOutBillNo(strTask[0]); //更新出库单
 
-                                DataTable dtCar = dal.TaskCarDetail(string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=3", strTask[0])); //获取任务ID
+                                DataTable dtCar = dal.TaskCarDetail(string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=3 AND DETAIL.STATE=0 ", strTask[0])); //获取任务ID
                                 Context.ProcessDispatcher.WriteToProcess("CarProcess", "CarOutRequest", dtCar);  //调度小车；
                             }
                             else
@@ -492,7 +492,7 @@ namespace THOK.XC.Dispatching.View
                                 dal.UpdateTaskDetailStation(FromStation, ToStation, "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", CancelTaskID)); //更新申请货位完成。
                                 dal.UpdateTaskState(strTask[0], "2");//更新出库任务完成
 
-                                string strWhere = string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=2", CancelTaskID);
+                                string strWhere = string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=2 AND DETAIL.STATE=0 ", CancelTaskID);
                                 DataTable dt = dal.TaskCarDetail(strWhere);
                                 Context.ProcessDispatcher.WriteToProcess("CarProcess", "CarInRequest", dt);//调度穿梭车入库。
 
@@ -547,7 +547,7 @@ namespace THOK.XC.Dispatching.View
                 dal.UpdateTaskState(strInfo[0], "2");
 
                 BillDal billdal = new BillDal();
-                billdal.UpdateBillMasterFinished(strInfo[1], "1");
+                billdal.UpdateInBillMasterFinished(strInfo[1], "1");
 
                 string writeItem = "01_2_122_";
 

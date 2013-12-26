@@ -12,7 +12,6 @@ namespace THOK.XC.Process.Process_Crane
     {
         private DataTable dtCrane;
         private Dictionary<string, string> dCraneState = new Dictionary<string, string>(); //堆垛机状态表  ""，表示状态未知，发送报文获取堆垛机状态。 0：空闲，1：执行中
-        private DataTable dtOrderCrane;
         private Dictionary<string, DataRow> dCraneWait = new Dictionary<string, DataRow>(); //堆垛机待入库。 0：空闲，1：执行中
         
         private DataTable dtSendCRQ;
@@ -78,19 +77,21 @@ namespace THOK.XC.Process.Process_Crane
                         break;
                     case "StockOutToCarStation": //烟包经过扫描，正确烟包更新为3，错误更新为4.
                         string []strdd = (string[])stateItem.State;
-                        DataRow[] drs = dtCrane.Select(string.Format("TASK_ID='{0}'", strdd[0]));
-                        if (drs.Length > 0)
+                        if (dtCrane != null)
                         {
-                            TaskDal tdal = new TaskDal();
-                            tdal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=1", drs[0]["TASK_ID"].ToString()), "2");
+                            DataRow[] drs = dtCrane.Select(string.Format("TASK_ID='{0}'", strdd[0]));
+                            if (drs.Length > 0)
+                            {
+                                TaskDal tdal = new TaskDal();
+                                tdal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=1", drs[0]["TASK_ID"].ToString()), "2");
 
-                            ProductStateDal psdal = new ProductStateDal();
-                            psdal.UpdateOutBillNo(strdd[0]);
-                            dtCrane.Rows.Remove(drs[0]);
+                                ProductStateDal psdal = new ProductStateDal();
+                                psdal.UpdateOutBillNo(strdd[0]);
+                                dtCrane.Rows.Remove(drs[0]);
 
+                            }
+                            CraneThreadStart(); //更新完成之后，线程调用堆垛机，避免堆垛机因调度原因而是堆垛机没有任务。
                         }
-                        CraneThreadStart(); //更新完成之后，线程调用堆垛机，避免堆垛机因调度原因而是堆垛机没有任务。
-
                         break;
 
                     case "CraneInRequest":  //货物到达入库站台，调用堆垛机
@@ -224,52 +225,52 @@ namespace THOK.XC.Process.Process_Crane
             return blnSend;
         }
 
-        /// <summary>
-        /// 能否发送出库报文。
-        /// </summary>
-        /// <param name="TaskID"></param>
-        /// <returns></returns>
-        private bool ProductCanOut(DataRow drTaskID)
-        {
+        ///// <summary>
+        ///// 能否发送出库报文。
+        ///// </summary>
+        ///// <param name="TaskID"></param>
+        ///// <returns></returns>
+        //private bool ProductCanOut(DataRow drTaskID)
+        //{
             
-            bool blnvalue = false;
-            DataRow[] drs = dtCrane.Select(string.Format("BILL_NO='{0}' and PRODUCT_CODE='{1}' and IS_MIX='{2}' and STATE=1", drTaskID["BILL_NO"], drTaskID["PRODUCT_CODE"], drTaskID["IS_MIX"]));   //判断当前单号，当前产品，当前形态是否有state=1的出库任务，有则返回true;
-            if (drs.Length > 0)
-            {
-                blnvalue = true;
-            }
-            else
-            {
+        //    bool blnvalue = false;
+        //    DataRow[] drs = dtCrane.Select(string.Format("BILL_NO='{0}' and PRODUCT_CODE='{1}' and IS_MIX='{2}' and STATE=1", drTaskID["BILL_NO"], drTaskID["PRODUCT_CODE"], drTaskID["IS_MIX"]));   //判断当前单号，当前产品，当前形态是否有state=1的出库任务，有则返回true;
+        //    if (drs.Length > 0)
+        //    {
+        //        blnvalue = true;
+        //    }
+        //    else
+        //    {
 
-                drs = dtOrderCrane.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and IS_MIX={2} and FORDER={3} and PRODUCT_CODE={4}", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["IS_MIX"], drTaskID["FORDER"], drTaskID["PRODUCT_CODE"] }));
-                if (drs.Length > 0)
-                {
-                    drs = dtOrderCrane.Select(string.Format("Index<{0}", drs[0]["Index"]));
-                    if (drs.Length > 0)
-                    {
-                        for (int i = 0; i < drs.Length; i++)
-                        {
-                            drs = dtCrane.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and IS_MIX={2} and FORDER={3} and PRODUCT_CODE={4} and TASK_TYPE='22' and STATE in (0,1,2)", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["IS_MIX"], drTaskID["FORDER"], drTaskID["PRODUCT_CODE"] }));//判断小于当前Index的出库任务，是否有未完成的出库任务，如果没有，则返回True.
-                            if (drs.Length == 0)
-                            {
-                                blnvalue = true;
-                            }
-                            else
-                            {
-                                blnvalue = false;
-                                break;
-                            }
+        //        drs = dtOrderCrane.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and IS_MIX={2} and FORDER={3} and PRODUCT_CODE={4}", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["IS_MIX"], drTaskID["FORDER"], drTaskID["PRODUCT_CODE"] }));
+        //        if (drs.Length > 0)
+        //        {
+        //            drs = dtOrderCrane.Select(string.Format("Index<{0}", drs[0]["Index"]));
+        //            if (drs.Length > 0)
+        //            {
+        //                for (int i = 0; i < drs.Length; i++)
+        //                {
+        //                    drs = dtCrane.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and IS_MIX={2} and FORDER={3} and PRODUCT_CODE={4} and TASK_TYPE='22' and STATE in (0,1,2)", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["IS_MIX"], drTaskID["FORDER"], drTaskID["PRODUCT_CODE"] }));//判断小于当前Index的出库任务，是否有未完成的出库任务，如果没有，则返回True.
+        //                    if (drs.Length == 0)
+        //                    {
+        //                        blnvalue = true;
+        //                    }
+        //                    else
+        //                    {
+        //                        blnvalue = false;
+        //                        break;
+        //                    }
 
-                        }
-                    }
-                    else
-                    {
-                        blnvalue = true;
-                    }
-                }                
-            }
-            return blnvalue;
-        }
+        //                }
+        //            }
+        //            else
+        //            {
+        //                blnvalue = true;
+        //            }
+        //        }                
+        //    }
+        //    return blnvalue;
+        //}
 
         /// <summary>
         ///  接收ACP后，根据获取的任务类型，重新获取新的TaskID;
@@ -369,23 +370,6 @@ namespace THOK.XC.Process.Process_Crane
                 dtCrane.Rows.Add(obj);
             }
             dtCrane.AcceptChanges();
-            if (drs.Length > 0) //重新排序
-            {
-                DataTable dtOrder = dtCrane.DefaultView.ToTable(true, new string[] { "TASK_TYPE", "TASK_LEVEL", "IS_MIX", "FORDER", "PRODUCT_CODE" });
-                dtOrderCrane = new DataTable();
-                dtOrderCrane = dtOrder.Clone();
-                DataColumn dc = new DataColumn("Index", Type.GetType("System.Int32"));
-                dtOrderCrane.Columns.Add(dc);
-
-                drs = dtOrder.Select("TASK_TYPE=22", "TASK_LEVEL desc,IS_MIX,FORDER,PRODUCT_CODE");
-                obj = new object[dtOrderCrane.Columns.Count];
-                for (int i = 0; i < drs.Length; i++)
-                {
-                    drs[i].ItemArray.CopyTo(obj, 0);
-                    obj[dtOrderCrane.Columns.Count] = i + 1;
-                    dtOrderCrane.Rows.Add(obj);
-                }
-            }
         }
 
         /// <summary>
@@ -516,7 +500,7 @@ namespace THOK.XC.Process.Process_Crane
                     string isBill = "1";
                     if (drs[0]["PRODUCT_CODE"].ToString() == "0000")
                         isBill = "0";
-                    billdal.UpdateBillMasterFinished(drs[0]["BILL_NO"].ToString(), isBill);//更新表单
+                    billdal.UpdateInBillMasterFinished(drs[0]["BILL_NO"].ToString(), isBill);//更新表单
 
                 }
                 else if(TaskType=="14")
@@ -567,7 +551,7 @@ namespace THOK.XC.Process.Process_Crane
                             string isBill = "1";
                             if (drs[0]["PRODUCT_CODE"].ToString() == "0000")
                                 isBill = "0";
-                            billdal.UpdateBillMasterFinished(drs[0]["BILL_NO"].ToString(), isBill);//更新表单
+                            billdal.UpdateInBillMasterFinished(drs[0]["BILL_NO"].ToString(), isBill);//更新表单
 
                         }
 
@@ -585,7 +569,7 @@ namespace THOK.XC.Process.Process_Crane
                         string isBill = "1";
                         if (drs[0]["PRODUCT_CODE"].ToString() == "0000")
                             isBill = "0";
-                        billdal.UpdateBillMasterFinished(drs[0]["BILL_NO"].ToString(), isBill);//更新表单
+                        billdal.UpdateInBillMasterFinished(drs[0]["BILL_NO"].ToString(), isBill);//更新表单
 
                     }
                     #endregion

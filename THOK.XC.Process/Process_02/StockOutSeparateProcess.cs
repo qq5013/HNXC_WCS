@@ -24,20 +24,26 @@ namespace THOK.XC.Process.Process_02
 
             string WriteItem="";
             string FromStation = "";
+            string strTaskItem = "";
+            object objTaskNo;
             try
             {
                 switch (stateItem.ItemName)
                 {
-                    case "02_1_372":
+                    case "02_1_372_1":
                         FromStation = "372";
                         WriteItem = "02_2_372";
+                        strTaskItem = "02_1_372_2";
+                        
                         break;
-                    case "02_1_392":
+                    case "02_1_392_1":
                         FromStation = "392";
                         WriteItem = "02_2_392";
+                        strTaskItem = "02_1_392_2";
                         break;
                 }
-                string TaskNo = obj.ToString().PadLeft(4, '0');
+                objTaskNo = ObjectUtil.GetObject(WriteToService("StockPLC_02", strTaskItem));
+                string TaskNo = objTaskNo.ToString().PadLeft(4, '0');
                 TaskDal dal = new TaskDal();
                 string[] strValue = dal.GetTaskInfo(TaskNo);
                 if (!string.IsNullOrEmpty(strValue[0]))

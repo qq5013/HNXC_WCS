@@ -35,7 +35,7 @@ namespace THOK.XC.Process.Process_01
                     dal.UpdateTaskState(strInfo[0], "2");
 
                     BillDal billdal = new BillDal();
-                    billdal.UpdateBillMasterFinished(strInfo[1],"1");
+                    billdal.UpdateInBillMasterFinished(strInfo[1],"1");
 
                     string writeItem = "01_2_122_";
 

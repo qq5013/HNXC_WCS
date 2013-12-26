@@ -73,12 +73,25 @@ namespace THOK.XC.Process.Dal
         /// </summary>
         /// <param name="BillNo"></param>
         /// <param name="IsBill"></param>
-        public void UpdateBillMasterFinished(string BillNo,string IsBill)
+        public void UpdateInBillMasterFinished(string BillNo,string IsBill)
         {
             using (PersistentManager pm = new PersistentManager())
             {
                 BillDao dao = new BillDao();
-                dao.UpdateBillMasterFinished(BillNo,IsBill);
+                dao.UpdateInBillMasterFinished(BillNo,IsBill);
+            }
+        }
+        /// <summary>
+        /// 单据出库完成
+        /// </summary>
+        /// <param name="BillNo"></param>
+        /// <param name="IsBill"></param>
+        public void UpdateOutBillMasterFinished(string BillNo)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                BillDao dao = new BillDao();
+                dao.UpdateOutBillMasterFinished(BillNo);
             }
         }
         /// <summary>

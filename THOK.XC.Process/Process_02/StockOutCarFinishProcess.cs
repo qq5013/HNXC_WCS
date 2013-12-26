@@ -21,7 +21,7 @@ namespace THOK.XC.Process.Process_02
              * 
              *  stateItem.State ：参数 - 请求的卷烟编码。        
             */
-            object obj = ObjectUtil.GetObject(stateItem.State);
+            object obj =stateItem.State;
 
             if (obj == null || obj.ToString() == "0")
                 return;
@@ -58,9 +58,10 @@ namespace THOK.XC.Process.Process_02
                     if (dt.Rows.Count > 0)
                     {
                         int[] WriteValue = new int[3];
-                        WriteValue[0] = int.Parse(FromStation);
-                        WriteValue[1] = int.Parse(ToStation);
-                        WriteValue[2] = 1;
+                        WriteValue[0] = int.Parse(TaskNo);
+                        WriteValue[1] = int.Parse(FromStation);
+                        WriteValue[2] = int.Parse(ToStation);
+                        
                         WriteToService("StockPLC_02", WriteItem + "_1", WriteValue);
 
                         string barcode = dt.Rows[0]["PRODUCT_BARCODE"].ToString();

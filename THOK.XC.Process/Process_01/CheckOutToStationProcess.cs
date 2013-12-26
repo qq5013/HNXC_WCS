@@ -45,7 +45,7 @@ namespace THOK.XC.Process.Process_01
                         dal.UpdateTaskState(strInfo[0], "2");
 
                         BillDal billdal = new BillDal();
-                        billdal.UpdateBillMasterFinished(strInfo[1],"1");
+                        billdal.UpdateInBillMasterFinished(strInfo[1],"1");
 
                         int[] ServiceW = new int[3];
                         ServiceW[0] = int.Parse(strInfo[1]); //任务号

@@ -506,6 +506,42 @@ namespace THOK.XC.Process.Dal
                 dao.UpdateOutChannelTime(TaskID);
             }
         }
+        /// <summary>
+        /// 获取分配的缓存道
+        /// </summary>
+        /// <param name="TaskNO"></param>
+        /// <param name="BillNo"></param>
+        /// <returns></returns>
+        public string GetChannelFromTask(string TaskNO, string BillNo)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                ChannelDao dao = new ChannelDao();
+                return dao.GetChannelFromTask(TaskNO, BillNo);
+            }
+        }
+
+        /// <summary>
+        /// 更新出库
+        /// </summary>
+        public int UpdateInChannelAndTime(string TaskID, string Bill_No, string ChannelNo)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                int strValue = 0;
+                ChannelDao dao = new ChannelDao();
+                int count = dao.ProductCount(Bill_No);
+                TaskDao tdao = new TaskDao();
+
+                int taskCount = tdao.TaskCount(Bill_No);
+                if (count == 0)
+                    strValue = 1;
+                if (count == taskCount - 1)
+                    strValue = 2;
+                dao.UpdateInChannelAndTime(TaskID, Bill_No, ChannelNo);
+                return strValue;
+            }
+        }
        
     }
 }

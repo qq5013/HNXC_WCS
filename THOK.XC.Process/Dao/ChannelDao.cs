@@ -88,5 +88,33 @@ namespace THOK.XC.Process.Dao
             string strSQL = string.Format("UPDATE WCS_PRODUCT_CACHE SET STATE=1,OUT_DATE =SYSDATE WHERE TASK_ID='{0}'", TaskID);
             ExecuteNonQuery(strSQL);
         }
+
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="TaskNO"></param>
+        /// <param name="BillNo"></param>
+        /// <returns></returns>
+        public string GetChannelFromTask(string TaskNO, string BillNo)
+        {
+            string strValue = "";
+            string strSQL = string.Format("SELECT CHANNEL_NO FROM WCS_PRODUCT_CACHE WHERE TASK_NO='{0}' AND BILL_NO='{1}'", TaskNO, BillNo);
+            DataTable dt = ExecuteQuery(strSQL).Tables[0];
+            if (dt.Rows.Count > 0)
+                strValue = dt.Rows[0][0].ToString();
+            return strValue;
+        }
+
+        /// <summary>
+        /// 更新进入
+        /// </summary>
+        public void UpdateInChannelAndTime(string TaskID, string Bill_No, string ChannelNo)
+        {
+
+
+            string strSQL = string.Format("UPDATE WCS_PRODUCT_CACHE SET ORDER_NO=(SELECT COUNT(*) FROM WCS_PRODUCT_CACHE WHERE BILL_NO='{0}')+1,IN_DATE =SYSDATE,CHANNEL_NO='{2}' " +
+                                          "WHERE TASK_ID='{0}' AND BILL_NO='{1}' ", TaskID, Bill_No, ChannelNo);
+            ExecuteNonQuery(strSQL);
+        }
     }
 }

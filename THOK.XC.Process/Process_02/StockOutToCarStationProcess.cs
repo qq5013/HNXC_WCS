@@ -95,7 +95,7 @@ namespace THOK.XC.Process.Process_02
                         ProductStateDal psdal = new ProductStateDal();
                         psdal.UpdateOutBillNo(strTask[0]); //更新出库单
 
-                        DataTable dt = dal.TaskCarDetail(string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=3", strTask[0])); //获取任务ID
+                        DataTable dt = dal.TaskCarDetail(string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=3 AND DETAIL.STATE=0 ", strTask[0])); //获取任务ID
                         WriteToProcess("CarProcess", "CarOutRequest", dt);  //调度小车；
 
                     }
@@ -129,7 +129,7 @@ namespace THOK.XC.Process.Process_02
                                     ProductStateDal psdal = new ProductStateDal();
                                     psdal.UpdateOutBillNo(strTask[0]); //更新出库单
 
-                                    DataTable dtCar = dal.TaskCarDetail(string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=3", strTask[0])); //获取任务ID
+                                    DataTable dtCar = dal.TaskCarDetail(string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=3 AND DETAIL.STATE=0 ", strTask[0])); //获取任务ID
                                     WriteToProcess("CarProcess", "CarOutRequest", dtCar);  //调度小车；
                                 }
                                 else
@@ -142,7 +142,7 @@ namespace THOK.XC.Process.Process_02
                                     dal.UpdateTaskDetailStation(FromStation, ToStation, "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", CancelTaskID)); //更新申请货位完成。
                                     dal.UpdateTaskState(strTask[0], "2");//更新出库任务完成
 
-                                    string strWhere = string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=2", CancelTaskID);
+                                    string strWhere = string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=2 AND DETAIL.STATE=0 ", CancelTaskID);
                                     DataTable dt = dal.TaskCarDetail(strWhere);
                                     if (dt.Rows.Count > 0) //更新入库位置
                                     {
