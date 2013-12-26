@@ -632,8 +632,23 @@ namespace THOK.XC.Process.Dao
         /// <returns></returns>
         public int CarTaskInfo()
         {
-            string strSQL = "SELECT TASK.TASK_ID,ITEM_NO FROM WCS_TASK_DETAIL DETAIL LEFT JOIN WCS_TASK TASK ON DETAIL.TASK_ID=TASK.TASK_ID  WHERE ITEM_NO=3 AND TASK_TYPE='22' AND DETAIL.STATE IN (0,1)";
+            string strSQL = "SELECT TASK.TASK_ID,ITEM_NO FROM WCS_TASK_DETAIL DETAIL LEFT JOIN WCS_TASK TASK ON DETAIL.TASK_ID=TASK.TASK_ID  WHERE ITEM_NO=3 AND TASK_TYPE='22' AND DETAIL.STATE=0";
             return ExecuteQuery(strSQL).Tables[0].Rows.Count;
+        }
+
+         /// <summary>
+        /// 二楼托盘组入库申请，判断是否有排程，小车未接货的任务。
+        /// </summary>
+        /// <param name="BillNo"></param>
+        /// <returns></returns>
+        public string GetPalletInTask()
+        {
+            string strvalue = "";
+            string strSQL = "SELECT TASK.TASK_ID,ITEM_NO FROM WCS_TASK_DETAIL DETAIL LEFT JOIN WCS_TASK TASK ON DETAIL.TASK_ID=TASK.TASK_ID WHERE ITEM_NO=2 AND TASK_TYPE='21' AND DETAIL.STATE=0 AND PRODUCT_CODE='0000'";
+            DataTable dt = ExecuteQuery(strSQL).Tables[0];
+            if (dt.Rows.Count > 0)
+                strvalue = dt.Rows[0]["TASK_ID"].ToString();
+            return strvalue;
         }
 
        

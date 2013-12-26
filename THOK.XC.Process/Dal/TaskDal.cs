@@ -336,6 +336,20 @@ namespace THOK.XC.Process.Dal
                 return dao.SeparateTaskDetailStart(TaskID);
             }
         }
+        /// <summary>
+        /// 二楼托盘组入库申请，判断是否有排程，小车未接货的任务。
+        /// </summary>
+        /// <param name="BillNo"></param>
+        /// <returns></returns>
+        public  string GetPalletInTask()
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                TaskDao dao = new TaskDao();
+                return dao.GetPalletInTask();
+            }
+
+        }
 
     }
 }
