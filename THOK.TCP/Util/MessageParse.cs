@@ -56,8 +56,8 @@ namespace THOK.TCP.Util
             Message message = null;
             try
             {
-                string confirmFlag = msg.Substring(0, 1);
-                string seqno = msg.Substring(1, 4);
+                string confirmFlag = msg.Substring(1, 1);
+                string seqno = msg.Substring(2, 4);
                 string sender = msg.Substring(12, 6);
                 string command = msg.Substring(18, 3);
                 string receiver = msg.Substring(6, 6);
