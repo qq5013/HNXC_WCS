@@ -40,8 +40,7 @@ namespace THOK.MCP.Service.TCP
             WriteToLog(text);
 
             if (message.Parsed)
-                DispatchState(message.Command, message);
-                //DispatchState(message.Command, message.Parameters);
+                DispatchState(message.Command, message.Parameters);
            
         }
 
