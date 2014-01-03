@@ -10,7 +10,14 @@
 
         public Writer(Socket socket)
         {
-            this.stream = new NetworkStream(socket);
+            try
+            {
+                this.stream = new NetworkStream(socket);
+            }
+            catch (Exception ex)
+            {
+                string str = ex.Message;
+            }
         }
 
         internal void Close()
