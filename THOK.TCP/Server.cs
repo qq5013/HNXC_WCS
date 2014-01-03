@@ -42,6 +42,7 @@
             while (this.isRun)
             {
                 Socket client = this.server.Accept();
+                client.Blocking = true;
                 ClientThread thread = new ClientThread(this, client);
                 thread.OnReceive += this.OnReceive;
                 thread.OnDisconnect += this.OnDisconnect;

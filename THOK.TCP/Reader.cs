@@ -22,10 +22,23 @@
 
         public string Read()
         {
-            if (!this.hasRead)
+            try
             {
-                this.strMsg = new StreamReader(this.stream).ReadLine();
-                this.hasRead = true;
+                if (!this.hasRead)
+                {
+                    //this.strMsg = new StreamReader(this.stream).ReadLine();
+
+                    //StreamReader sr = new StreamReader(this.stream);
+                    //string ss = sr.ReadLine();
+                    byte[] buff = new byte[1024];
+                    int i = this.stream.Read(buff,0, buff.Length);
+                    strMsg = System.Text.Encoding.Default.GetString(buff, 0, i);
+                    this.hasRead = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                string str = ex.Message;
             }
             return this.strMsg;
         }
