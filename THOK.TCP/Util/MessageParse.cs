@@ -63,6 +63,8 @@ namespace THOK.TCP.Util
                 string receiver = msg.Substring(6, 6);
                 string telegramData = msg.Substring(18, msg.Length-21);
                 Dictionary<string, string> parameters = this.GetParameters(telegramData);
+                parameters.Add("ConfirmFlag", confirmFlag);
+                parameters.Add("SeqNo", seqno);
                 message = new Message(msg, confirmFlag, seqno,sender, command, receiver, parameters);
             }
             catch
