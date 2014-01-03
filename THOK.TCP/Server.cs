@@ -101,11 +101,11 @@
             for (int i = 0; i < this.clients.Count; i++)
             {
                 ClientThread thread = (ClientThread) this.clients[i];
-                if (thread.RemoteAddress.Equals(remoteAddress))
-                {
+                //if (thread.RemoteAddress.Equals(remoteAddress))
+                //{
                     thread.Write(msg);
                     return;
-                }
+            //}
             }
         }
 

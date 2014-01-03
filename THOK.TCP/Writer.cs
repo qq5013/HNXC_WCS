@@ -27,9 +27,10 @@
 
         public void Write(string msg)
         {
-            StreamWriter writer = new StreamWriter(this.stream);
-            writer.WriteLine(msg);
-            writer.Flush();
+            //StreamWriter writer = new StreamWriter(this.stream);
+            Byte[] sendBytes = System.Text.Encoding.Default.GetBytes(msg);
+            this.stream.Write(sendBytes, 0, sendBytes.Length);
+            //writer.Flush();
         }
     }
 }

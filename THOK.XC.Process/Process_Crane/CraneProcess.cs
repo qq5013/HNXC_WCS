@@ -164,7 +164,7 @@ namespace THOK.XC.Process.Process_Crane
                 return true;
             TaskDal dal = new TaskDal();
             DataRow drTaskCrane = null;
-            if (drTaskID==null) //出库任务调用堆垛机
+            if (drTaskID==null && dtCrane!=null) //出库任务调用堆垛机
             {
                 //读取二楼出库站台是否有烟包，PLC
                 DataRow[] drs = dtCrane.Select(string.Format("CRANE_NO='{0}' and STATE=0 and TASK_TYPE in ('12','22','13','14')", CraneNo), "TASK_LEVEL,TASK_DATE,BILL_NO,IS_MIX,PRODUCT_CODE,TASK_ID"); //按照任务等级，任务时间，产品形态，
@@ -705,6 +705,9 @@ namespace THOK.XC.Process.Process_Crane
                 }
                 Logger.Error(string.Format("堆垛机{0}返回错误代码{1}{2}", msg["CraneNo"], msg["ReturnCode"], ""));
             }
+            string str = "<10010CRAN30THOK01ACK0001000>";
+            
+            WriteToService("Crane", "ACK", str);
 
         }
         /// <summary>
@@ -865,7 +868,8 @@ namespace THOK.XC.Process.Process_Crane
 
             THOK.CRANE.TelegramFraming tf = new CRANE.TelegramFraming();
             string QuenceNo = GetNextSQuenceNo();
-            string str = tf.DataFraming("1" + QuenceNo, tgd, tf.TelegramARQ);
+            string str = "<00000THOK01CRAN30ACK0000200>";
+            tf.DataFraming("1" + QuenceNo, tgd, tf.TelegramARQ);
             WriteToService("Crane", "ARQ", str);
          
 
