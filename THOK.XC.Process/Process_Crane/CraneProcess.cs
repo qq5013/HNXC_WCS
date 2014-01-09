@@ -16,6 +16,7 @@ namespace THOK.XC.Process.Process_Crane
         
         private DataTable dtSendCRQ;
         private DataTable dtErrMesage;
+        private int NCK001;
         
         public override void Initialize(Context context)
         {
@@ -25,7 +26,7 @@ namespace THOK.XC.Process.Process_Crane
 
                 CraneErrMessageDal errDal = new CraneErrMessageDal();
                 dtErrMesage = errDal.GetErrMessageList();
-
+                NCK001 = 100;
 
                 for (int i = 1; i <= 6; i++)
                 {
@@ -46,8 +47,8 @@ namespace THOK.XC.Process.Process_Crane
         }
 
 
-      
-        
+
+
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
         {
             /*  处理事项：
@@ -73,10 +74,10 @@ namespace THOK.XC.Process.Process_Crane
                         }
                         InsertCraneQuene(dtSend[0]);
                         CraneThreadStart();//线程调度堆垛机
-                      
+
                         break;
                     case "StockOutToCarStation": //烟包经过扫描，正确烟包更新为3，错误更新为4.
-                        string []strdd = (string[])stateItem.State;
+                        string[] strdd = (string[])stateItem.State;
                         if (dtCrane != null)
                         {
                             DataRow[] drs = dtCrane.Select(string.Format("TASK_ID='{0}'", strdd[0]));
@@ -113,6 +114,9 @@ namespace THOK.XC.Process.Process_Crane
                         THOK.CRANE.TelegramFraming tf = new CRANE.TelegramFraming();
                         string str = tf.DataFraming("00000", tgd, tf.TelegramDUA);
                         WriteToService("Crane", "DUA", str);
+                        break;
+                    case "DUU":
+                        WriteToService("Crane", "DUM", "<00000CRAN30THOK01DUM0000000>");
                         break;
                     case "NCK":
                         NCK(stateItem.State);
@@ -380,33 +384,6 @@ namespace THOK.XC.Process.Process_Crane
             //ThreadStart starter1 = delegate { SendTelegram("01", null); };
             //new Thread(starter1).Start();
 
-            //ThreadStart starter2 = delegate { SendTelegram("02", null); };
-            //new Thread(starter2).Start();
-
-            //ThreadStart starter3 = delegate { SendTelegram("03", null); };
-            //new Thread(starter3).Start();
-
-            //ThreadStart starter4 = delegate { SendTelegram("04", null); };
-            //new Thread(starter4).Start();
-
-            //ThreadStart starter5 = delegate { SendTelegram("05", null); };
-            //new Thread(starter5).Start();
-
-            //ThreadStart starter6 = delegate { SendTelegram("06", null); };
-            //new Thread(starter6).Start();
-
-            for (int i = 1; i <= 6; i++)
-            {
-                string CraneNo = i.ToString().PadLeft(2, '0');
-                if (!dCraneState.ContainsKey(CraneNo))
-                {
-                    dCraneState.Add(CraneNo, "");
-                }
-                SendTelegramCRQ(CraneNo);
-                //发送请求堆垛机状态报文
-            }
-
-
             SendTelegram("01", null);
             SendTelegram("02", null);
             SendTelegram("03", null);
@@ -421,248 +398,211 @@ namespace THOK.XC.Process.Process_Crane
         private void ACP(object state)
         {
             Dictionary<string, string> msg = (Dictionary<string, string>)state;
+            TaskDal dal = new TaskDal();
             if (!dCraneState.ContainsKey(msg["CraneNo"]))
             {
                 dCraneState.Add(msg["CraneNo"], "");
             }
-           
+            DataRow dr = null;
+            if (dtCrane != null)
+            {
+                DataRow[] drs = dtCrane.Select(string.Format("SQUENCE_NO='{0}'", msg["SequenceNo"]));
+                if (drs.Length > 0)
+                {
+                    dr = drs[0];
+                }
+            }
+            if (dr == null)
+            {
+                //根据流水号，获取资料
+                DataTable dt = dal.CraneTaskIn(string.Format("DETAIL.SQUENCE_NO='{1}' AND DETAIL.CRANE_NO='{0}'", msg["CraneNo"], msg["SequenceNo"]));
+                if (dt.Rows.Count > 0)
+                    dr = dt.Rows[0];
+
+            }
+            string TaskType = "";
+            string TaskID = ""; 
+            string ItemNo = "";
+            if (dr != null)
+            {
+                TaskType = dr["TASK_TYPE"].ToString();
+                TaskID = dr["TASK_ID"].ToString();
+                ItemNo = dr["ITEM_NO"].ToString();
+            }
             if (msg["ReturnCode"] == "000")
             {
                 #region 正常处理流程
-                DataRow[] drs = dtCrane.Select(string.Format("ASSIGNMENT_ID='{0}'", msg["AssignmenID"]));
-                DataRow dr = drs[0];
-                drs[0].BeginEdit();
-                drs[0]["state"] = "2";
-                drs[0].EndEdit();
-                dtCrane.AcceptChanges();
-                if (dCraneWait[msg["CraneNo"]] != null)
+
+                if (dr != null)
                 {
-                    if (dCraneWait[msg["CraneNo"]]["TASK_ID"].ToString() == drs[0]["TASK_ID"].ToString())
+                    if (dCraneWait[msg["CraneNo"]] != null)
                     {
-                        dCraneWait[msg["CraneNo"]] = null;
+                        if (dCraneWait[msg["CraneNo"]]["TASK_ID"].ToString() == TaskID)
+                        {
+                            dCraneWait[msg["CraneNo"]] = null;
+                        }
                     }
-                }
-                string TaskType = drs[0]["TASK_TYPE"].ToString();
-                string TASK_ID = drs[0]["TASK_ID"].ToString();
-                string ItemNo = dr["ITEM_NO"].ToString();
-                TaskDal dal = new TaskDal();
 
-                string strWhere = string.Format("TASK_ID='{0}' and ITEM_NO='{1}'", drs[0]["TASK_ID"], ItemNo);
-                dal.UpdateTaskDetailState(strWhere, "2"); //更新堆垛机状态
-                if (TaskType.Substring(1, 1) == "2" || (TaskType.Substring(1, 1) == "3" && ItemNo == "1")) //出库，一楼盘点出库
-                {
-                    if (TaskType == "12") //一楼出库
+
+
+                    string strWhere = string.Format("TASK_ID='{0}' and ITEM_NO='{1}'", TaskID, ItemNo);
+                    dal.UpdateTaskDetailState(strWhere, "2"); //更新堆垛机状态
+                    if (TaskType.Substring(1, 1) == "2" || (TaskType.Substring(1, 1) == "3" && ItemNo == "1")) //出库，一楼盘点出库
                     {
-                        CellDal Cdal = new CellDal();
-                        Cdal.UpdateCellOutFinishUnLock(drs[0]["CELL_CODE"].ToString());//货位解锁
-
-                        ProductStateDal psdal = new ProductStateDal();
-                        psdal.UpdateOutBillNo(drs[0]["TASK_ID"].ToString());
-                     
-                    }
-                    int[] WriteValue = new int[3];
-                    WriteValue[0] = int.Parse(drs[0]["TASK_NO"].ToString());
-                    if (TaskType == "22") 
-                        WriteValue[1] = int.Parse(drs[0]["MEMO"].ToString()); 
-                    else
-                        WriteValue[1] = int.Parse(drs[0]["TARGET_CODE"].ToString());
-                    WriteValue[2] = int.Parse(drs[0]["PRODUCT_TYPE"].ToString());
-
-
-                    string Barcode = drs[0]["PRODUCT_BARCODE"].ToString();
-                    string PalletCode = drs[0]["PALLET_CODE"].ToString();
-
-                    sbyte[] b=new sbyte[190];
-                    Common.ConvertStringChar.stringToBytes(Barcode, 80).CopyTo(b, 0);
-                    Common.ConvertStringChar.stringToBytes(PalletCode, 110).CopyTo(b, 80);
-
-                    dal.UpdateTaskDetailStation(drs[0]["STATION_NO"].ToString(), WriteValue[1].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", TASK_ID));
-                    
-
-                    WriteToService(drs[0]["SERVICE_NAME"].ToString(), drs[0]["ITEM_NAME_2"].ToString() + "_1", WriteValue);
-
-                    WriteToService(drs[0]["SERVICE_NAME"].ToString(), drs[0]["ITEM_NAME_2"].ToString() + "_2", b);
-                    WriteToService(drs[0]["SERVICE_NAME"].ToString(), drs[0]["ITEM_NAME_2"].ToString() + "_3", 1);
-
-                   
-
-                }
-                else if (TaskType.Substring(1, 1) == "1" || (TaskType.Substring(1, 1) == "3" && drs[0]["ITEM_NO"].ToString() == "4")) //入库完成，更新Task任务完成。
-                {
-                    dal.UpdateTaskState(drs[0]["TASK_ID"].ToString(), "2");//更新任务状态。
-                    if (TaskType == "11")
-                    {
-                        CellDal Cdal = new CellDal();
-                        Cdal.UpdateCellInFinishUnLock(drs[0]["TASK_ID"].ToString());//入库完成，更新货位。
-                    }
-                   
-                    BillDal billdal = new BillDal();
-                    string isBill = "1";
-                    if (drs[0]["PRODUCT_CODE"].ToString() == "0000")
-                        isBill = "0";
-                    billdal.UpdateInBillMasterFinished(drs[0]["BILL_NO"].ToString(), isBill);//更新表单
-
-                }
-                else if(TaskType=="14")
-                {
-                    #region 移库
-                    if (dr["CRANE_NO"].ToString() != dr["NEW_CRANE_NO"].ToString())
-                    {
-                        if (ItemNo == "1")
+                        if (TaskType == "12") //一楼出库
                         {
                             CellDal Cdal = new CellDal();
-                            Cdal.UpdateCellOutFinishUnLock(drs[0]["CELL_CODE"].ToString());
+                            Cdal.UpdateCellOutFinishUnLock(dr["CELL_CODE"].ToString());//货位解锁
 
-                            int[] WriteValue = new int[3];
-                            WriteValue[0] = int.Parse(drs[0]["TASK_NO"].ToString());
+                            ProductStateDal psdal = new ProductStateDal();
+                            psdal.UpdateOutBillNo(TaskID);
 
-                            WriteValue[1] = int.Parse(drs[0]["NEW_TARGET_CODE"].ToString());
-                           
-                            WriteValue[2] = int.Parse(drs[0]["PRODUCT_TYPE"].ToString());
-
-
-                            string Barcode = drs[0]["PRODUCT_BARCODE"].ToString();
-                            string PalletCode = drs[0]["PALLET_CODE"].ToString();
-
-                            sbyte[] b = new sbyte[190];
-                            Common.ConvertStringChar.stringToBytes(Barcode, 80).CopyTo(b, 0);
-                            Common.ConvertStringChar.stringToBytes(PalletCode, 110).CopyTo(b, 80);
-
-                            dal.UpdateTaskDetailStation(drs[0]["STATION_NO"].ToString(), WriteValue[1].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", TASK_ID));
+                        }
+                        int[] WriteValue = new int[3];
+                        WriteValue[0] = int.Parse(dr["TASK_NO"].ToString());
+                        if (TaskType == "22")
+                            WriteValue[1] = int.Parse(dr["MEMO"].ToString());
+                        else
+                            WriteValue[1] = int.Parse(dr["TARGET_CODE"].ToString());
+                        WriteValue[2] = int.Parse(dr["PRODUCT_TYPE"].ToString());
 
 
-                            WriteToService(drs[0]["SERVICE_NAME"].ToString(), drs[0]["ITEM_NAME_2"].ToString() + "_1", WriteValue);
+                        string Barcode = dr["PRODUCT_BARCODE"].ToString();
+                        string PalletCode = dr["PALLET_CODE"].ToString();
 
-                            WriteToService(drs[0]["SERVICE_NAME"].ToString(), drs[0]["ITEM_NAME_2"].ToString() + "_2", b);
-                            WriteToService(drs[0]["SERVICE_NAME"].ToString(), drs[0]["ITEM_NAME_2"].ToString() + "_3", 1);
+                        sbyte[] b = new sbyte[190];
+                        Common.ConvertStringChar.stringToBytes(Barcode, 80).CopyTo(b, 0);
+                        Common.ConvertStringChar.stringToBytes(PalletCode, 110).CopyTo(b, 80);
 
-                            BillDal billdal = new BillDal();
-                            billdal.UpdateBillMasterStart(drs[0]["BILL_NO"].ToString(), true);//更新表单
+                        dal.UpdateTaskDetailStation(dr["STATION_NO"].ToString(), WriteValue[1].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", TaskID));
+
+
+                        WriteToService(dr["SERVICE_NAME"].ToString(), dr["ITEM_NAME_2"].ToString() + "_1", WriteValue);
+
+                        WriteToService(dr["SERVICE_NAME"].ToString(), dr["ITEM_NAME_2"].ToString() + "_2", b);
+                        WriteToService(dr["SERVICE_NAME"].ToString(), dr["ITEM_NAME_2"].ToString() + "_3", 1);
+
+
+
+                    }
+                    else if (TaskType.Substring(1, 1) == "1" || (TaskType.Substring(1, 1) == "3" && dr["ITEM_NO"].ToString() == "4")) //入库完成，更新Task任务完成。
+                    {
+                        dal.UpdateTaskState(TaskID, "2");//更新任务状态。
+                        if (TaskType == "11")
+                        {
+                            CellDal Cdal = new CellDal();
+                            Cdal.UpdateCellInFinishUnLock(TaskID);//入库完成，更新货位。
+                        }
+
+                        BillDal billdal = new BillDal();
+                        string isBill = "1";
+                        if (dr["PRODUCT_CODE"].ToString() == "0000")
+                            isBill = "0";
+                        billdal.UpdateInBillMasterFinished(dr["BILL_NO"].ToString(), isBill);//更新表单
+
+                    }
+                    else if (TaskType == "14")
+                    {
+                        #region 移库
+                        if (dr["CRANE_NO"].ToString() != dr["NEW_CRANE_NO"].ToString())
+                        {
+                            if (ItemNo == "1")
+                            {
+                                CellDal Cdal = new CellDal();
+                                Cdal.UpdateCellOutFinishUnLock(dr["CELL_CODE"].ToString());
+
+                                int[] WriteValue = new int[3];
+                                WriteValue[0] = int.Parse(dr["TASK_NO"].ToString());
+
+                                WriteValue[1] = int.Parse(dr["NEW_TARGET_CODE"].ToString());
+
+                                WriteValue[2] = int.Parse(dr["PRODUCT_TYPE"].ToString());
+
+
+                                string Barcode = dr["PRODUCT_BARCODE"].ToString();
+                                string PalletCode = dr["PALLET_CODE"].ToString();
+
+                                sbyte[] b = new sbyte[190];
+                                Common.ConvertStringChar.stringToBytes(Barcode, 80).CopyTo(b, 0);
+                                Common.ConvertStringChar.stringToBytes(PalletCode, 110).CopyTo(b, 80);
+
+                                dal.UpdateTaskDetailStation(dr["STATION_NO"].ToString(), WriteValue[1].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", TaskID));
+
+
+                                WriteToService(dr["SERVICE_NAME"].ToString(), dr["ITEM_NAME_2"].ToString() + "_1", WriteValue);
+
+                                WriteToService(dr["SERVICE_NAME"].ToString(), dr["ITEM_NAME_2"].ToString() + "_2", b);
+                                WriteToService(dr["SERVICE_NAME"].ToString(), dr["ITEM_NAME_2"].ToString() + "_3", 1);
+
+                                BillDal billdal = new BillDal();
+                                billdal.UpdateBillMasterStart(dr["BILL_NO"].ToString(), true);//更新表单
+
+                            }
+                            else
+                            {
+                                dal.UpdateTaskState(TaskID, "2");//更新任务状态。
+
+                                CellDal Cdal = new CellDal();
+                                Cdal.UpdateCellInFinishUnLock(dr["NEWCELL_CODE"].ToString());
+
+                                BillDal billdal = new BillDal();
+                                string isBill = "1";
+                                if (dr["PRODUCT_CODE"].ToString() == "0000")
+                                    isBill = "0";
+                                billdal.UpdateInBillMasterFinished(dr["BILL_NO"].ToString(), isBill);//更新表单
+
+                            }
+
 
                         }
                         else
                         {
-                            dal.UpdateTaskState(drs[0]["TASK_ID"].ToString(), "2");//更新任务状态。
+                            dal.UpdateTaskState(dr["TASK_ID"].ToString(), "2");//更新任务状态。
 
                             CellDal Cdal = new CellDal();
-                            Cdal.UpdateCellInFinishUnLock(drs[0]["NEWCELL_CODE"].ToString());
+                            Cdal.UpdateCellRemoveFinish(dr["NEWCELL_CODE"].ToString(), dr["CELL_CODE"].ToString()); //入库完成，更新货位。
+                            Cdal.UpdateCellOutFinishUnLock(dr["CELL_CODE"].ToString());
 
                             BillDal billdal = new BillDal();
                             string isBill = "1";
-                            if (drs[0]["PRODUCT_CODE"].ToString() == "0000")
+                            if (dr["PRODUCT_CODE"].ToString() == "0000")
                                 isBill = "0";
-                            billdal.UpdateInBillMasterFinished(drs[0]["BILL_NO"].ToString(), isBill);//更新表单
+                            billdal.UpdateInBillMasterFinished(dr["BILL_NO"].ToString(), isBill);//更新表单
 
                         }
-
-
+                        #endregion
                     }
-                    else
-                    {
-                        dal.UpdateTaskState(drs[0]["TASK_ID"].ToString(), "2");//更新任务状态。
-
-                        CellDal Cdal = new CellDal();
-                        Cdal.UpdateCellRemoveFinish(drs[0]["NEWCELL_CODE"].ToString(), drs[0]["CELL_CODE"].ToString()); //入库完成，更新货位。
-                        Cdal.UpdateCellOutFinishUnLock(drs[0]["CELL_CODE"].ToString());
-
-                        BillDal billdal = new BillDal();
-                        string isBill = "1";
-                        if (drs[0]["PRODUCT_CODE"].ToString() == "0000")
-                            isBill = "0";
-                        billdal.UpdateInBillMasterFinished(drs[0]["BILL_NO"].ToString(), isBill);//更新表单
-
-                    }
-                    #endregion
-                }
-                lock (dCraneState)
-                {
-                    dCraneState[msg["CraneNo"]] = "0";
-                }
-                if (TaskType != "22")
-                {
-                    dtCrane.Rows.Remove(drs[0]);
-                }
-
-                //查找发送下条报文。
-                GetNextTaskID(msg["CraneNo"], TaskType);
-                #endregion
-            }
-            else
-            {
-                #region 错误处理
-                string ErrMsg = "";
-                DataRow[] drMsgs = dtErrMesage.Select(string.Format("CODE='{0}'", msg["ReturnCode"]));
-                if (drMsgs.Length > 0)
-                    ErrMsg = drMsgs[0]["DESCRIPTION"].ToString();
-                if (msg["ReturnCode"] == "111") //入库，货位有货
-                {
-                    string Flag = "";
-                    string[] strMessage = new string[3];
-                    strMessage[0] = "7";
-                    strMessage[1] = msg["ReturnCode"];
-                    strMessage[2] = ErrMsg;
-
-
-                    while ((Flag = FormDialog.ShowDialog(strMessage, null)) != "")
-                    {
-                        if (Flag == "2") //系统错误
-                        {
-                            DataRow[] drs = dtCrane.Select(string.Format("ASSIGNMENT_ID='{0}'", msg["AssignmenID"]));
-                            CellDal cdal = new CellDal();
-                            cdal.UpdateCellErrFlag(drs[0]["CELL_CODE"].ToString(), "货位有货，系统无记录");
-
-
-                            SendTelegramDER(drs[0]); //删除任务
-                        }
-                        break;
-                    }
-                    
-                }
-                else if (msg["ReturnCode"] == "113")//出库，货位无货，
-                {
-                     DataRow[] drs = dtCrane.Select(string.Format("ASSIGNMENT_ID='{0}'", msg["AssignmenID"]));
-
-                    string strBillNo = "";
-                    string[] strMessage = new string[3];
-                    strMessage[0] = "8";
-                    strMessage[1] = drs[0]["TASK_ID"].ToString();
-                    strMessage[2] = "错误代码：" +  msg["ReturnCode"] + ",错误内容：" + ErrMsg;
-                   
-
-                    TaskDal dal = new TaskDal();
-                    DataTable dtProductInfo = dal.GetProductInfoByTaskID(drs[0]["TASK_ID"].ToString());
-
-                    while ((strBillNo = FormDialog.ShowDialog(strMessage, dtProductInfo)) != "")
-                    {
-                        BillDal bdal = new BillDal();
-                        string strNewBillNo = strBillNo;
-
-                        string strOutTaskID = bdal.CreateCancelBillOutTask(drs[0]["TASK_ID"].ToString(), drs[0]["BILL_NO"].ToString(), strNewBillNo,"");
-                        
-                        DataTable dtOutTask = dal.CraneTaskOut(string.Format("TASK_ID='{0}'", strOutTaskID));
-
-                        WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
-                        CellDal cdal = new CellDal();
-                        cdal.UpdateCellErrFlag(drs[0]["CELL_CODE"].ToString(), "货位有货，系统有记录");
-
-
-                        SendTelegramDER(drs[0]); //删除任务
-                        dtCrane.Rows.Remove(drs[0]);
-                        break;
-                    }
-                }
-                else
-                {
-
                     lock (dCraneState)
                     {
                         dCraneState[msg["CraneNo"]] = "0";
                     }
+                    if (dtCrane != null)
+                    {
+                        DataRow[] drs = dtCrane.Select(string.Format("TASK_ID='{0}'", TaskID));
+                        if (drs.Length > 0)
+                        {
+                            dtCrane.Rows.Remove(drs[0]);
+                        }
+                    }
 
-                    Logger.Error(string.Format("堆垛机{0}返回错误代码{1}:{2}", msg["CraneNo"], msg["ReturnCode"], ErrMsg));
+                    //查找发送下条报文。
+                    GetNextTaskID(msg["CraneNo"], TaskType);
                 }
                 #endregion
             }
+            else
+            {
+                string ErrMsg = "";
+                DataRow[] drMsgs = dtErrMesage.Select(string.Format("CODE='{0}'", msg["ReturnCode"]));
+                if (drMsgs.Length > 0)
+                    ErrMsg = drMsgs[0]["DESCRIPTION"].ToString();
+
+                dal.UpdateCraneErrCode(TaskID, ItemNo, msg["ReturnCode"]);//更新堆垛机错误编号
+                Logger.Error(string.Format("堆垛机{0}返回错误代码{1}:{2}", msg["CraneNo"], msg["ReturnCode"], ErrMsg));
+               
+            }
+            SendACK(msg);
+            CraneErrWriteToPLC(msg["CraneNo"], int.Parse(msg["ReturnCode"]));
         }
         /// <summary>
         /// 堆垛机状态。
@@ -705,10 +645,8 @@ namespace THOK.XC.Process.Process_Crane
                 }
                 Logger.Error(string.Format("堆垛机{0}返回错误代码{1}{2}", msg["CraneNo"], msg["ReturnCode"], ""));
             }
-            string str = "<10010CRAN30THOK01ACK0001000>";
-            
-            WriteToService("Crane", "ACK", str);
-
+            SendACK(msg);
+            CraneErrWriteToPLC(msg["CraneNo"], int.Parse(msg["ReturnCode"]));
         }
         /// <summary>
         /// 发送报文后，堆垛机发送接收确认。
@@ -717,36 +655,61 @@ namespace THOK.XC.Process.Process_Crane
         private void ACK(object state)
         {
             Dictionary<string, string> msg = (Dictionary<string, string>)state;
-
-            DataRow dr = dtCrane.Select(string.Format("SQUENCE_NO='{0}'", msg["SequenceNo"]))[0];
-
+            DataRow dr = null;
             TaskDal dal = new TaskDal();
-            string TaskType = dr["TASK_TYPE"].ToString();
-            string ItemNo = dr["ITEM_NO"].ToString();
-            BillDal bdal = new BillDal();
-            if (TaskType.Substring(1, 1) == "2" || (TaskType.Substring(1, 1) == "3" && ItemNo == "1") || (TaskType.Substring(1, 1) == "4" && ItemNo == "1" && dr["CRANE_NO"].ToString() != dr["NEW_CRANE_NO"].ToString()))
+            if (dtCrane != null)
             {
-                dal.UpdateTaskState(dr["TASK_ID"].ToString(), "1");//出库任务 更新任务状态--任务开始。
-                dal.UpdateTaskDetailCrane(dr["CELL_CODE"].ToString(), dr["STATION_NO"].ToString(), "1", dr["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO={1}", dr["TASK_ID"], dr["ITEM_NO"]));
-                bdal.UpdateBillMasterStart(dr["BILL_NO"].ToString(), dr["PRODUCT_CODE"].ToString() == "0000" ? false : true);
-
+                DataRow[] drs = dtCrane.Select(string.Format("SQUENCE_NO='{0}'", msg["SequenceNo"]));
+                if (drs.Length > 0)
+                {
+                    dr = drs[0];
+                }
             }
-            else if (TaskType.Substring(1, 1) == "4" && ItemNo == "1" && dr["CRANE_NO"].ToString() == dr["NEW_CRANE_NO"].ToString())
+            if (dr == null)
             {
-                dal.UpdateTaskState(dr["TASK_ID"].ToString(), "1");//出库任务 更新任务状态--任务开始。
-                dal.UpdateTaskDetailCrane(dr["CELL_CODE"].ToString(), dr["NEWCELL_CODE"].ToString(), "1", dr["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO={1}", dr["TASK_ID"], dr["ITEM_NO"]));
-                bdal.UpdateBillMasterStart(dr["BILL_NO"].ToString(), true);
+                //根据流水号，获取资料
+                DataTable dt = dal.CraneTaskIn(string.Format("DETAIL.SQUENCE_NO='' AND DETAIL.CRANE_NO IS NOT NULL", msg["SequenceNo"]));
+                if (dt.Rows.Count > 0)
+                    dr = dt.Rows[0];
             }
-            else
-                dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' and ITEM_NO={1}", dr["TASK_ID"], dr["ITEM_NO"]), "1");
- 
 
-            dr.BeginEdit();
-            dr["state"] = "1";
-            dr.EndEdit();
-            dtCrane.AcceptChanges();
-            
-          
+            #region 缓存数据存在
+            if (dr != null)
+            {
+                string TaskType = dr["TASK_TYPE"].ToString();
+                string ItemNo = dr["ITEM_NO"].ToString();
+                BillDal bdal = new BillDal();
+                if (TaskType.Substring(1, 1) == "2" || (TaskType.Substring(1, 1) == "3" && ItemNo == "1") || (TaskType.Substring(1, 1) == "4" && ItemNo == "1" && dr["CRANE_NO"].ToString() != dr["NEW_CRANE_NO"].ToString()))
+                {
+                    dal.UpdateTaskState(dr["TASK_ID"].ToString(), "1");//出库任务 更新任务状态--任务开始。
+                    dal.UpdateTaskDetailCrane(dr["CELL_CODE"].ToString(), dr["STATION_NO"].ToString(), "1", dr["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO={1}", dr["TASK_ID"], dr["ITEM_NO"]));
+                    bdal.UpdateBillMasterStart(dr["BILL_NO"].ToString(), dr["PRODUCT_CODE"].ToString() == "0000" ? false : true);
+
+                }
+                else if (TaskType.Substring(1, 1) == "4" && ItemNo == "1" && dr["CRANE_NO"].ToString() == dr["NEW_CRANE_NO"].ToString())
+                {
+                    dal.UpdateTaskState(dr["TASK_ID"].ToString(), "1");//出库任务 更新任务状态--任务开始。
+                    dal.UpdateTaskDetailCrane(dr["CELL_CODE"].ToString(), dr["NEWCELL_CODE"].ToString(), "1", dr["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO={1}", dr["TASK_ID"], dr["ITEM_NO"]));
+                    bdal.UpdateBillMasterStart(dr["BILL_NO"].ToString(), true);
+                }
+                else
+                    dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' and ITEM_NO={1}", dr["TASK_ID"], dr["ITEM_NO"]), "1");
+
+                if (dtCrane != null)
+                {
+                    DataRow []drs=dtCrane.Select(string.Format("TASK_ID='{0}'",dr["TASK_ID"]));
+                    if(drs.Length>0)
+                    {
+                        drs[0].BeginEdit();
+                        drs[0]["state"]="1";
+                        drs[0].EndEdit();
+                        dtCrane.AcceptChanges();
+                    }
+                     
+                }
+            }
+            #endregion
+
         }
 
         /// <summary>
@@ -756,25 +719,30 @@ namespace THOK.XC.Process.Process_Crane
         private void NCK(object state)
         {
             Dictionary<string, string> msg = (Dictionary<string, string>)state;
-            if (msg["FaultIndicator"] == "1") //序列号出错，重新发送报文
+            if (msg["FaultIndicator"] == "1" ) //序列号出错，重新发送报文
             {
-                DataRow[] drs = dtCrane.Select(string.Format("SQUENCE_NO='{0}'", msg["SequenceNo"]));
-                if (drs.Length > 0)
+                if (msg["SequenceNo"] != "0001")
                 {
-                    lock (dCraneState)
-                    {
-                        dCraneState[drs[0]["CRANE_NO"].ToString()] = "0";
-                    }
-                    SendTelegram(drs[0]["CRANE_NO"].ToString(), drs[0]);
+                    //重置流水号为0；
+                    SysStationDal dal = new SysStationDal();
+                    dal.ResetSQueNo();
+                    //重新发送SYN
+                    WriteToService("Crane", "DUM", "<00000CRAN30THOK01SYN0000000>");
+                    NCK001 = 0;
                 }
                 else
                 {
-                    drs = dtSendCRQ.Select(string.Format("SQUENCE_NO='{0}'", msg["SequenceNo"]));
-                    if (drs.Length > 0)
+                    if (NCK001 == 100)
                     {
-                        SendTelegramCRQ(drs[0]["CRANE_NO"].ToString());
+                        WriteToService("Crane", "DUM", "<00000CRAN30THOK01SYN0000000>");
+                        NCK001 = 0;
+                    }
+                    else
+                    {
+                        CraneThreadStart();
                     }
                 }
+          
             }
         }
         /// <summary>
@@ -786,35 +754,82 @@ namespace THOK.XC.Process.Process_Crane
             Dictionary<string, string> msg = (Dictionary<string, string>)state;
             if (msg["ReturnCode"] == "000") //序列号出错，重新发送报文
             {
-                DataRow[] drs = dtCrane.Select(string.Format("ASSIGNMENT_ID='{0}'", msg["AssignmenID"]));
-                string TaskType = drs[0]["TASK_TYPE"].ToString();
-                string TASK_ID = drs[0]["TASK_ID"].ToString();
-                if (TaskType.Substring(1, 1) == "1") //入库--货位有货，系统无记录
+               
+               
+              
+                
+                
+                
+                TaskDal dal = new TaskDal();
+                #region 错误处理
+                string ErrMsg = "";
+                if (msg["ReturnCode"] == "111") //入库，货位有货
                 {
-                    //重新分配货位；
+                    
+                    string Flag = "";
+                    string[] strMessage = new string[3];
+                    strMessage[0] = "7";
+                    strMessage[1] = msg["ReturnCode"];
+                    strMessage[2] = ErrMsg;
 
-                    TaskDal dal = new TaskDal();
-                    string[] strValue = dal.AssignNewCell(string.Format("TASK_ID='{0}'", TASK_ID), drs[0]["CRANE_NO"].ToString());//货位申请
-                    ProductStateDal StateDal = new ProductStateDal();
-                    StateDal.UpdateProductCellCode(strValue[0], strValue[4]); //更新Product_State 货位
-                    dal.UpdateTaskDetailCrane(strValue[3], "30" + strValue[4], "1", strValue[5], string.Format("TASK_ID='{0}' AND ITEM_NO=3", strValue[0]));//更新调度堆垛机的其实位置及目标地址。
 
-                    drs[0].BeginEdit();
-                    drs[0]["CRANESTATION"] = "30" + strValue[4];
-                    drs[0].EndEdit();
+                    while ((Flag = FormDialog.ShowDialog(strMessage, null)) != "")
+                    {
+                        if (Flag == "2") //系统错误
+                        {
+                            DataRow[] drs = dtCrane.Select(string.Format("ASSIGNMENT_ID='{0}'", msg["AssignmenID"]));
+                            CellDal cdal = new CellDal();
+                            cdal.UpdateCellErrFlag(drs[0]["CELL_CODE"].ToString(), "货位有货，系统无记录");
 
-                    SendTelegramARQ(drs[0], false);
 
+                            SendTelegramDER(drs[0]); //删除任务
+                        }
+                        break;
+                    }
 
                 }
-                else //出库 货位无货，系统记录有货--重新分配新的出库任务。
+                else if (msg["ReturnCode"] == "113")//出库，货位无货，
                 {
+                    DataRow[] drs = dtCrane.Select(string.Format("ASSIGNMENT_ID='{0}'", msg["AssignmenID"]));
+
+                    string strBillNo = "";
+                    string[] strMessage = new string[3];
+                    strMessage[0] = "8";
+                    strMessage[1] = drs[0]["TASK_ID"].ToString();
+                    strMessage[2] = "错误代码：" + msg["ReturnCode"] + ",错误内容：" + ErrMsg;
+
+                    DataTable dtProductInfo = dal.GetProductInfoByTaskID(drs[0]["TASK_ID"].ToString());
+
+                    while ((strBillNo = FormDialog.ShowDialog(strMessage, dtProductInfo)) != "")
+                    {
+                        BillDal bdal = new BillDal();
+                        string strNewBillNo = strBillNo;
+
+                        string strOutTaskID = bdal.CreateCancelBillOutTask(drs[0]["TASK_ID"].ToString(), drs[0]["BILL_NO"].ToString(), strNewBillNo, "");
+
+                        DataTable dtOutTask = dal.CraneTaskOut(string.Format("TASK_ID='{0}'", strOutTaskID));
+
+                        WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
+                        CellDal cdal = new CellDal();
+                        cdal.UpdateCellErrFlag(drs[0]["CELL_CODE"].ToString(), "货位无货，系统有记录");
+
+
+                        SendTelegramDER(drs[0]); //删除任务
+                        dtCrane.Rows.Remove(drs[0]);
+                        break;
+                    }
+                }
+                else
+                {
+
                     lock (dCraneState)
                     {
                         dCraneState[msg["CraneNo"]] = "0";
                     }
-                    GetNextTaskID(msg["CraneNo"], TaskType);
+
+
                 }
+                #endregion
             }
         }
         #endregion
@@ -832,19 +847,6 @@ namespace THOK.XC.Process.Process_Crane
             }
             string TaskType = dr["TASK_TYPE"].ToString();
             string ItemNo = dr["ITEM_NO"].ToString();
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
             if (TaskType.Substring(1, 1) == "4" && ItemNo == "1" && dr["CRANE_NO"].ToString() == dr["NEW_CRANE_NO"].ToString())
@@ -868,8 +870,7 @@ namespace THOK.XC.Process.Process_Crane
 
             THOK.CRANE.TelegramFraming tf = new CRANE.TelegramFraming();
             string QuenceNo = GetNextSQuenceNo();
-            string str = "<00000THOK01CRAN30ACK0000200>";
-            tf.DataFraming("1" + QuenceNo, tgd, tf.TelegramARQ);
+            string str = tf.DataFraming("1" + QuenceNo, tgd, tf.TelegramARQ);
             WriteToService("Crane", "ARQ", str);
          
 
@@ -885,11 +886,6 @@ namespace THOK.XC.Process.Process_Crane
                 dr["SQUENCE_NO"] = QuenceNo;
                 dr.EndEdit();
             }
-
-
-
-
-           
             lock (dCraneState)
             {
                 dCraneState[dr["CRANE_NO"].ToString()] = "1";
@@ -897,7 +893,7 @@ namespace THOK.XC.Process.Process_Crane
            
             //更新发送报文。
             TaskDal dal = new TaskDal();
-            dal.UpdateCraneQuenceNo(dr["TASK_ID"].ToString(), dr["SQUENCE_NO"].ToString()); //更新堆垛机序列号。并更新为1
+            dal.UpdateCraneQuenceNo(dr["TASK_ID"].ToString(), dr["SQUENCE_NO"].ToString(), ItemNo); //更新堆垛机序列号。并更新为1
         }
         //请求堆垛机状态
         private void SendTelegramCRQ(string CraneNo)
@@ -936,8 +932,8 @@ namespace THOK.XC.Process.Process_Crane
             tgd.AssignmenID = dr["ASSIGNMENT_ID"].ToString();
             
             THOK.CRANE.TelegramFraming tf = new CRANE.TelegramFraming();
-
-            string str = tf.DataFraming("1" + dr["SQUENCE_NO"].ToString(), tgd, tf.TelegramDER);
+            string QuenceNo = GetNextSQuenceNo();
+            string str = tf.DataFraming("1" + QuenceNo, tgd, tf.TelegramDER);
             WriteToService("Crane", "DER", str);
         }
 
@@ -946,6 +942,24 @@ namespace THOK.XC.Process.Process_Crane
         {
             SysStationDal dal = new SysStationDal();
             return dal.GetTaskNo("S");
+        }
+        private void SendACK(Dictionary<string, string> msg)
+        {
+            if (msg["ConfirmFlag"] == "1")
+            {
+                string str = "<00000CRAN30THOK01ACK0" + msg["SeqNo"] + "00>";
+                WriteToService("Crane", "ACK", str);
+            }
+        }
+        /// <summary>
+        /// 堆垛机返回错误号，写入PLC
+        /// </summary>
+        /// <param name="CraneNo"></param>
+        /// <param name="ErrCode"></param>
+        private void CraneErrWriteToPLC(string CraneNo, int ErrCode)
+        {
+            WriteToService("StockPLC_01", "01_2_C" + CraneNo, ErrCode);
+            WriteToService("StockPLC_02", "02_2_C" + CraneNo, ErrCode);
         }
         #endregion
 

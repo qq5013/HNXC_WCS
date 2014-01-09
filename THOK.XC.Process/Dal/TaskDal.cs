@@ -54,13 +54,32 @@ namespace THOK.XC.Process.Dal
                 dao.UpdateTaskDetailState(strWhere, State);
             }
         }
-       
-        public void UpdateCraneQuenceNo(string TaskID,string QueueNO)
+       /// <summary>
+       /// 更新堆垛机顺序号
+       /// </summary>
+       /// <param name="TaskID"></param>
+       /// <param name="QueueNO"></param>
+       /// <param name="ItemNo"></param>
+        public void UpdateCraneQuenceNo(string TaskID,string QueueNO,string ItemNo)
         {
             using (PersistentManager pm = new PersistentManager())
             {
                 TaskDao dao = new TaskDao();
-                dao.UpdateCraneQuenceNo(TaskID, QueueNO);
+                dao.UpdateCraneQuenceNo(TaskID, QueueNO, ItemNo);
+            }
+        }
+        /// <summary>
+        /// 更新堆垛机错误编号
+        /// </summary>
+        /// <param name="TaskID"></param>
+        /// <param name="QueueNO"></param>
+        /// <param name="ItemNo"></param>
+        public void UpdateCraneErrCode(string TaskID, string ItemNo, string ErrCode)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                TaskDao dao = new TaskDao();
+                dao.UpdateCraneErrCode(TaskID, ItemNo, ErrCode);
             }
         }
 

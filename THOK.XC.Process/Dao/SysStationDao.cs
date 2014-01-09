@@ -89,5 +89,13 @@ namespace THOK.XC.Process.Dao
             return strValue;
 
         }
+        /// <summary>
+        /// 堆垛机流水号报错，重置0；
+        /// </summary>
+        public void ResetSQueNo()
+        {
+           string strSQL = string.Format("UPDATE SYS_TASKORDER SET TASK_NO='{0}' WHERE TASK_MODE='{1}'", "0000", "S");
+            ExecuteNonQuery(strSQL);
+        }
     }
 }

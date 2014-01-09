@@ -94,6 +94,18 @@
     <Compile Include="OperateView\CellQueryForm.designer.cs">
       <DependentUpon>CellQueryForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="OperateView\CraneTaskOptionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateView\CraneTaskOptionDialog.Designer.cs">
+      <DependentUpon>CraneTaskOptionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OperateView\frmCraneTaskOption.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OperateView\frmCraneTaskOption.Designer.cs">
+      <DependentUpon>frmCraneTaskOption.cs</DependentUpon>
+    </Compile>
     <Compile Include="OperateView\ParameterForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -210,6 +222,12 @@
     <EmbeddedResource Include="OperateView\CellQueryForm.resx">
       <DependentUpon>CellQueryForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="OperateView\CraneTaskOptionDialog.resx">
+      <DependentUpon>CraneTaskOptionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OperateView\frmCraneTaskOption.resx">
+      <DependentUpon>frmCraneTaskOption.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="OperateView\ParameterForm.resx">
       <DependentUpon>ParameterForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -309,6 +327,10 @@
     <None Include="Resources\Add.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\THOK.CRANE\THOK.CRANE.csproj">
+      <Project>{2B122925-2701-4C34-ADAB-A463CC2E3797}</Project>
+      <Name>THOK.CRANE</Name>
+    </ProjectReference>
     <ProjectReference Include="..\THOK.MCP.Service.Siemens\THOK.MCP.Service.Siemens.csproj">
       <Project>{7635ED62-DE46-4ED5-ACC8-367C84ACE1CA}</Project>
       <Name>THOK.MCP.Service.Siemens</Name>

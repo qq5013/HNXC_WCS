@@ -10,6 +10,8 @@ namespace THOK.MCP.Service.TCP
 {
     public class TCPService:THOK.MCP.AbstractService 
     {
+        private System.Timers.Timer time1;
+        private DateTime dtTime;
         private Server server = null;
         private Client client = null;
         private string ip = "127.0.0.1";
@@ -25,6 +27,45 @@ namespace THOK.MCP.Service.TCP
             port = config.Port;
             server = new Server();
             server.OnReceive += new ReceiveEventHandler(server_OnReceive);
+            time1 = new System.Timers.Timer();
+            time1.Interval = 10000;
+            dtTime = DateTime.Now;
+            //time1.Elapsed += new System.Timers.ElapsedEventHandler(OnTimer);
+
+            time1.Elapsed += new System.Timers.ElapsedEventHandler(time1_Elapsed);
+
+            time1.Start();
+            
+        }
+
+        void time1_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            TimeSpan midTime = DateTime.Now - dtTime;
+            if (midTime.TotalSeconds >= 45)
+            {
+
+                //context.ProcessDispatcher.WriteToService("Crane", "DUM", "<00000CRAN30THOK01DUM0000000>");
+                DispatchState("DUU", "");
+                dtTime = DateTime.Now;
+            }
+        }
+        //protected void OnTimer(Object source, System.Timers.ElapsedEventArgs e)
+        //{
+        //    System.Threading.Thread thdInStock = new System.Threading.Thread(new System.Threading.ThreadStart(AutoInStock));
+        //    thdInStock.IsBackground = true;
+        //    thdInStock.Start();
+        //}
+
+        private void AutoInStock()
+        {
+            TimeSpan midTime = DateTime.Now - dtTime;
+            if (midTime.TotalSeconds >= 55)
+            {
+
+                context.ProcessDispatcher.WriteToService("Crane", "DUM", "<00000CRAN30THOK01DUM0000000>");
+                dtTime = DateTime.Now;
+            }
+
         }
 
         private void server_OnReceive(object sender, ReceiveEventArgs e)
@@ -41,7 +82,8 @@ namespace THOK.MCP.Service.TCP
 
             if (message.Parsed)
                 DispatchState(message.Command, message.Parameters);
-           
+            dtTime = DateTime.Now;
+            
         }
 
         public override void Release()

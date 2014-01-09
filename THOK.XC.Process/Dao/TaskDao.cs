@@ -198,9 +198,19 @@ namespace THOK.XC.Process.Dao
         /// </summary>
         /// <param name="TaskID"></param>
         /// <param name="Squenceno"></param>
-        public void UpdateCraneQuenceNo(string TaskID, string Squenceno)
+        public void UpdateCraneQuenceNo(string TaskID, string Squenceno,string ItemNo)
         {
-            string strSQL = string.Format("UPDATE WCS_TASK_DETAIL SET SQUENCE_NO='{0}' WHERE TASK_ID='{1}'", Squenceno, TaskID);
+            string strSQL = string.Format("UPDATE WCS_TASK_DETAIL SET SQUENCE_NO='{0}' WHERE TASK_ID='{1}' AND ITEM_NO='{2}'", Squenceno, TaskID,ItemNo);
+            ExecuteNonQuery(strSQL);
+        }
+        /// <summary>
+        /// 更新堆垛机错误编号。
+        /// </summary>
+        /// <param name="TaskID"></param>
+        /// <param name="Squenceno"></param>
+        public void UpdateCraneErrCode(string TaskID, string ItemNo,string ErrCode)
+        {
+            string strSQL = string.Format("UPDATE WCS_TASK_DETAIL SET ERR_CODE='{0}' WHERE TASK_ID='{1}' AND ITEM_NO='{2}'", ErrCode, TaskID, ItemNo);
             ExecuteNonQuery(strSQL);
         }
 
@@ -651,7 +661,19 @@ namespace THOK.XC.Process.Dao
             return strvalue;
         }
 
-       
+
+        public DataTable GetCraneTaskBySequenceNo(string SequenceNo)
+        {
+            string strSQL = string.Format("SELECT TASK_ID FROM WCS_TASK_DETAIL WHERE SQUENCE_NO='{0}'", SequenceNo);
+
+            DataTable dt = ExecuteQuery(strSQL).Tables[0];
+            string strWhere = "1=2";
+            if (dt.Rows.Count > 0)
+                strWhere = "1=1";
+
+
+            return CraneTaskIn(strWhere);
+        }
 
 
     }

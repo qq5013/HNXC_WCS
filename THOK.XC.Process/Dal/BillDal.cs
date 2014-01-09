@@ -159,5 +159,19 @@ namespace THOK.XC.Process.Dal
                 return dao.GetBillTaskDetail(TaskID);
             }
         }
+        /// <summary>
+        /// 获取堆垛机运行任务
+        /// </summary>
+        /// <param name="CraneNo"></param>
+        /// <returns></returns>
+        public DataTable GetCranTaskByCraneNo(string CraneNo)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                BillDao dao = new BillDao();
+                return dao.GetCranTaskByCraneNo(CraneNo);
+            }
+        }
     }
+
 }

@@ -52,5 +52,16 @@ namespace THOK.XC.Process.Dal
                 return dao.GetTaskNo(Module);
             }
         }
+           /// <summary>
+        /// 堆垛机流水号报错，重置0；
+        /// </summary>
+        public void ResetSQueNo()
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                SysStationDao dao = new SysStationDao();
+                dao.ResetSQueNo();
+            }
+        }
     }
 }

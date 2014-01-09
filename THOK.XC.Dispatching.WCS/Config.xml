@@ -17,9 +17,11 @@
       <Item ServiceName="Crane" ItemName="CSR" />
       <Item ServiceName="Crane" ItemName="ACK" />
       <Item ServiceName="Crane" ItemName="DUM" />
+      <Item ServiceName="Crane" ItemName="DUU" />
       <Item ServiceName="Crane" ItemName="NCK" />
       <Item ServiceName="Crane" ItemName="DEC" />
       <Item ServiceName="Crane" ItemName="PDA" />
+      <Item ServiceName="Crane" ItemName="DUA" />
     </Process>
     <!--一层入库申请-->
     <Process Name="StockInRequestProcess" Type="THOK.XC.Process.dll, THOK.XC.Process.Process_01.StockInRequestProcess">
