@@ -299,7 +299,7 @@ namespace THOK.XC.Process.Dal
         }
 
         /// <summary>
-        ///  分配货位,返回 0:TaskID，1:任务号，2:货物到达入库站台的目的地址--平面号,3:堆垛机入库站台，4:货位，5:堆垛机编号
+        ///  分配货位,返回 0:TaskID，1:货位 
         /// </summary>
         /// <param name="strWhere"></param>
         public string[] AssignNewCell(string strWhere, string CranNo)
