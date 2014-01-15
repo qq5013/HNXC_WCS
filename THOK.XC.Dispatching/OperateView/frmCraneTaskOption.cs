@@ -54,6 +54,7 @@ namespace THOK.XC.Dispatching.OperateView
                     string str = tf.DataFraming("1" + QuenceNo, tgd, tf.TelegramDER);
                     this.mainFrame.Context.ProcessDispatcher.WriteToService("Crane", "DER", str);
 
+                    MessageBox.Show("操作成功", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
@@ -89,7 +90,7 @@ namespace THOK.XC.Dispatching.OperateView
                     string str = tf.DataFraming("1" + QuenceNo, tgd, tf.TelegramARQ);
                     this.mainFrame.Context.ProcessDispatcher.WriteToService("Crane", "ARQ", str);
 
-
+                    MessageBox.Show("操作成功", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 }
             }

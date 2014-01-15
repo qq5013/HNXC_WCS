@@ -38,6 +38,9 @@
             this.btnOption = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
             this.btnRefresh = new System.Windows.Forms.Button();
+            this.colAssignmentID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFromStation = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colToStation = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colBILL_NO = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colBTYPE_NAME = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCIGARETTE_NAME = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -121,6 +124,9 @@
             this.dgvMain.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dgvMain.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvMain.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colAssignmentID,
+            this.colFromStation,
+            this.colToStation,
             this.colBILL_NO,
             this.colBTYPE_NAME,
             this.colCIGARETTE_NAME,
@@ -194,6 +200,27 @@
             this.btnRefresh.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            // 
+            // colAssignmentID
+            // 
+            this.colAssignmentID.DataPropertyName = "ASSIGNMENT_ID";
+            this.colAssignmentID.HeaderText = "堆垛机任务号";
+            this.colAssignmentID.Name = "colAssignmentID";
+            this.colAssignmentID.ReadOnly = true;
+            // 
+            // colFromStation
+            // 
+            this.colFromStation.DataPropertyName = "FROM_STATION";
+            this.colFromStation.HeaderText = "起始位置";
+            this.colFromStation.Name = "colFromStation";
+            this.colFromStation.ReadOnly = true;
+            // 
+            // colToStation
+            // 
+            this.colToStation.DataPropertyName = "TO_STATION";
+            this.colToStation.HeaderText = "目的地址";
+            this.colToStation.Name = "colToStation";
+            this.colToStation.ReadOnly = true;
             // 
             // colBILL_NO
             // 
@@ -331,6 +358,9 @@
         private System.Windows.Forms.ComboBox cmbCrane;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView dgvMain;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colAssignmentID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colFromStation;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colToStation;
         private System.Windows.Forms.DataGridViewTextBoxColumn colBILL_NO;
         private System.Windows.Forms.DataGridViewTextBoxColumn colBTYPE_NAME;
         private System.Windows.Forms.DataGridViewTextBoxColumn colCIGARETTE_NAME;
