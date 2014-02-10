@@ -50,7 +50,6 @@
             this.PRODUCT_CODE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colPRODUCT_NAME = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colPRODUCT_BARCODE = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colCELL_CODE = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colGRADE_NAME = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colORIGINAL_NAME = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colYEARS = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -136,7 +135,6 @@
             this.PRODUCT_CODE,
             this.colPRODUCT_NAME,
             this.colPRODUCT_BARCODE,
-            this.colCELL_CODE,
             this.colGRADE_NAME,
             this.colORIGINAL_NAME,
             this.colYEARS,
@@ -285,13 +283,6 @@
             this.colPRODUCT_BARCODE.Name = "colPRODUCT_BARCODE";
             this.colPRODUCT_BARCODE.ReadOnly = true;
             // 
-            // colCELL_CODE
-            // 
-            this.colCELL_CODE.DataPropertyName = "CELL_CODE";
-            this.colCELL_CODE.HeaderText = "货位编号";
-            this.colCELL_CODE.Name = "colCELL_CODE";
-            this.colCELL_CODE.ReadOnly = true;
-            // 
             // colGRADE_NAME
             // 
             this.colGRADE_NAME.DataPropertyName = "GRADE_NAME";
@@ -370,7 +361,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn PRODUCT_CODE;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPRODUCT_NAME;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPRODUCT_BARCODE;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colCELL_CODE;
         private System.Windows.Forms.DataGridViewTextBoxColumn colGRADE_NAME;
         private System.Windows.Forms.DataGridViewTextBoxColumn colORIGINAL_NAME;
         private System.Windows.Forms.DataGridViewTextBoxColumn colYEARS;
