@@ -57,16 +57,16 @@
             this.pnlTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTitle.Location = new System.Drawing.Point(0, 0);
             this.pnlTitle.Name = "pnlTitle";
-            this.pnlTitle.Size = new System.Drawing.Size(1024, 58);
+            this.pnlTitle.Size = new System.Drawing.Size(1024, 84);
             this.pnlTitle.TabIndex = 0;
             // 
             // pnlMain
             // 
             this.pnlMain.Controls.Add(this.splitContainer1);
             this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlMain.Location = new System.Drawing.Point(0, 58);
+            this.pnlMain.Location = new System.Drawing.Point(0, 84);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(1024, 580);
+            this.pnlMain.Size = new System.Drawing.Size(1024, 554);
             this.pnlMain.TabIndex = 2;
             // 
             // splitContainer1
@@ -83,7 +83,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.monitorView1);
-            this.splitContainer1.Size = new System.Drawing.Size(1024, 580);
+            this.splitContainer1.Size = new System.Drawing.Size(1024, 554);
             this.splitContainer1.SplitterDistance = 521;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 1;
@@ -96,7 +96,7 @@
             this.monitorView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.monitorView.Location = new System.Drawing.Point(0, 0);
             this.monitorView.Name = "monitorView";
-            this.monitorView.Size = new System.Drawing.Size(521, 580);
+            this.monitorView.Size = new System.Drawing.Size(521, 554);
             this.monitorView.TabIndex = 0;
             // 
             // monitorView1
@@ -107,7 +107,7 @@
             this.monitorView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.monitorView1.Location = new System.Drawing.Point(0, 0);
             this.monitorView1.Name = "monitorView1";
-            this.monitorView1.Size = new System.Drawing.Size(502, 580);
+            this.monitorView1.Size = new System.Drawing.Size(502, 554);
             this.monitorView1.TabIndex = 1;
             // 
             // pnlBottom
@@ -163,7 +163,8 @@
             this.pictureBox1.Image = global::THOK.XC.Dispatching.WCS.Properties.Resources.banner;
             this.pictureBox1.Location = new System.Drawing.Point(0, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1024, 58);
+            this.pictureBox1.Size = new System.Drawing.Size(1024, 84);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
