@@ -117,21 +117,4 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="btnFormulaCode.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        R0lGODlhEgAUAIIAAP////8zAMzMzJmZmf///wAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEBAAAh+QQB
-        BwAEACwAAAAAEgAUAAAIagAJCBxIsKDBgwgTKhzAsKHDhwMEDgBAsaJFixEJTLzIkWJGiCAbSqQogKRJ
-        ACUBfDxZMoDLlyolCphJU0AAiwEErERp8mbFmztTtsQZU2NNmj4p5gza86XLohuFsvQoMSRIhVizat2q
-        NSAAOw==
-</value>
-  </data>
-  <data name="btnCigaretteCode.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        R0lGODlhEgAUAIIAAP////8zAMzMzJmZmf///wAAAAAAAAAAACH/C05FVFNDQVBFMi4wAwEBAAAh+QQB
-        BwAEACwAAAAAEgAUAAAIagAJCBxIsKDBgwgTKhzAsKHDhwMEDgBAsaJFixEJTLzIkWJGiCAbSqQogKRJ
-        ACUBfDxZMoDLlyolCphJU0AAiwEErERp8mbFmztTtsQZU2NNmj4p5gza86XLohuFsvQoMSRIhVizat2q
-        NSAAOw==
-</value>
-  </data>
 </root>

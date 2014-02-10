@@ -64,11 +64,11 @@ namespace THOK.XC.Process.Dao
 
         public DataTable Find()
         {
-            string sql = "select * from cmd_cell A "+
-                          "LEFT JOIN cmd_AREA B on a. area_code=b.area_code "+
-                            "LEFT JOIN cmd_SHELF C on A.Shelf_Code=C.Shelf_Code "+
-                        "LEFT JOIN cmd_product D ON A.Product_Code=D.Product_Code " +
-                "ORDER BY AREA_CODE,A.SHELF_CODE,CELL_CODE";
+            string sql = @"SELECT * FROM CMD_CELL A
+                           LEFT JOIN CMD_AREA B ON A.AREA_CODE=B.AREA_CODE
+                           LEFT JOIN CMD_SHELF C ON A.SHELF_CODE=C.SHELF_CODE
+                           LEFT JOIN CMD_PRODUCT D ON A.PRODUCT_CODE=D.PRODUCT_CODE
+                           ORDER BY C.AREA_CODE,A.SHELF_CODE,CELL_CODE";
             return ExecuteQuery(sql).Tables[0];
         }
 
