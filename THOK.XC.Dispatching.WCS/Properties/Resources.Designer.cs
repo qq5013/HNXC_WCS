@@ -60,6 +60,13 @@ namespace THOK.XC.Dispatching.WCS.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap banner {
+            get {
+                object obj = ResourceManager.GetObject("banner", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap S1_0002 {
             get {
                 object obj = ResourceManager.GetObject("S1.0002", resourceCulture);

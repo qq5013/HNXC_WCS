@@ -14,7 +14,7 @@ namespace THOK.XC.Dispatching.WCS
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            Application.Run(new Main());
         }
     }
 }
