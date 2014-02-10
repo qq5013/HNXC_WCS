@@ -31,10 +31,10 @@ namespace THOK.XC.Dispatching.WCS
                 path = "日志";
                 path = path + @"/" + DateTime.Now.ToString().Substring(0, 4).Trim();
                 CreateDirectory(path);
-                path = path + @"/" + DateTime.Now.ToString().Substring(0, 7).Trim();
+                path = path + @"/" + DateTime.Now.ToString("yyyy-MM-dd").Substring(0, 7).Trim();
                 path = path.TrimEnd(new char[] { '-' });
                 CreateDirectory(path);
-                path = path + @"/" + DateTime.Now.ToShortDateString() + ".txt";
+                path = path + @"/" + DateTime.Now.ToString("yyyy-MM-dd") + ".txt";
                 System.IO.File.AppendAllText(path, string.Format("{0} {1}", DateTime.Now, text + "\r\n"));
             }
             catch (Exception ex)
