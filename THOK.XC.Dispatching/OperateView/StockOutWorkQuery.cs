@@ -44,7 +44,7 @@ namespace THOK.XC.Dispatching.OperateView
                 Process.Dal.BillDal dal = new Process.Dal.BillDal();
                 DataTable dt = dal.GetBillTaskDetail(TaskID);
                 this.dgSub.DataSource = dt;
-            }
+            } 
         }
     }
 }

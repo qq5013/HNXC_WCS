@@ -40,7 +40,7 @@ namespace THOK.XC.Process.Process_02
                     {
                         PalletBillDal Billdal = new PalletBillDal();
                         TaskID = Billdal.CreatePalletInBillTask(false);
-
+                         
                         strWhere = string.Format("TASK_ID='{0}'", TaskID);
                         string[] CellValue = dal.AssignCellTwo(strWhere);//货位申请
                         string TaskNo = dal.InsertTaskDetail(CellValue[0]);
