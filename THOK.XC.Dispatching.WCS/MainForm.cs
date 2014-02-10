@@ -75,7 +75,7 @@ namespace THOK.XC.Dispatching.WCS
 
         private void MainForm_Resize(object sender, EventArgs e)
         {
-            lblTitle.Left = (pnlTitle.Width - lblTitle.Width) / 2;
+           
         }
 
         private void MainForm_Shown(object sender, EventArgs e)

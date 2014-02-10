@@ -14,7 +14,14 @@ namespace THOK.XC.Dispatching.WCS
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Main());
+
+           int height= Screen.PrimaryScreen.WorkingArea.Height;
+           int weight = Screen.PrimaryScreen.WorkingArea.Width;
+           decimal d = (decimal)weight / height;
+           if (d >= (decimal)1.6)
+               Application.Run(new MainForm());
+           else
+               Application.Run(new Main());
         }
     }
 }

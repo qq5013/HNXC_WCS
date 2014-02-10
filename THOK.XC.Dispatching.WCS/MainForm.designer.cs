@@ -30,7 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.pnlTitle = new System.Windows.Forms.Panel();
-            this.lblTitle = new System.Windows.Forms.Label();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.monitorView = new THOK.MCP.View.MonitorView();
@@ -39,6 +38,8 @@
             this.scBottom = new System.Windows.Forms.SplitContainer();
             this.lbLog = new System.Windows.Forms.ListBox();
             this.buttonArea = new THOK.XC.Dispatching.View.ButtonArea();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pnlTitle.SuspendLayout();
             this.pnlMain.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -47,26 +48,17 @@
             this.scBottom.Panel1.SuspendLayout();
             this.scBottom.Panel2.SuspendLayout();
             this.scBottom.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlTitle
             // 
+            this.pnlTitle.Controls.Add(this.pictureBox1);
             this.pnlTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTitle.Location = new System.Drawing.Point(0, 0);
             this.pnlTitle.Name = "pnlTitle";
             this.pnlTitle.Size = new System.Drawing.Size(1024, 58);
             this.pnlTitle.TabIndex = 0;
-            // 
-            // lblTitle
-            // 
-            this.lblTitle.AutoSize = true;
-            this.lblTitle.Font = new System.Drawing.Font("SimSun", 26.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(192)))));
-            this.lblTitle.Location = new System.Drawing.Point(369, 9);
-            this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(303, 35);
-            this.lblTitle.TabIndex = 0;
-            this.lblTitle.Text = "天海欧康调度系统";
             // 
             // pnlMain
             // 
@@ -149,7 +141,7 @@
             // lbLog
             // 
             this.lbLog.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbLog.Font = new System.Drawing.Font("SimSun", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lbLog.Font = new System.Drawing.Font("宋体", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.lbLog.FormattingEnabled = true;
             this.lbLog.HorizontalScrollbar = true;
             this.lbLog.Location = new System.Drawing.Point(0, 0);
@@ -165,13 +157,22 @@
             this.buttonArea.Size = new System.Drawing.Size(500, 130);
             this.buttonArea.TabIndex = 0;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox1.Image = global::THOK.XC.Dispatching.WCS.Properties.Resources.banner;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(1024, 58);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1024, 768);
             this.ControlBox = false;
-            this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlBottom);
             this.Controls.Add(this.pnlTitle);
@@ -186,6 +187,7 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainForm_FormClosed);
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
+            this.pnlTitle.ResumeLayout(false);
             this.pnlMain.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -194,15 +196,14 @@
             this.scBottom.Panel1.ResumeLayout(false);
             this.scBottom.Panel2.ResumeLayout(false);
             this.scBottom.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
         private System.Windows.Forms.Panel pnlTitle;
-        private System.Windows.Forms.Label lblTitle;
         private System.Windows.Forms.Panel pnlMain;
         private THOK.MCP.View.MonitorView monitorView;
         private System.Windows.Forms.Panel pnlBottom;
@@ -211,6 +212,7 @@
         private System.Windows.Forms.ListBox lbLog;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private MCP.View.MonitorView monitorView1;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 
