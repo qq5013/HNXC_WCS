@@ -644,6 +644,82 @@ namespace THOK.XC.Process.Process_Crane
                     dCraneState[msg["CraneNo"]] = "1";
                 }
                 Logger.Error(string.Format("堆垛机{0}返回错误代码{1}{2}", msg["CraneNo"], msg["ReturnCode"], ""));
+
+                #region 堆垛机错误而停止，重新选择出库批次
+                if (msg["ReturnCode"] == "000")
+                {
+                    DataRow dr = null;
+                    TaskDal dal = new TaskDal();
+                    if (dtCrane != null)
+                    {
+                        DataRow[] drs = dtCrane.Select(string.Format("SQUENCE_NO='{0}'", msg["SequenceNo"]));
+                        if (drs.Length > 0)
+                        {
+                            dr = drs[0];
+                        }
+                    }
+                    if (dr == null)
+                    {
+                        //根据流水号，获取资料
+                        DataTable dt = dal.CraneTaskIn(string.Format("DETAIL.SQUENCE_NO='{0}' AND DETAIL.CRANE_NO IS NOT NULL", msg["SequenceNo"]));
+                        if (dt.Rows.Count > 0)
+                            dr = dt.Rows[0];
+                    }
+                    if (dr != null)
+                    {
+
+                        string ErrMsg = "";
+                        DataRow[] drMsgs = dtErrMesage.Select(string.Format("CODE='{0}'", dr["ERR_CODE"].ToString()));
+                        if (drMsgs.Length > 0)
+                            ErrMsg = drMsgs[0]["DESCRIPTION"].ToString();
+
+                        string strBillNo = "";
+                        string[] strMessage = new string[4];
+                        strMessage[0] = "9";
+                        strMessage[1] = dr["TASK_ID"].ToString();
+                        strMessage[2] = "错误代码：" + dr["ERR_CODE"] + ",错误内容：" + ErrMsg;
+                        strMessage[3] = msg["CraneNo"];
+
+                        DataTable dtProductInfo = dal.GetProductInfoByTaskID(dr["TASK_ID"].ToString());
+
+                        while ((strBillNo = FormDialog.ShowDialog(strMessage, dtProductInfo)) != "")
+                        {
+                            if (strBillNo != "1")
+                            {
+                                BillDal bdal = new BillDal();
+                                string strNewBillNo = strBillNo;
+                                //产生新的出库单
+                                string strOutTaskID = bdal.CreateCancelBillOutTask(dr["TASK_ID"].ToString(), dr["BILL_NO"].ToString(), strNewBillNo, msg["CraneNo"]);
+                                DataTable dtOutTask = dal.CraneTaskOut(string.Format("TASK_ID='{0}'", strOutTaskID));
+                                WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);
+
+                                //取消当前单据的出货记录
+                                CellDal cdal = new CellDal();
+                                cdal.UpdateCellUnLock(dr["CELL_CODE"].ToString());
+                                dal.UpdateTaskState(dr["TASK_ID"].ToString(), "3");
+                                break;
+
+
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+
+
+
+                    }
+                    if (msg["AssignmenID"] == "00000000")
+                    {
+                        lock (dCraneState)
+                        {
+                            dCraneState[msg["CraneNo"]] = "0";
+                        }
+                    }
+                }
+                #endregion
+
             }
             SendACK(msg);
             CraneErrWriteToPLC(msg["CraneNo"], int.Parse(msg["ReturnCode"]));
@@ -668,7 +744,7 @@ namespace THOK.XC.Process.Process_Crane
             if (dr == null)
             {
                 //根据流水号，获取资料
-                DataTable dt = dal.CraneTaskIn(string.Format("DETAIL.SQUENCE_NO='' AND DETAIL.CRANE_NO IS NOT NULL", msg["SequenceNo"]));
+                DataTable dt = dal.CraneTaskIn(string.Format("DETAIL.SQUENCE_NO='{0}' AND DETAIL.CRANE_NO IS NOT NULL", msg["SequenceNo"]));
                 if (dt.Rows.Count > 0)
                     dr = dt.Rows[0];
             }
@@ -809,7 +885,7 @@ namespace THOK.XC.Process.Process_Crane
                             BillDal bdal = new BillDal();
                             string strNewBillNo = strBillNo;
 
-                            string strOutTaskID = bdal.CreateCancelBillOutTask(dr["TASK_ID"].ToString(), dr["BILL_NO"].ToString(), strNewBillNo, "");
+                            string strOutTaskID = bdal.CreateCancelBillOutTask(dr["TASK_ID"].ToString(), dr["BILL_NO"].ToString(), strNewBillNo);
 
                             DataTable dtOutTask = dal.CraneTaskOut(string.Format("TASK_ID='{0}'", strOutTaskID));
 

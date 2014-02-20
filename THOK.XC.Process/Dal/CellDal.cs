@@ -44,7 +44,17 @@ namespace THOK.XC.Process.Dal
                 dao.UpdateCellLock(strCell);
             }
         }
-
+        /// <summary>
+        /// 货位解锁
+        /// </summary>
+        public void UpdateCellUnLock(string strCell)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                CellDao dao = new CellDao();
+                dao.UpdateCellUnLock(strCell);
+            }
+        }
         /// <summary>
         /// 更新货位新的RFID,及出库错误标志。
         /// </summary>

@@ -136,7 +136,7 @@ namespace THOK.XC.Process.Process_02
                                 {
                                     //生成二楼退库单
                                     BillDal bdal = new BillDal();
-                                    string CancelTaskID = bdal.CreateCancelBillInTask(strTask[0], strTask[1], NewPalletCode);//产生退库单，并生成明细。
+                                    string CancelTaskID = bdal.CreateCancelBillInTask(strTask[0], strTask[1]);//产生退库单，并生成明细。
                                     Celldal.UpdateCellNewPalletCode(CellCode, NewPalletCode);//更新货位错误标志。
 
                                     dal.UpdateTaskDetailStation(FromStation, ToStation, "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", CancelTaskID)); //更新申请货位完成。
@@ -157,7 +157,7 @@ namespace THOK.XC.Process.Process_02
                                     }
                                     WriteToProcess("CarProcess", "CarInRequest", dt);//调度穿梭车入库。
 
-                                    string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo, dtTask.Rows[0]["PALLET_CODE"].ToString());
+                                    string strOutTaskID = bdal.CreateCancelBillOutTask(strTask[0], strTask[1], strNewBillNo);
                                     DataTable dtOutTask = dal.CraneTaskOut(string.Format("TASK_ID='{0}'", strOutTaskID));
 
                                     WriteToProcess("CraneProcess", "CraneInRequest", dtOutTask);

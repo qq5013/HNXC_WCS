@@ -18,7 +18,7 @@ namespace THOK.XC.Dispatching.View
         private int Flag;
         public string strValue;
         private DataTable dtProductInfo;
-        private SerialPort comm = new SerialPort();
+     
         StringBuilder builder = new StringBuilder();
 
         public CheckScan()
@@ -79,28 +79,28 @@ namespace THOK.XC.Dispatching.View
             this.txtWeight.Text = dr["WEIGHT"].ToString();
 
 
-            THOK.MCP.Config.Configuration conf = new MCP.Config.Configuration();
-            conf.Load("Config.xml");
+            //THOK.MCP.Config.Configuration conf = new MCP.Config.Configuration();
+            //conf.Load("Config.xml");
 
 
-            comm.PortName = conf.Attributes["ScanPortName"];
-            comm.BaudRate = int.Parse(conf.Attributes["ScanBaudRate"]);
-            comm.NewLine = "\r\n";
-            comm.RtsEnable = true;//根据实际情况吧。
+            //comm.PortName = conf.Attributes["ScanPortName"];
+            //comm.BaudRate = int.Parse(conf.Attributes["ScanBaudRate"]);
+            //comm.NewLine = "\r\n";
+            //comm.RtsEnable = true;//根据实际情况吧。
 
-            //添加事件注册
-            comm.DataReceived += comm_DataReceived;
-            try
-            {
-                comm.Open();
-            }
-            catch (Exception ex)
-            {
-                //捕获到异常信息，创建一个新的comm对象，之前的不能用了。
-                comm = new SerialPort();
-                //现实异常信息给客户。
-                MessageBox.Show(ex.Message);
-            }
+            ////添加事件注册
+            //comm.DataReceived += comm_DataReceived;
+            //try
+            //{
+            //    comm.Open();
+            //}
+            //catch (Exception ex)
+            //{
+            //    //捕获到异常信息，创建一个新的comm对象，之前的不能用了。
+            //    comm = new SerialPort();
+            //    //现实异常信息给客户。
+            //    MessageBox.Show(ex.Message);
+            //}
         }
 
         private void CheckScan_Activated(object sender, EventArgs e)
@@ -109,29 +109,29 @@ namespace THOK.XC.Dispatching.View
             this.txtCode.Focus();
         }
 
-        void comm_DataReceived(object sender, SerialDataReceivedEventArgs e)
-        {
-            int n = comm.BytesToRead;//先记录下来，避免某种原因，人为的原因，操作几次之间时间长，缓存不一致
-            byte[] buf = new byte[n];//声明一个临时数组存储当前来的串口数据
+        //void comm_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        //{
+        //    int n = comm.BytesToRead;//先记录下来，避免某种原因，人为的原因，操作几次之间时间长，缓存不一致
+        //    byte[] buf = new byte[n];//声明一个临时数组存储当前来的串口数据
          
-            comm.Read(buf, 0, n);//读取缓冲数据
-            builder.Remove(0, builder.Length);//清除字符串构造器的内容
-            //因为要访问ui资源，所以需要使用invoke方式同步ui。
-            this.Invoke((EventHandler)(delegate
-            {
+        //    comm.Read(buf, 0, n);//读取缓冲数据
+        //    builder.Remove(0, builder.Length);//清除字符串构造器的内容
+        //    //因为要访问ui资源，所以需要使用invoke方式同步ui。
+        //    this.Invoke((EventHandler)(delegate
+        //    {
 
-                //直接按ASCII规则转换成字符串
-                builder.Append(Encoding.ASCII.GetString(buf));
+        //        //直接按ASCII规则转换成字符串
+        //        builder.Append(Encoding.ASCII.GetString(buf));
 
-                //追加的形式添加到文本框末端，并滚动到最后。
-                this.txtCode.AppendText(builder.ToString());
-                if (this.txtCode.Text.IndexOf("\r\n") > 0)
-                {
-                    this.txtCode.Text = txtCode.Text.Replace("\r\n", "");
-                    txtCode_KeyDown(sender, new KeyEventArgs(Keys.Enter));
-                }
+        //        //追加的形式添加到文本框末端，并滚动到最后。
+        //        this.txtCode.AppendText(builder.ToString());
+        //        if (this.txtCode.Text.IndexOf("\r\n") > 0)
+        //        {
+        //            this.txtCode.Text = txtCode.Text.Replace("\r\n", "");
+        //            txtCode_KeyDown(sender, new KeyEventArgs(Keys.Enter));
+        //        }
 
-            }));
-        }
+        //    }));
+        //}
     }
 }

@@ -15,13 +15,33 @@ namespace THOK.XC.Dispatching.WCS
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-           int height= Screen.PrimaryScreen.WorkingArea.Height;
-           int weight = Screen.PrimaryScreen.WorkingArea.Width;
-           decimal d = (decimal)weight / height;
-           if (d >= (decimal)1.6)
-               Application.Run(new MainForm());
-           else
-               Application.Run(new Main());
+            bool ExisFlag = false;  
+           System.Diagnostics.Process currentProccess = System.Diagnostics.Process.GetCurrentProcess();
+           System.Diagnostics.Process[] currentProccessArray = System.Diagnostics.Process.GetProcesses();
+           foreach (System.Diagnostics.Process p in currentProccessArray)
+           {
+               if (p.ProcessName == currentProccess.ProcessName && p.Id != currentProccess.Id)
+               {
+                   ExisFlag = true;
+                   break;
+               }
+           }
+
+            if (ExisFlag)
+            {
+                MessageBox.Show("自动化仓储控制系统已经执行！", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            else
+            {
+                int height = Screen.PrimaryScreen.WorkingArea.Height;
+                int weight = Screen.PrimaryScreen.WorkingArea.Width;
+                decimal d = (decimal)weight / height;
+                if (d >= (decimal)1.6)
+                    Application.Run(new MainForm());
+                else
+                    Application.Run(new Main());
+            }
         }
     }
 }

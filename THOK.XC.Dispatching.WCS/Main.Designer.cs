@@ -28,20 +28,21 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.lbLog = new System.Windows.Forms.ListBox();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.monitorView = new THOK.MCP.View.MonitorView();
+            this.monitorView1 = new THOK.MCP.View.MonitorView();
             this.splitContainer3 = new System.Windows.Forms.SplitContainer();
+            this.monitorView2 = new THOK.MCP.View.MonitorView();
+            this.monitorView3 = new THOK.MCP.View.MonitorView();
             this.scBottom = new System.Windows.Forms.SplitContainer();
+            this.buttonArea = new THOK.XC.Dispatching.View.ButtonArea();
             this.pnlBottom = new System.Windows.Forms.Panel();
             this.pnlTitle = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.monitorView = new THOK.MCP.View.MonitorView();
-            this.monitorView1 = new THOK.MCP.View.MonitorView();
-            this.monitorView2 = new THOK.MCP.View.MonitorView();
-            this.monitorView3 = new THOK.MCP.View.MonitorView();
-            this.buttonArea = new THOK.XC.Dispatching.View.ButtonArea();
             this.pnlMain.SuspendLayout();
             this.splitContainer2.Panel1.SuspendLayout();
             this.splitContainer2.Panel2.SuspendLayout();
@@ -117,6 +118,28 @@
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 1;
             // 
+            // monitorView
+            // 
+            this.monitorView.BackColor = System.Drawing.SystemColors.Highlight;
+            this.monitorView.BackgroundImage = global::THOK.XC.Dispatching.WCS.Properties.Resources.S1_2;
+            this.monitorView.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.monitorView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.monitorView.Location = new System.Drawing.Point(0, 0);
+            this.monitorView.Name = "monitorView";
+            this.monitorView.Size = new System.Drawing.Size(542, 141);
+            this.monitorView.TabIndex = 0;
+            // 
+            // monitorView1
+            // 
+            this.monitorView1.BackColor = System.Drawing.SystemColors.Highlight;
+            this.monitorView1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("monitorView1.BackgroundImage")));
+            this.monitorView1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.monitorView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.monitorView1.Location = new System.Drawing.Point(0, 0);
+            this.monitorView1.Name = "monitorView1";
+            this.monitorView1.Size = new System.Drawing.Size(489, 141);
+            this.monitorView1.TabIndex = 1;
+            // 
             // splitContainer3
             // 
             this.splitContainer3.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -135,6 +158,28 @@
             this.splitContainer3.SplitterWidth = 1;
             this.splitContainer3.TabIndex = 2;
             // 
+            // monitorView2
+            // 
+            this.monitorView2.BackColor = System.Drawing.SystemColors.Highlight;
+            this.monitorView2.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("monitorView2.BackgroundImage")));
+            this.monitorView2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.monitorView2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.monitorView2.Location = new System.Drawing.Point(0, 0);
+            this.monitorView2.Name = "monitorView2";
+            this.monitorView2.Size = new System.Drawing.Size(542, 141);
+            this.monitorView2.TabIndex = 0;
+            // 
+            // monitorView3
+            // 
+            this.monitorView3.BackColor = System.Drawing.SystemColors.Highlight;
+            this.monitorView3.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("monitorView3.BackgroundImage")));
+            this.monitorView3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.monitorView3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.monitorView3.Location = new System.Drawing.Point(0, 0);
+            this.monitorView3.Name = "monitorView3";
+            this.monitorView3.Size = new System.Drawing.Size(489, 141);
+            this.monitorView3.TabIndex = 1;
+            // 
             // scBottom
             // 
             this.scBottom.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -151,6 +196,14 @@
             this.scBottom.Size = new System.Drawing.Size(1032, 130);
             this.scBottom.SplitterDistance = 544;
             this.scBottom.TabIndex = 0;
+            // 
+            // buttonArea
+            // 
+            this.buttonArea.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonArea.Location = new System.Drawing.Point(0, 0);
+            this.buttonArea.Name = "buttonArea";
+            this.buttonArea.Size = new System.Drawing.Size(484, 130);
+            this.buttonArea.TabIndex = 0;
             // 
             // pnlBottom
             // 
@@ -180,58 +233,6 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
-            // 
-            // monitorView
-            // 
-            this.monitorView.BackColor = System.Drawing.SystemColors.Highlight;
-            this.monitorView.BackgroundImage = global::THOK.XC.Dispatching.WCS.Properties.Resources.S2;
-            this.monitorView.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.monitorView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.monitorView.Location = new System.Drawing.Point(0, 0);
-            this.monitorView.Name = "monitorView";
-            this.monitorView.Size = new System.Drawing.Size(542, 141);
-            this.monitorView.TabIndex = 0;
-            // 
-            // monitorView1
-            // 
-            this.monitorView1.BackColor = System.Drawing.SystemColors.Highlight;
-            this.monitorView1.BackgroundImage = global::THOK.XC.Dispatching.WCS.Properties.Resources.S3;
-            this.monitorView1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.monitorView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.monitorView1.Location = new System.Drawing.Point(0, 0);
-            this.monitorView1.Name = "monitorView1";
-            this.monitorView1.Size = new System.Drawing.Size(489, 141);
-            this.monitorView1.TabIndex = 1;
-            // 
-            // monitorView2
-            // 
-            this.monitorView2.BackColor = System.Drawing.SystemColors.Highlight;
-            this.monitorView2.BackgroundImage = global::THOK.XC.Dispatching.WCS.Properties.Resources.S2;
-            this.monitorView2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.monitorView2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.monitorView2.Location = new System.Drawing.Point(0, 0);
-            this.monitorView2.Name = "monitorView2";
-            this.monitorView2.Size = new System.Drawing.Size(542, 141);
-            this.monitorView2.TabIndex = 0;
-            // 
-            // monitorView3
-            // 
-            this.monitorView3.BackColor = System.Drawing.SystemColors.Highlight;
-            this.monitorView3.BackgroundImage = global::THOK.XC.Dispatching.WCS.Properties.Resources.S3;
-            this.monitorView3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.monitorView3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.monitorView3.Location = new System.Drawing.Point(0, 0);
-            this.monitorView3.Name = "monitorView3";
-            this.monitorView3.Size = new System.Drawing.Size(489, 141);
-            this.monitorView3.TabIndex = 1;
-            // 
-            // buttonArea
-            // 
-            this.buttonArea.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonArea.Location = new System.Drawing.Point(0, 0);
-            this.buttonArea.Name = "buttonArea";
-            this.buttonArea.Size = new System.Drawing.Size(484, 130);
-            this.buttonArea.TabIndex = 0;
             // 
             // Main
             // 

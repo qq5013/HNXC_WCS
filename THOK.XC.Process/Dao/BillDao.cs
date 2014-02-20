@@ -18,6 +18,8 @@ namespace THOK.XC.Process.Dao
         {
             string strBillNo = GetBillNo("IS");
 
+            
+
             string strSQL = string.Format("INSERT INTO WMS_BILL_MASTER (BILL_NO,BILL_DATE,BTYPE_CODE,WAREHOUSE_CODE,STATUS,STATE,OPERATER,OPERATE_DATE,CHECKER,CHECK_DATE, TASKER,TASK_DATE,BILL_METHOD,SOURCE_BILLNO,SCHEDULE_ITEMNO)" +
                 "values ('{0}',SYSDATE,'007','001','1','3','000001',SYSDATE,'000001',SYSDATE,'000001',SYSDATE,'0','{1}',0)", strBillNo, Bill_No);
             ExecuteNonQuery(strSQL);
@@ -29,71 +31,79 @@ namespace THOK.XC.Process.Dao
             strSQL = string.Format("INSERT INTO WMS_PRODUCT_STATE(BILL_NO,ITEM_NO,PRODUCT_CODE,WEIGHT,REAL_WEIGHT,PACKAGE_COUNT,CELL_CODE,PRODUCT_BARCODE,PALLET_CODE,IS_MIX) " +
                      "SELECT '{0}',1,PRODUCT_CODE,WEIGHT,REAL_WEIGHT,PACKAGE_COUNT,CELL_CODE,PRODUCT_BARCODE,PALLET_CODE,IS_MIX FROM WMS_PRODUCT_STATE WHERE  BILL_NO||LPAD(ITEM_NO, 2, '0')='{1}'", strBillNo, TaskID);
             ExecuteNonQuery(strSQL);
+
+            string Source_BillNO="";
+            strSQL = string.Format("SELECT CMD_CELL.BILL_NO FROM CMD_CELL INNER JOIN WCS_TASK ON WCS_TASK.CELL_CODE=CMD_CELL.CELL_CODE " +
+                     "WHERE TASK_ID='{0}'", TaskID);
+            DataTable dt = ExecuteQuery(strSQL).Tables[0];
+            if (dt.Rows.Count > 0)
+                Source_BillNO = dt.Rows[0][0].ToString();
+
             strSQL = string.Format("INSERT INTO WCS_TASK(TASK_ID,TASK_TYPE,TASK_LEVEL,BILL_NO,PRODUCT_CODE,REAL_WEIGHT,PRODUCT_BARCODE,PALLET_CODE,STATE,TASK_DATE,TASKER,PRODUCT_TYPE,IS_MIX,CELL_CODE,SOURCE_BILLNO)" +
                  "SELECT STATE.BILL_NO||LPAD(ITEM_NO, 2, '0'),BTYPE.TASK_TYPE ,BTYPE.TASK_LEVEL,STATE.BILL_NO,PRODUCT_CODE,REAL_WEIGHT,PRODUCT_BARCODE,PALLET_CODE,'0',TASK_DATE,TASKER,0,IS_MIX,CELL_CODE,'{1}' FROM  WMS_PRODUCT_STATE STATE " +
                   "LEFT JOIN WMS_BILL_MASTER BILL ON STATE.BILL_NO=BILL.BILL_NO " +
-                  "LEFT JOIN CMD_BILL_TYPE BTYPE ON BILL.BTYPE_CODE=BTYPE.BTYPE_CODE WHERE  STATE.BILL_NO='{0}'", strBillNo, Bill_No);
+                  "LEFT JOIN CMD_BILL_TYPE BTYPE ON BILL.BTYPE_CODE=BTYPE.BTYPE_CODE WHERE  STATE.BILL_NO='{0}'", strBillNo, Source_BillNO);
             ExecuteNonQuery(strSQL);
 
             return strBillNo + "01";
 
         }
-        /// <summary>
-        /// 二楼出库托盘校验出错，补充生成 出库单。
-        /// </summary>
-        /// <returns>TaskID</returns>
-        public string CreateCancelBillOutTask(string TaskID, string Bill_No)
-        {
-            string strBillNo = GetBillNo("OS");
+        ///// <summary>
+        ///// 二楼出库托盘校验出错，补充生成 出库单。
+        ///// </summary>
+        ///// <returns>TaskID</returns>
+        //public string CreateCancelBillOutTask(string TaskID, string Bill_No)
+        //{
+        //    string strBillNo = GetBillNo("OS");
 
-            string strSQL = string.Format("INSERT INTO WMS_BILL_MASTER (BILL_NO,BILL_DATE,BTYPE_CODE,WAREHOUSE_CODE,STATUS,STATE,OPERATER,OPERATE_DATE,CHECKER,CHECK_DATE, TASKER,TASK_DATE,BILL_METHOD,SOURCE_BILLNO)" +
-                "values ('{0}',SYSDATE,'002','001','1','3','000001',SYSDATE,'000001',SYSDATE,'000001',SYSDATE,'0','{1}')", strBillNo, Bill_No);
-            ExecuteNonQuery(strSQL);
-            strSQL = string.Format("INSERT INTO WMS_BILL_DETAIL(BILL_NO,ITEM_NO,PRODUCT_CODE,WEIGHT,REAL_WEIGHT,PACKAGE_COUNT,NC_COUNT,IS_MIX,FPRODUCT_CODE) " +
-                 "SELECT '{0}',1,PRODUCT_CODE,WEIGHT,REAL_WEIGHT,PACKAGE_COUNT,NC_COUNT,IS_MIX,FPRODUCT_CODE FROM  WMS_BILL_DETAIL WHERE BILL_NO||LPAD(ITEM_NO, 2, '0')='{1}'", TaskID, Bill_No);
-            ExecuteNonQuery(strSQL);
+        //    string strSQL = string.Format("INSERT INTO WMS_BILL_MASTER (BILL_NO,BILL_DATE,BTYPE_CODE,WAREHOUSE_CODE,STATUS,STATE,OPERATER,OPERATE_DATE,CHECKER,CHECK_DATE, TASKER,TASK_DATE,BILL_METHOD,SOURCE_BILLNO)" +
+        //        "values ('{0}',SYSDATE,'002','001','1','3','000001',SYSDATE,'000001',SYSDATE,'000001',SYSDATE,'0','{1}')", strBillNo, Bill_No);
+        //    ExecuteNonQuery(strSQL);
+        //    strSQL = string.Format("INSERT INTO WMS_BILL_DETAIL(BILL_NO,ITEM_NO,PRODUCT_CODE,WEIGHT,REAL_WEIGHT,PACKAGE_COUNT,NC_COUNT,IS_MIX,FPRODUCT_CODE) " +
+        //         "SELECT '{0}',1,PRODUCT_CODE,WEIGHT,REAL_WEIGHT,PACKAGE_COUNT,NC_COUNT,IS_MIX,FPRODUCT_CODE FROM  WMS_BILL_DETAIL WHERE BILL_NO||LPAD(ITEM_NO, 2, '0')='{1}'", TaskID, Bill_No);
+        //    ExecuteNonQuery(strSQL);
 
-            strSQL = string.Format("INSERT INTO WMS_PRODUCT_STATE(BILL_NO,ITEM_NO,PRODUCT_CODE,WEIGHT,REAL_WEIGHT,PACKAGE_COUNT,IS_MIX,FORDERBILLNO,FORDER) " +
-                  "SELECT '{0}',1,PRODUCT_CODE,WEIGHT,REAL_WEIGHT,PACKAGE_COUNT,IS_MIX,'{2}',FORDER FROM WMS_PRODUCT_STATE WHERE  BILL_NO||LPAD(ITEM_NO, 2, '0')='{1}'",strBillNo, TaskID, Bill_No);
-            ExecuteNonQuery(strSQL);
-
-
-            //分配货位
-            strSQL = string.Format("SELECT DISTINCT CELL.CELL_CODE,CELL.PRODUCT_CODE,CELL.PRODUCT_BARCODE,CELL.PALLET_CODE,CELL.IN_DATE FROM CMD_CELL CELL INNER JOIN WMS_BILL_MASTER WBM ON CELL.BILL_NO=WBM.BILL_NO " +
-                   "INNER JOIN WMS_PRODUCT_STATE PS ON PS.PRODUCT_CODE=CELL.PRODUCT_CODE AND PS.PRODUCT_BARCODE=CELL.PRODUCT_BARCODE " +
-                   "INNER JOIN (SELECT PRODUCT_CODE,REAL_WEIGHT,BILL_METHOD,CIGARETTE_CODE,FORMULA_CODE,IS_MIX FROM WMS_PRODUCT_STATE PS " +
-                   "INNER JOIN WMS_BILL_MASTER BM ON PS.BILL_NO=BM.BILL_NO WHERE  PS.BILL_NO||LPAD(ITEM_NO, 2, '0')='{0}') TMP " +
-                   "ON TMP.BILL_METHOD=WBM.BILL_METHOD AND TMP.CIGARETTE_CODE=WBM.CIGARETTE_CODE AND TMP.FORMULA_CODE=WBM.FORMULA_CODE " +
-                   "AND TMP.PRODUCT_CODE=CELL.PRODUCT_CODE AND TMP.REAL_WEIGHT=CELL.REAL_WEIGHT  AND TMP.IS_MIX=PS.IS_MIX " +
-                   "WHERE  CELL.IS_LOCK='0' AND CELL.IS_ACTIVE='1' AND CELL.ERROR_FLAG='0'  ORDER BY CELL.IN_DATE", TaskID);
+        //    strSQL = string.Format("INSERT INTO WMS_PRODUCT_STATE(BILL_NO,ITEM_NO,PRODUCT_CODE,WEIGHT,REAL_WEIGHT,PACKAGE_COUNT,IS_MIX,FORDERBILLNO,FORDER) " +
+        //          "SELECT '{0}',1,PRODUCT_CODE,WEIGHT,REAL_WEIGHT,PACKAGE_COUNT,IS_MIX,'{2}',FORDER FROM WMS_PRODUCT_STATE WHERE  BILL_NO||LPAD(ITEM_NO, 2, '0')='{1}'",strBillNo, TaskID, Bill_No);
+        //    ExecuteNonQuery(strSQL);
 
 
-            DataTable dt = ExecuteQuery(strSQL).Tables[0];
-            if (dt.Rows.Count > 0)
-            {
-                DataRow dr = dt.Rows[0];
-                strSQL = string.Format("UPDATE WMS_PRODUCT_STATE SET CELL_CODE='{0}',PRODUCT_BARCODE='{1}',PALLET_CODE='{2}' WHERE BILL_NO='{3}'", new string[] { dr["CELL_CODE"].ToString(), dr["PRODUCT_BARCODE"].ToString(), dr["PALLET_CODE"].ToString(), strBillNo });
-                ExecuteNonQuery(strSQL);
+        //    //分配货位
+        //    strSQL = string.Format("SELECT DISTINCT CELL.CELL_CODE,CELL.PRODUCT_CODE,CELL.PRODUCT_BARCODE,CELL.PALLET_CODE,CELL.IN_DATE FROM CMD_CELL CELL INNER JOIN WMS_BILL_MASTER WBM ON CELL.BILL_NO=WBM.BILL_NO " +
+        //           "INNER JOIN WMS_PRODUCT_STATE PS ON PS.PRODUCT_CODE=CELL.PRODUCT_CODE AND PS.PRODUCT_BARCODE=CELL.PRODUCT_BARCODE " +
+        //           "INNER JOIN (SELECT PRODUCT_CODE,REAL_WEIGHT,BILL_METHOD,CIGARETTE_CODE,FORMULA_CODE,IS_MIX FROM WMS_PRODUCT_STATE PS " +
+        //           "INNER JOIN WMS_BILL_MASTER BM ON PS.BILL_NO=BM.BILL_NO WHERE  PS.BILL_NO||LPAD(ITEM_NO, 2, '0')='{0}') TMP " +
+        //           "ON TMP.BILL_METHOD=WBM.BILL_METHOD AND TMP.CIGARETTE_CODE=WBM.CIGARETTE_CODE AND TMP.FORMULA_CODE=WBM.FORMULA_CODE " +
+        //           "AND TMP.PRODUCT_CODE=CELL.PRODUCT_CODE AND TMP.REAL_WEIGHT=CELL.REAL_WEIGHT  AND TMP.IS_MIX=PS.IS_MIX " +
+        //           "WHERE  CELL.IS_LOCK='0' AND CELL.IS_ACTIVE='1' AND CELL.ERROR_FLAG='0'  ORDER BY CELL.IN_DATE", TaskID);
 
 
-                strSQL = string.Format("INSERT INTO WCS_TASK(TASK_ID,TASK_TYPE,TASK_LEVEL,BILL_NO,PRODUCT_CODE,REAL_WEIGHT,PRODUCT_BARCODE,PALLET_CODE,STATE,TASK_DATE,TASKER,PRODUCT_TYPE,IS_MIX,CELL_CODE,FORDERBILLNO,FORDER)" +
-                     "SELECT STATE.BILL_NO||LPAD(ITEM_NO, 2, '0'),BTYPE.TASK_TYPE ,BTYPE.TASK_LEVEL,STATE.BILL_NO,PRODUCT_CODE,REAL_WEIGHT,PRODUCT_BARCODE,PALLET_CODE,'0',TASK_DATE,TASKER,0,IS_MIX,CELL_CODE,FORDERBILLNO,FORDER FROM  WMS_PRODUCT_STATE STATE " +
-                      "LEFT JOIN WMS_BILL_MASTER BILL ON STATE.BILL_NO=BILL.BILL_NO " +
-                      "LEFT JOIN CMD_BILL_TYPE BTYPE ON BILL.BTYPE_CODE=BTYPE.BTYPE_CODE WHERE  STATE.BILL_NO='{0}'", strBillNo);
-                ExecuteNonQuery(strSQL);
-            }
+        //    DataTable dt = ExecuteQuery(strSQL).Tables[0];
+        //    if (dt.Rows.Count > 0)
+        //    {
+        //        DataRow dr = dt.Rows[0];
+        //        strSQL = string.Format("UPDATE WMS_PRODUCT_STATE SET CELL_CODE='{0}',PRODUCT_BARCODE='{1}',PALLET_CODE='{2}' WHERE BILL_NO='{3}'", new string[] { dr["CELL_CODE"].ToString(), dr["PRODUCT_BARCODE"].ToString(), dr["PALLET_CODE"].ToString(), strBillNo });
+        //        ExecuteNonQuery(strSQL);
+
+
+        //        strSQL = string.Format("INSERT INTO WCS_TASK(TASK_ID,TASK_TYPE,TASK_LEVEL,BILL_NO,PRODUCT_CODE,REAL_WEIGHT,PRODUCT_BARCODE,PALLET_CODE,STATE,TASK_DATE,TASKER,PRODUCT_TYPE,IS_MIX,CELL_CODE,FORDERBILLNO,FORDER)" +
+        //             "SELECT STATE.BILL_NO||LPAD(ITEM_NO, 2, '0'),BTYPE.TASK_TYPE ,BTYPE.TASK_LEVEL,STATE.BILL_NO,PRODUCT_CODE,REAL_WEIGHT,PRODUCT_BARCODE,PALLET_CODE,'0',TASK_DATE,TASKER,0,IS_MIX,CELL_CODE,FORDERBILLNO,FORDER FROM  WMS_PRODUCT_STATE STATE " +
+        //              "LEFT JOIN WMS_BILL_MASTER BILL ON STATE.BILL_NO=BILL.BILL_NO " +
+        //              "LEFT JOIN CMD_BILL_TYPE BTYPE ON BILL.BTYPE_CODE=BTYPE.BTYPE_CODE WHERE  STATE.BILL_NO='{0}'", strBillNo);
+        //        ExecuteNonQuery(strSQL);
+        //    }
           
 
-            return strBillNo + "01";
+        //    return strBillNo + "01";
 
           
-        }
+        //}
 
         /// <summary>
         /// 二楼出库托盘校验出错，由用户选定出库的入库单号OutBillNO， 补充生成 出库单。
         /// </summary>
         /// <returns>TaskID</returns>
-        public string CreateCancelBillOutTask(string TaskID, string Bill_No, string OutBillNO, string OLD_PALLET_CODE)
+        public string CreateCancelBillOutTask(string TaskID, string Bill_No, string OutBillNO)
         {
             string strBillNo = GetBillNo("OS");
 
@@ -139,6 +149,58 @@ namespace THOK.XC.Process.Dao
 
 
         }
+
+        /// <summary>
+        /// 二楼出库堆垛机出现问题，由用户选定出库的入库单号OutBillNO（其它堆垛机的入库单）， 补充生成新出库单。
+        /// </summary>
+        /// <returns>TaskID</returns>
+        public string CreateCancelBillOutTask(string TaskID, string Bill_No, string OutBillNO, string CraneNo)
+        {
+            string strBillNo = GetBillNo("OS");
+
+            string strSQL = string.Format("INSERT INTO WMS_BILL_MASTER (BILL_NO,BILL_DATE,BTYPE_CODE,WAREHOUSE_CODE,STATUS,STATE,OPERATER,OPERATE_DATE,CHECKER,CHECK_DATE, TASKER,TASK_DATE,BILL_METHOD,SOURCE_BILLNO)" +
+                "values ('{0}',SYSDATE,'002','001','1','3','000001',SYSDATE,'000001',SYSDATE,'000001',SYSDATE,'0','{1}')", strBillNo, Bill_No);
+            ExecuteNonQuery(strSQL);
+            strSQL = string.Format("INSERT INTO WMS_BILL_DETAIL(BILL_NO,ITEM_NO,PRODUCT_CODE,WEIGHT,REAL_WEIGHT,PACKAGE_COUNT,NC_COUNT,IS_MIX,FPRODUCT_CODE) " +
+                 "SELECT '{0}',1,PRODUCT_CODE,WEIGHT,REAL_WEIGHT,PACKAGE_COUNT,NC_COUNT,IS_MIX,FPRODUCT_CODE FROM  WMS_BILL_DETAIL WHERE BILL_NO||LPAD(ITEM_NO, 2, '0')='{1}'", TaskID, Bill_No);
+            ExecuteNonQuery(strSQL);
+
+            strSQL = string.Format("INSERT INTO WMS_PRODUCT_STATE(BILL_NO,ITEM_NO,PRODUCT_CODE,WEIGHT,REAL_WEIGHT,PACKAGE_COUNT,IS_MIX) " +
+                  "SELECT '{0}',1,PRODUCT_CODE,WEIGHT,REAL_WEIGHT,PACKAGE_COUNT,IS_MIX FROM WMS_PRODUCT_STATE WHERE  BILL_NO||LPAD(ITEM_NO, 2, '0')='{1}'", strBillNo, TaskID);
+            ExecuteNonQuery(strSQL);
+
+
+            //分配货位
+            strSQL = string.Format("SELECT DISTINCT CELL.CELL_CODE,CELL.PRODUCT_CODE,CELL.PRODUCT_BARCODE,CELL.PALLET_CODE,CELL.IN_DATE FROM CMD_CELL CELL INNER JOIN WMS_BILL_MASTER WBM ON CELL.BILL_NO=WBM.BILL_NO " +
+                   "INNER JOIN WMS_PRODUCT_STATE PS ON PS.PRODUCT_CODE=CELL.PRODUCT_CODE AND PS.PRODUCT_BARCODE=CELL.PRODUCT_BARCODE " +
+                   "INNER JOIN (SELECT PRODUCT_CODE,REAL_WEIGHT,BILL_METHOD,CIGARETTE_CODE,FORMULA_CODE,IS_MIX FROM WMS_PRODUCT_STATE PS " +
+                   "INNER JOIN WMS_BILL_MASTER BM ON PS.BILL_NO=BM.BILL_NO WHERE  PS.BILL_NO||LPAD(ITEM_NO, 2, '0')='{0}') TMP " +
+                   "ON TMP.BILL_METHOD=WBM.BILL_METHOD AND TMP.CIGARETTE_CODE=WBM.CIGARETTE_CODE AND TMP.FORMULA_CODE=WBM.FORMULA_CODE " +
+                   "AND TMP.PRODUCT_CODE=CELL.PRODUCT_CODE AND TMP.REAL_WEIGHT=CELL.REAL_WEIGHT  AND TMP.IS_MIX=PS.IS_MIX " +
+                   " INNER JOIN CMD_SHELF ON CELL.SHELF_CODE=CMD_SHELF.SHELF_CODE " +
+                   "WHERE  CELL.IS_LOCK='0' AND CELL.IS_ACTIVE='1' AND CELL.ERROR_FLAG='0' AND WBM.BILL_NO='{1}' AND CMD_SHELF.CRANE_NO<>'{2}'  ORDER BY CELL.IN_DATE", TaskID, OutBillNO, CraneNo);
+
+
+            DataTable dt = ExecuteQuery(strSQL).Tables[0];
+            if (dt.Rows.Count > 0)
+            {
+                DataRow dr = dt.Rows[0];
+                strSQL = string.Format("UPDATE WMS_PRODUCT_STATE SET CELL_CODE='{0}',PRODUCT_BARCODE='{1}',PALLET_CODE='{2}' WHERE BILL_NO='{3}'", new string[] { dr["CELL_CODE"].ToString(), dr["PRODUCT_BARCODE"].ToString(), dr["PALLET_CODE"].ToString(), strBillNo });
+                ExecuteNonQuery(strSQL);
+
+
+                strSQL = string.Format("INSERT INTO WCS_TASK(TASK_ID,TASK_TYPE,TASK_LEVEL,BILL_NO,PRODUCT_CODE,REAL_WEIGHT,PRODUCT_BARCODE,PALLET_CODE,STATE,TASK_DATE,TASKER,PRODUCT_TYPE,IS_MIX,CELL_CODE)" +
+                     "SELECT STATE.BILL_NO||LPAD(ITEM_NO, 2, '0'),BTYPE.TASK_TYPE ,BTYPE.TASK_LEVEL,STATE.BILL_NO,PRODUCT_CODE,REAL_WEIGHT,PRODUCT_BARCODE,PALLET_CODE,'0',TASK_DATE,TASKER,0,IS_MIX,CELL_CODE FROM  WMS_PRODUCT_STATE STATE " +
+                      "LEFT JOIN WMS_BILL_MASTER BILL ON STATE.BILL_NO=BILL.BILL_NO " +
+                      "LEFT JOIN CMD_BILL_TYPE BTYPE ON BILL.BTYPE_CODE=BTYPE.BTYPE_CODE WHERE  STATE.BILL_NO='{0}'", strBillNo);
+                ExecuteNonQuery(strSQL);
+            }
+
+
+            return strBillNo + "01";
+
+
+        }
         /// <summary>
         /// 根据 错误烟包 查找相同入库单据信息，供用户选择入库单号。
         /// </summary>
@@ -159,7 +221,27 @@ namespace THOK.XC.Process.Dao
 
             return ExecuteQuery(strSQL).Tables[0];
         }
+        /// <summary>
+        /// 根据 错误烟包 查找相同入库单据信息，供用户选择入库单号。
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetCancelBillNo(string TaskID,string CraneNO)
+        {
+            string strSQL = string.Format("SELECT DISTINCT WBM.BILL_NO,BILL_DATE,WBM.OPERATER,WBM.OPERATE_DATE,WBM.BILL_METHOD,WBM.CIGARETTE_CODE,CIGARETTE_NAME, WBM.FORMULA_CODE,WFM.FORMULA_NAME, BATCH_WEIGHT,CELL.IN_DATE " +
+                            "FROM CMD_CELL CELL INNER JOIN WMS_BILL_MASTER WBM ON CELL.BILL_NO=WBM.BILL_NO " +
+                            "INNER JOIN WMS_PRODUCT_STATE PS ON PS.PRODUCT_CODE=CELL.PRODUCT_CODE AND PS.PRODUCT_BARCODE=CELL.PRODUCT_BARCODE " +
+                            "INNER JOIN (SELECT PRODUCT_CODE,REAL_WEIGHT,BILL_METHOD,CIGARETTE_CODE,FORMULA_CODE,IS_MIX FROM WMS_PRODUCT_STATE PS " +
+                            "INNER JOIN WMS_BILL_MASTER BM ON PS.BILL_NO=BM.BILL_NO WHERE PS.BILL_NO||LPAD(ITEM_NO, 2, '0')='{0}') TMP  " +
+                            "ON TMP.BILL_METHOD=WBM.BILL_METHOD AND TMP.CIGARETTE_CODE=WBM.CIGARETTE_CODE AND TMP.FORMULA_CODE=WBM.FORMULA_CODE " +
+                            "AND TMP.PRODUCT_CODE=CELL.PRODUCT_CODE AND TMP.REAL_WEIGHT=CELL.REAL_WEIGHT  AND TMP.IS_MIX=PS.IS_MIX " +
+                            "INNER JOIN CMD_CIGARETTE ON CMD_CIGARETTE.CIGARETTE_CODE=WBM.CIGARETTE_CODE " +
+                            "INNER JOIN WMS_FORMULA_MASTER WFM ON WFM.FORMULA_CODE=WBM.FORMULA_CODE " +
+                            "INNER JOIN CMD_SHELF ON CMD_CELL.SHELF_CODE=CMD_SHELF.SHELF_CODE " +
+                            "WHERE CELL.IS_LOCK='0' AND CELL.IS_ACTIVE='1' AND CELL.ERROR_FLAG='0' AND CMD_SHELF.CRANE_NO<>'{1}' " +
+                            "ORDER BY DECODE(CELL.IN_DATE,NULL,'0000', IN_DATE) ", TaskID,CraneNO);
 
+            return ExecuteQuery(strSQL).Tables[0];
+        }
 
 
         private string GetBillNo(string PREFIX_CODE)
