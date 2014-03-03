@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(StockInWorkQueryDialog));
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnOK = new System.Windows.Forms.Button();
             this.lblBillNo = new System.Windows.Forms.Label();
@@ -194,23 +193,21 @@
             // 
             // btnFormulaCode
             // 
-            this.btnFormulaCode.Image = ((System.Drawing.Image)(resources.GetObject("btnFormulaCode.Image")));
             this.btnFormulaCode.Location = new System.Drawing.Point(216, 203);
             this.btnFormulaCode.Name = "btnFormulaCode";
-            this.btnFormulaCode.Size = new System.Drawing.Size(27, 22);
+            this.btnFormulaCode.Size = new System.Drawing.Size(31, 22);
             this.btnFormulaCode.TabIndex = 31;
-            this.btnFormulaCode.Text = "..";
+            this.btnFormulaCode.Text = "...";
             this.btnFormulaCode.UseVisualStyleBackColor = true;
             this.btnFormulaCode.Click += new System.EventHandler(this.btnFormulaCode_Click);
             // 
             // btnCigaretteCode
             // 
-            this.btnCigaretteCode.Image = ((System.Drawing.Image)(resources.GetObject("btnCigaretteCode.Image")));
             this.btnCigaretteCode.Location = new System.Drawing.Point(216, 171);
             this.btnCigaretteCode.Name = "btnCigaretteCode";
-            this.btnCigaretteCode.Size = new System.Drawing.Size(25, 22);
+            this.btnCigaretteCode.Size = new System.Drawing.Size(31, 22);
             this.btnCigaretteCode.TabIndex = 27;
-            this.btnCigaretteCode.Text = "..";
+            this.btnCigaretteCode.Text = "...";
             this.btnCigaretteCode.UseVisualStyleBackColor = true;
             this.btnCigaretteCode.Click += new System.EventHandler(this.btnCigaretteCode_Click);
             // 

@@ -14,7 +14,7 @@ namespace THOK.XC.Process.Dal
         /// </summary>
         ///  
         /// <returns>TaskID</returns>
-        public string  CreateCancelBillInTask(string TaskID,string BillNo,string NewPalletCode)
+        public string  CreateCancelBillInTask(string TaskID,string BillNo)
         {
             using (PersistentManager pm = new PersistentManager())
             {
@@ -42,17 +42,47 @@ namespace THOK.XC.Process.Dal
             }
  
         }
+        /// <summary>
+        /// 根据 错误烟包 查找相同入库单据信息，供用户选择入库单号。
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetCancelBillNo(string TaskID,string CraneNo)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                BillDao dao = new BillDao();
+
+                return dao.GetCancelBillNo(TaskID, CraneNo);
+            }
+
+        }
+
 
          /// <summary>
         /// 二楼出库托盘校验出错，由用户选定出库的入库单号OutBillNO， 补充生成 出库单。
         /// </summary>
         /// <returns>TaskID</returns>
-        public string CreateCancelBillOutTask(string TaskID, string BillNo, string OutBillNO, string OLD_PALLET_CODE)
+        public string CreateCancelBillOutTask(string TaskID, string BillNo, string OutBillNO)
         {
             using (PersistentManager pm = new PersistentManager())
             {
                 BillDao dao = new BillDao();
-                string strTaskID = dao.CreateCancelBillOutTask(TaskID, BillNo, OutBillNO, OLD_PALLET_CODE);
+                string strTaskID = dao.CreateCancelBillOutTask(TaskID, BillNo, OutBillNO);
+                return strTaskID;
+            }
+        }
+
+
+        /// <summary>
+        /// 二楼出库堆垛机出现问题，由用户选定出库的入库单号OutBillNO（其它堆垛机编号的入库单）， 补充生成新出库单。
+        /// </summary>
+        /// <returns>TaskID</returns>
+        public string CreateCancelBillOutTask(string TaskID, string BillNo, string OutBillNO,string CraneNo)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                BillDao dao = new BillDao();
+                string strTaskID = dao.CreateCancelBillOutTask(TaskID, BillNo, OutBillNO,CraneNo);
                 return strTaskID;
             }
         }

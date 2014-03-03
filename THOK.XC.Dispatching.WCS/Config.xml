@@ -6,8 +6,8 @@
     <Attribute Name="ScanBaudRate" Value="9600" />
   </Attributes>
   <Services>
-    <!--<Service Name="StockPLC_01" Type="THOK.MCP.Service.Siemens.dll, THOK.MCP.Service.Siemens.OPCService" ConfigFile="StockPLC_01.xml" />-->
-    <!--<Service Name="StockPLC_02" Type="THOK.MCP.Service.Siemens.dll, THOK.MCP.Service.Siemens.OPCService" ConfigFile="StockPLC_02.xml" />-->
+    <Service Name="StockPLC_01" Type="THOK.MCP.Service.Siemens.dll, THOK.MCP.Service.Siemens.OPCService" ConfigFile="StockPLC_01.xml" />
+    <Service Name="StockPLC_02" Type="THOK.MCP.Service.Siemens.dll, THOK.MCP.Service.Siemens.OPCService" ConfigFile="StockPLC_02.xml" />
     <Service Name="Crane" Type="THOK.MCP.Service.TCP.dll, THOK.MCP.Service.TCP.TCPService" ConfigFile="Crane.xml" />
   </Services>
   <Processes>

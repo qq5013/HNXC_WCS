@@ -437,7 +437,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "错误条码处理";
             this.Activated += new System.EventHandler(this.ReadBarcode_Activated);
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ReadBarcode_FormClosing);
             this.Load += new System.EventHandler(this.ReadBarcode_Load);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();

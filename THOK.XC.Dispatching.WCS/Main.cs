@@ -160,6 +160,14 @@ namespace THOK.XC.Dispatching.WCS
                         strValue = frm.strBillNo;
                     }
                 }
+                else if (args.Message[0] == "9")//烟包出库，堆垛机返回错误，
+                {
+                    THOK.XC.Dispatching.View.frmNewCraneBill frm = new View.frmNewCraneBill(args.Message[1], args.Message[2], args.dtInfo, args.Message[3]);
+                    if (frm.ShowDialog() == DialogResult.OK)
+                    {
+                        strValue = frm.strBillNo;
+                    }
+                }
             }
             return strValue;
         }
