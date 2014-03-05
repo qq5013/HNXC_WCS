@@ -33,8 +33,8 @@ namespace THOK.XC.Process.Dao
 
         public void InsertChannel(string Task_ID, string Bill_No, string Channel_No)
         {
-            string strSQL = string.Format("INSERT INTO WCS_PRODUCT_CACHE(TASK_ID,TASK_NO,ORDER_NO,PRODUCT_CODE,PRODUCT_BARCODE,CHANNEL_NO,BILL_NO, SCHEDULE_NO,SCHEDULE_ITEMNO,STATE)" +
-                          "SELECT TASK.TASK_ID,DETAIL.TASK_NO,(SELECT COUNT(*) FROM WCS_PRODUCT_CACHE WHERE BILL_NO='{0}')+1 AS ORDER_NO,PRODUCT_CODE,PRODUCT_BARCODE,'{1}' AS CHANNEL_NO,TASK.BILL_NO,BILL.SCHEDULE_NO,SCHEDULE_ITEMNO, 0 " +
+            string strSQL = string.Format("INSERT INTO WCS_PRODUCT_CACHE(TASK_ID,TASK_NO,ORDER_NO,PRODUCT_CODE,PRODUCT_BARCODE,CHANNEL_NO,BILL_NO, SCHEDULE_NO,SCHEDULE_ITEMNO,STATE,CHECK_RESULT)" +
+                          "SELECT TASK.TASK_ID,DETAIL.TASK_NO,(SELECT COUNT(*) FROM WCS_PRODUCT_CACHE WHERE BILL_NO='{0}')+1 AS ORDER_NO,PRODUCT_CODE,PRODUCT_BARCODE,'{1}' AS CHANNEL_NO,TASK.BILL_NO,BILL.SCHEDULE_NO,SCHEDULE_ITEMNO, 0,0 " +
                           "FROM WCS_TASK TASK " +
                           "INNER JOIN WCS_TASK_DETAIL DETAIL ON TASK.TASK_ID=DETAIL.TASK_ID AND DETAIL.ITEM_NO=5 " +
                           "INNER JOIN WMS_BILL_MASTER BILL ON BILL.BILL_NO=TASK.BILL_NO " +
@@ -110,8 +110,6 @@ namespace THOK.XC.Process.Dao
         /// </summary>
         public void UpdateInChannelAndTime(string TaskID, string Bill_No, string ChannelNo)
         {
-
-
             string strSQL = string.Format("UPDATE WCS_PRODUCT_CACHE SET ORDER_NO=(SELECT COUNT(*) FROM WCS_PRODUCT_CACHE WHERE BILL_NO='{0}')+1,IN_DATE =SYSDATE,CHANNEL_NO='{2}' " +
                                           "WHERE TASK_ID='{0}' AND BILL_NO='{1}' ", TaskID, Bill_No, ChannelNo);
             ExecuteNonQuery(strSQL);
