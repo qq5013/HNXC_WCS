@@ -67,10 +67,13 @@ namespace THOK.XC.Dispatching.View
                 this.btnStop.Enabled = true;
 
                 TaskDal taskDal = new TaskDal();
+                //获取出1楼跟2楼的状态为0还未执行的堆垛机的出入库任务信息=dt
                 DataTable dt = taskDal.TaskOutToDetail();
+                //获取出1楼跟2楼的状态为1正在执行的堆垛机的出入库任务信息=dt2
                 DataTable dt2 = null;
                 if (IndexStar == 0)
                 {
+                    //获取堆垛机的要执行或正在执行的所有任务
                     string strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1})  AND DETAIL.CRANE_NO IS NOT NULL ", "11,21,12,13,14", "0,1");
                     dt2 = taskDal.CraneTaskIn(strWhere);
                     strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1}) AND DETAIL.CRANE_NO IS NOT NULL ", "22", "1");
@@ -148,14 +151,14 @@ namespace THOK.XC.Dispatching.View
             TaskDal taskDal = new TaskDal();
             DataTable dt = taskDal.TaskOutToDetail();
             DataTable dt2 = null;
-            if (IndexStar == 0)
-            {
-                string strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1})  AND DETAIL.CRANE_NO IS NOT NULL ", "11,21,12,13,14", "0,1");
-                dt2 = taskDal.CraneTaskIn(strWhere);
-                strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1}) AND DETAIL.CRANE_NO IS NOT NULL ", "22", "0,1,2");
-                DataTable dtout = taskDal.CraneTaskIn(strWhere);
-                dt2.Merge(dtout);
-            }
+            //if (IndexStar == 0)
+            //{
+            //    string strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1})  AND DETAIL.CRANE_NO IS NOT NULL ", "11,21,12,13,14", "0,1");
+            //    dt2 = taskDal.CraneTaskIn(strWhere);
+            //    strWhere = string.Format("TASK_TYPE IN ({0}) AND DETAIL.STATE IN ({1}) AND DETAIL.CRANE_NO IS NOT NULL ", "22", "0,1,2");
+            //    DataTable dtout = taskDal.CraneTaskIn(strWhere);
+            //    dt2.Merge(dtout);
+            //}
             DataTable[] dtSend = new DataTable[2];
             dtSend[0] = dt;
             dtSend[1] = dt2;

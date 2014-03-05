@@ -17,13 +17,14 @@ namespace THOK.XC.Process.Process_Crane
         private DataTable dtSendCRQ;
         private DataTable dtErrMesage;
         private int NCK001;
-        
+
+        //process.Initialize(context);初始化的时候执行
         public override void Initialize(Context context)
         {
             try
             {
                 base.Initialize(context);
-
+                //堆垛机收发报文的错误信息代码
                 CraneErrMessageDal errDal = new CraneErrMessageDal();
                 dtErrMesage = errDal.GetErrMessageList();
                 NCK001 = 100;
@@ -311,7 +312,7 @@ namespace THOK.XC.Process.Process_Crane
                     {
                         if (!blnSend)
                         {
-                            drs = dtCrane.Select(string.Format("CRANE_NO={0} and TASK_TYPE in ('11','13','14')", CraneNo));
+                            drs = dtCrane.Select(string.Format("CRANE_NO={0} and TASK_TYPE in ('11','13','14')", CraneNo),"TASK_LEVEL DESC");
                             if (drs.Length > 0)
                             {
                                 blnSend = SendTelegram(CraneNo, drs[0]);

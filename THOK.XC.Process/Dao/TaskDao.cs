@@ -15,15 +15,21 @@ namespace THOK.XC.Process.Dao
         /// <returns></returns>
         public DataTable TaskOutToDetail()
         {
-            //处理一楼出库，生成Task_Detail。
+            //处理一楼出库(抽检倒库12、盘点13、移库14)，生成Task_Detail。
             DataTable dtCraneTask = CraneTaskOut("TASK.TASK_TYPE IN('12','13'，'14') AND TASK.STATE='0'");
 
             string strBillNo = "";
-            string strSQL = "SELECT * FROM WCS_TASK_DETAIL LEFT JOIN WCS_TASK ON WCS_TASK_DETAIL.TASK_ID=WCS_TASK.TASK_ID WHERE TASK_TYPE=22 AND CRANE_NO IS NOT NULL AND WCS_TASK_DETAIL.STATE IN (1,2)";
+            //找出2楼状态为1正在执行出库任务的出库单
+            string strSQL = "SELECT * FROM WCS_TASK_DETAIL " + 
+                            "LEFT JOIN WCS_TASK ON WCS_TASK_DETAIL.TASK_ID=WCS_TASK.TASK_ID " +
+                            "WHERE TASK_TYPE='22' AND CRANE_NO IS NOT NULL AND WCS_TASK_DETAIL.STATE=1";
             DataTable dt = ExecuteQuery(strSQL).Tables[0];
+
+            //如果没有正在出库的任务，找二楼还没有产生TASK_DTAIL的出库单
             if (dt.Rows.Count == 0)
             {
-                strSQL = "SELECT  DISTINCT WMS_BILL_MASTER.SCHEDULE_NO,WMS_BILL_MASTER.SCHEDULE_ITEMNO,WCS_TASK.TASK_LEVEL, WCS_TASK.TASK_DATE,WCS_TASK.BILL_NO  FROM WCS_TASK " +
+                strSQL = "SELECT  DISTINCT WMS_BILL_MASTER.SCHEDULE_NO,WMS_BILL_MASTER.SCHEDULE_ITEMNO,WCS_TASK.TASK_LEVEL, WCS_TASK.TASK_DATE,WCS_TASK.BILL_NO " +
+                         "FROM WCS_TASK " +
                          "INNER JOIN WMS_BILL_MASTER  ON WCS_TASK.BILL_NO=WMS_BILL_MASTER.BILL_NO " +
                          "WHERE WMS_BILL_MASTER.STATE=3  AND WCS_TASK.STATE=0 AND WCS_TASK.TASK_TYPE='22' " +
                          "ORDER BY WMS_BILL_MASTER.SCHEDULE_NO,WMS_BILL_MASTER.SCHEDULE_ITEMNO,WCS_TASK.TASK_LEVEL, WCS_TASK.TASK_DATE,WCS_TASK.BILL_NO ";
@@ -32,9 +38,11 @@ namespace THOK.XC.Process.Dao
             }
             if (dt.Rows.Count > 0)
             {
+                //正在出或者准备要出的出库单号
                 strBillNo = dt.Rows[0]["BILL_NO"].ToString();
                 string strWhere = string.Format(" TASK.TASK_TYPE='22' and TASK.BILL_NO ='{0}' AND TASK.STATE='0'", strBillNo);
                 dt = CraneTaskOut(strWhere);
+                //与1楼出库任务进行合并
                 dtCraneTask.Merge(dt);
             }
             return dtCraneTask;
