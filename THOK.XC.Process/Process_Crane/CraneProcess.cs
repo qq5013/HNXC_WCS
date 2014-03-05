@@ -171,7 +171,7 @@ namespace THOK.XC.Process.Process_Crane
             if (drTaskID==null && dtCrane!=null) //出库任务调用堆垛机
             {
                 //读取二楼出库站台是否有烟包，PLC
-                DataRow[] drs = dtCrane.Select(string.Format("CRANE_NO='{0}' and STATE=0 and TASK_TYPE in ('12','22','13','14')", CraneNo), "TASK_LEVEL,TASK_DATE,BILL_NO,IS_MIX,PRODUCT_CODE,TASK_ID"); //按照任务等级，任务时间，产品形态，
+                DataRow[] drs = dtCrane.Select(string.Format("CRANE_NO='{0}' and STATE=0 and TASK_TYPE in ('12','22','13','14')", CraneNo), "TASK_LEVEL DESC,TASK_DATE DESC,BILL_NO,IS_MIX,PRODUCT_CODE,TASK_ID"); //按照任务等级，任务时间，产品形态，
                 for (int i = 0; i < drs.Length; i++)
                 {
                     //判断能否出库
@@ -297,7 +297,7 @@ namespace THOK.XC.Process.Process_Crane
                     blnSend = SendTelegram(CraneNo, null);  //查询出库报文
                     if (!blnSend)
                     {
-                        drs = dtCrane.Select(string.Format("CRANE_NO={0} and TASK_TYPE in ('11','21','13','14')", CraneNo));
+                        drs = dtCrane.Select(string.Format("CRANE_NO={0} and TASK_TYPE in ('11','21','13','14')", CraneNo), "TASK_LEVEL DESC,TASK_DATE DESC");
                         if (drs.Length > 0)
                         {
                             blnSend = SendTelegram(CraneNo, drs[0]);
@@ -311,7 +311,7 @@ namespace THOK.XC.Process.Process_Crane
                     {
                         if (!blnSend)
                         {
-                            drs = dtCrane.Select(string.Format("CRANE_NO={0} and TASK_TYPE in ('11','13','14')", CraneNo));
+                            drs = dtCrane.Select(string.Format("CRANE_NO={0} and TASK_TYPE in ('11','13','14')", CraneNo), "TASK_LEVEL DESC,TASK_DATE DESC");
                             if (drs.Length > 0)
                             {
                                 blnSend = SendTelegram(CraneNo, drs[0]);
@@ -319,7 +319,7 @@ namespace THOK.XC.Process.Process_Crane
                         }
                         if (!blnSend)
                         {
-                            drs = dtCrane.Select(string.Format("CRANE_NO={0} and TASK_TYPE='21'", CraneNo));
+                            drs = dtCrane.Select(string.Format("CRANE_NO={0} and TASK_TYPE='21'", CraneNo), "TASK_LEVEL DESC,TASK_DATE DESC");
                             if (drs.Length > 0)
                             {
                                 blnSend = SendTelegram(CraneNo, drs[0]);
@@ -330,7 +330,7 @@ namespace THOK.XC.Process.Process_Crane
                     {
                         if (!blnSend)
                         {
-                            drs = dtCrane.Select(string.Format("CRANE_NO={0} and TASK_TYPE='21'", CraneNo));
+                            drs = dtCrane.Select(string.Format("CRANE_NO={0} and TASK_TYPE='21'", CraneNo),"TASK_LEVEL DESC,TASK_DATE DESC");
                             if (drs.Length > 0)
                             {
                                 blnSend = SendTelegram(CraneNo, drs[0]);
@@ -338,7 +338,7 @@ namespace THOK.XC.Process.Process_Crane
                         }
                         if (!blnSend)
                         {
-                            drs = dtCrane.Select(string.Format("CRANE_NO={0} and TASK_TYPE  in ('11','13','14') ", CraneNo));
+                            drs = dtCrane.Select(string.Format("CRANE_NO={0} and TASK_TYPE  in ('11','13','14') ", CraneNo), "TASK_LEVEL DESC,TASK_DATE DESC");
                             if (drs.Length > 0)
                             {
                                 blnSend = SendTelegram(CraneNo, drs[0]);
