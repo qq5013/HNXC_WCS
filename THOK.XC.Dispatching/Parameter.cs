@@ -45,24 +45,26 @@ namespace THOK.XC.Dispatching
 
 
 
+        //由于扫码枪使用USB接口，而屏蔽。
 
-        private string scanPortName;
 
-        [CategoryAttribute("扫码器通信参数"), DescriptionAttribute("扫码器串口号"), Chinese("串口号")]
-        public string ScanPortName
-        {
-            get { return scanPortName; }
-            set { scanPortName = value; }
-        }
+        //private string scanPortName;
 
-        private string scanBaudRate;
+        //[CategoryAttribute("扫码器通信参数"), DescriptionAttribute("扫码器串口号"), Chinese("串口号")]
+        //public string ScanPortName
+        //{
+        //    get { return scanPortName; }
+        //    set { scanPortName = value; }
+        //}
 
-        [CategoryAttribute("扫码器通信参数"), DescriptionAttribute("扫码器波特率"), Chinese("波特率")]
-        public string ScanBaudRate
-        {
-            get { return scanBaudRate; }
-            set { scanBaudRate = value; }
-        }
+        //private string scanBaudRate;
+
+        //[CategoryAttribute("扫码器通信参数"), DescriptionAttribute("扫码器波特率"), Chinese("波特率")]
+        //public string ScanBaudRate
+        //{
+        //    get { return scanBaudRate; }
+        //    set { scanBaudRate = value; }
+        //}
 
 
         private string ip;
