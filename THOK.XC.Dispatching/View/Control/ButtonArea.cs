@@ -29,7 +29,7 @@ namespace THOK.XC.Dispatching.View
                 MessageBox.Show("先停止出库才能退出系统。", "提示", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-            if (DialogResult.Yes == MessageBox.Show("您确定要退出备货监控系统吗？", "询问", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+            if (DialogResult.Yes == MessageBox.Show("您确定要退出调度系统吗？", "询问", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
             {
                 THOK.XC.Dispatching.Util.LogFile.DeleteFile();
                 Application.Exit();
