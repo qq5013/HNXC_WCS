@@ -35,7 +35,8 @@ namespace THOK.XC.Process.Process_01
                     case "01_1_186":
                         break;
                 }
-                string TaskNo = obj.ToString().PadLeft(4, '0'); //读取PLC任务号。
+                //电控系统返回任务号9999
+                string TaskNo = obj.ToString().PadLeft(4, '0');
                 TaskDal taskDal = new TaskDal();
                 string[] TaskInfo = taskDal.GetTaskInfo(TaskNo);
                 DataTable dt = taskDal.TaskInfo(string.Format("TASK_ID='{0}'", TaskInfo[0]));
@@ -48,29 +49,32 @@ namespace THOK.XC.Process.Process_01
                     string CellCode = "";
                     switch(taskType)
                     {
+                        //入库
                         case "11":
-                              ItemNo = "2";
-                            NextItemNo = "3";
-                            CellCode = dr["CELL_CODE"].ToString();
-                            break;
-                        case "14":
                             ItemNo = "2";
                             NextItemNo = "3";
-                            CellCode = dr["NEWCELL_CODE"].ToString();
-                            break;
+                            CellCode = dr["CELL_CODE"].ToString();
+                            break;                        
+                        //盘点
                         case "13":
                             ItemNo = "3";
                             NextItemNo = "4";
                             CellCode = dr["CELL_CODE"].ToString();
                             break;
-
+                        //移库
+                        case "14":
+                            ItemNo = "2";
+                            NextItemNo = "3";
+                            CellCode = dr["NEWCELL_CODE"].ToString();
+                            break;
                     }
-
+                    //更新路线完成状态
                     taskDal.UpdateTaskDetailState(string.Format("TASK_NO='{0}' AND ITEM_NO='{1}'", TaskNo, ItemNo), "2");
 
                     SysStationDal sysdal = new SysStationDal();
                     DataTable dtstation = sysdal.GetSationInfo(CellCode, "11","3");
-                    taskDal.UpdateTaskDetailCrane(dtstation.Rows[0]["STATION_NO"].ToString(), CellCode, "0", dtstation.Rows[0]["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO={1}", TaskInfo[0],NextItemNo));//更新调度堆垛机的其实位置及目标地址。
+                    //更新调度堆垛机的起始位置及目标地址。
+                    taskDal.UpdateTaskDetailCrane(dtstation.Rows[0]["STATION_NO"].ToString(), CellCode, "0", dtstation.Rows[0]["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO={1}", TaskInfo[0],NextItemNo));
 
                     string strWhere = string.Format("TASK_NO='{0}'AND DETAIL.STATE='0' and ITEM_NO='{1}'", TaskNo, NextItemNo);
                     DataTable dtInCrane = taskDal.CraneTaskIn(strWhere);
