@@ -371,7 +371,7 @@ namespace THOK.XC.Dispatching.View
                 strMessage[1] = strBadFlag;
                 while ((strBarCode = FormDialog.ShowDialog(strMessage, null)) != "")
                 {
-                    sbyte[] b = THOK.XC.Process.Common.ConvertStringChar.stringToBytes(strBarCode, 40);
+                    byte[] b = THOK.XC.Process.Common.ConvertStringChar.stringToByte(strBarCode, 40);
                     Context.ProcessDispatcher.WriteToService("StockPLC_01", "01_2_124_1", b); //写入条码  
                     Context.ProcessDispatcher.WriteToService("StockPLC_01", "01_2_124_2", 1);//写入标识。
                     Context.Processes["NotReadBarcodeProcess"].Resume();

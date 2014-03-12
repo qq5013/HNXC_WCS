@@ -94,8 +94,8 @@ namespace THOK.XC.Process.Process_01
                 }
                 else
                 {
-                    sbyte[] b = new sbyte[110];
-                    Common.ConvertStringChar.stringToBytes(dtTask.Rows[0]["PALLET_CODE"].ToString(), 110).CopyTo(b, 0);
+                    byte[] b = new byte[110];
+                    Common.ConvertStringChar.stringToByte(dtTask.Rows[0]["PALLET_CODE"].ToString(), 110).CopyTo(b, 0);
 
                     WriteToService("StockPLC_01", writeItem + "2", b); //PLC写入任务
                     WriteToService("StockPLC_01", writeItem + "3", 1); //PLC写入任务

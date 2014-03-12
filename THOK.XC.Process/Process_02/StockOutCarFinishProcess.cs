@@ -67,9 +67,9 @@ namespace THOK.XC.Process.Process_02
                         string barcode = dt.Rows[0]["PRODUCT_BARCODE"].ToString();
                         string palletcode = dt.Rows[0]["PALLET_CODE"].ToString();
 
-                        sbyte[] b = new sbyte[190];
-                        Common.ConvertStringChar.stringToBytes(barcode, 80).CopyTo(b, 0);
-                        Common.ConvertStringChar.stringToBytes(palletcode, 110).CopyTo(b, 80);
+                        byte[] b = new byte[190];
+                        Common.ConvertStringChar.stringToByte(barcode, 80).CopyTo(b, 0);
+                        Common.ConvertStringChar.stringToByte(palletcode, 110).CopyTo(b, 80);
 
                         WriteToService("StockPLC_02", WriteItem + "_2", b);
                         WriteToService("StockPLC_02", WriteItem + "_3", 1);

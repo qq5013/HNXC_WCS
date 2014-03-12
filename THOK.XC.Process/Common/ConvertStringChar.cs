@@ -15,7 +15,7 @@ namespace THOK.XC.Process.Common
             byte[] b = new byte[obj.Length];
             for (int i = 0; i < obj.Length; i++)
             {
-                if ((sbyte)obj[i] == 0)
+                if ((byte)obj[i] == 0)
                     b[i] = 32;
                 else
                     b[i] = byte.Parse(obj[i].ToString());
@@ -33,6 +33,20 @@ namespace THOK.XC.Process.Common
                     b[i] = 0;
                 else
                     b[i] = sbyte.Parse(a[i].ToString());
+            }
+            return b;
+        }
+
+        public static byte[] stringToByte(string strvalue, int length)
+        {
+            byte[] b = new byte[length];
+            byte[] a = Encoding.ASCII.GetBytes(strvalue);
+            for (int i = 0; i < length; i++)
+            {
+                if (i >= a.Length)
+                    b[i] = 0;
+                else
+                    b[i] = a[i];
             }
             return b;
         }
