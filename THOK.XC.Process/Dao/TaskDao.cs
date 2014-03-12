@@ -168,9 +168,11 @@ namespace THOK.XC.Process.Dao
         private string GetTaskDetailNo(string TaskID)
         {
             string strValue = "";
-            string strSQL = string.Format("SELECT TASK_ID,TASK.BILL_NO,BILL.BTYPE_CODE,BTYPE.BILL_TYPE||BTYPE.TARGET_CODE AS TASKNOTYPE FROM WCS_TASK TASK LEFT JOIN VBILLMASTER BILL ON BILL.BILL_NO=TASK.BILL_NO " +
-                            "LEFT JOIN CMD_BILL_TYPE BTYPE ON BTYPE.BTYPE_CODE=BILL.BTYPE_CODE " +
-                            "WHERE TASK_ID='{0}'", TaskID);
+            string strSQL = string.Format("SELECT TASK_ID,TASK.BILL_NO,BILL.BTYPE_CODE,BTYPE.BILL_TYPE||BTYPE.TARGET_CODE AS TASKNOTYPE " + 
+                                          "FROM WCS_TASK TASK " + 
+                                          "LEFT JOIN VBILLMASTER BILL ON BILL.BILL_NO=TASK.BILL_NO " +
+                                          "LEFT JOIN CMD_BILL_TYPE BTYPE ON BTYPE.BTYPE_CODE=BILL.BTYPE_CODE " +
+                                          "WHERE TASK_ID='{0}'", TaskID);
             DataTable dt = ExecuteQuery(strSQL).Tables[0];
             string mode = "";
             if (dt.Rows.Count > 0)

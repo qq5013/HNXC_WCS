@@ -66,28 +66,34 @@ namespace THOK.XC.Process.Process_01
                     strWhere = string.Format("TASK_ID='{0}'", TaskID);
 
                 TaskDal dal = new TaskDal();
+                //分配货位,返回 0:TaskID，1:货位 
                 string[] CellValue = dal.AssignCell(strWhere, ToStation);//货位申请
-
+                //返回任务号9999
                 string TaskNo = dal.InsertTaskDetail(CellValue[0]);
                 SysStationDal sysDal = new SysStationDal();
+                //获取task_detail行走路线item_no=3的信息,也就是堆垛机取货入库的动作
                 DataTable dt = sysDal.GetSationInfo(CellValue[1], "11","3");
 
                 DataTable dtTask = dal.TaskInfo(string.Format("TASK_ID='{0}'", CellValue[0]));
-
-                dal.UpdateTaskState(CellValue[0], "1");//更新任务开始执行
+                //更新任务开始执行
+                dal.UpdateTaskState(CellValue[0], "1");
+                //更新Product_State 货位
                 ProductStateDal StateDal = new ProductStateDal();
-                StateDal.UpdateProductCellCode(CellValue[0], CellValue[1]); //更新Product_State 货位
+                StateDal.UpdateProductCellCode(CellValue[0], CellValue[1]);
+                //更新货位申请起始地址及目标地址。
+                dal.UpdateTaskDetailStation(FromStation, ToStation, "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", CellValue[0]));
 
-                dal.UpdateTaskDetailStation(FromStation, ToStation, "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", CellValue[0])); //更新货位申请起始地址及目标地址。
-
+                //0:任务号 1:目标地址 2:货物类型
                 int[] ServiceW = new int[3];
-                ServiceW[0] = int.Parse(TaskNo); //任务号
-                ServiceW[1] = int.Parse(dt.Rows[0]["STATION_NO"].ToString());//目的地址
+                ServiceW[0] = int.Parse(TaskNo); //
+                ServiceW[1] = int.Parse(dt.Rows[0]["STATION_NO"].ToString());
                 if (stateItem.ItemName == "01_1_131")
-                    ServiceW[2] = 2;                 //货物类型
+                    ServiceW[2] = 2;
                 else
                     ServiceW[2] = 1;
-                WriteToService("StockPLC_01", writeItem + "1", ServiceW); //PLC写入任务
+
+                //PLC写入任务
+                WriteToService("StockPLC_01", writeItem + "1", ServiceW);
                 if (stateItem.ItemName == "01_1_131")
                 {
                     WriteToService("StockPLC_01", writeItem + "2", 1);
@@ -96,17 +102,14 @@ namespace THOK.XC.Process.Process_01
                 {
                     sbyte[] b = new sbyte[110];
                     Common.ConvertStringChar.stringToBytes(dtTask.Rows[0]["PALLET_CODE"].ToString(), 110).CopyTo(b, 0);
-
-                    WriteToService("StockPLC_01", writeItem + "2", b); //PLC写入任务
-                    WriteToService("StockPLC_01", writeItem + "3", 1); //PLC写入任务
-
-                    //更新RFID
+                    //写入RFID
+                    WriteToService("StockPLC_01", writeItem + "2", b);
+                    //标识位置1
+                    WriteToService("StockPLC_01", writeItem + "3", 1); 
                 }
                 BillDal Bdal = new BillDal();
                 Bdal.UpdateBillMasterStart(dtTask.Rows[0]["BILL_NO"].ToString(), ServiceW[2] == 1 ? true : false);
                 dal.UpdateTaskDetailStation(ToStation, dt.Rows[0]["STATION_NO"].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", CellValue[0]));//更新货位到达入库站台，
-
-
             }
             catch (Exception e)
             {
