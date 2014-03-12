@@ -472,9 +472,9 @@ namespace THOK.XC.Process.Process_Crane
                         string Barcode = dr["PRODUCT_BARCODE"].ToString();
                         string PalletCode = dr["PALLET_CODE"].ToString();
 
-                        sbyte[] b = new sbyte[190];
-                        Common.ConvertStringChar.stringToBytes(Barcode, 80).CopyTo(b, 0);
-                        Common.ConvertStringChar.stringToBytes(PalletCode, 110).CopyTo(b, 80);
+                        byte[] b = new byte[190];
+                        Common.ConvertStringChar.stringToByte(Barcode, 80).CopyTo(b, 0);
+                        Common.ConvertStringChar.stringToByte(PalletCode, 110).CopyTo(b, 80);
 
                         dal.UpdateTaskDetailStation(dr["STATION_NO"].ToString(), WriteValue[1].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", TaskID));
 
@@ -524,9 +524,9 @@ namespace THOK.XC.Process.Process_Crane
                                 string Barcode = dr["PRODUCT_BARCODE"].ToString();
                                 string PalletCode = dr["PALLET_CODE"].ToString();
 
-                                sbyte[] b = new sbyte[190];
-                                Common.ConvertStringChar.stringToBytes(Barcode, 80).CopyTo(b, 0);
-                                Common.ConvertStringChar.stringToBytes(PalletCode, 110).CopyTo(b, 80);
+                                byte[] b = new byte[190];
+                                Common.ConvertStringChar.stringToByte(Barcode, 80).CopyTo(b, 0);
+                                Common.ConvertStringChar.stringToByte(PalletCode, 110).CopyTo(b, 80);
 
                                 dal.UpdateTaskDetailStation(dr["STATION_NO"].ToString(), WriteValue[1].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", TaskID));
 

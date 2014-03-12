@@ -47,7 +47,7 @@ namespace THOK.XC.Process.Process_01
               
                while ((strBarCode = FormDialog.ShowDialog(strMessage,null)) != "")
                {
-                   sbyte[] b = Common.ConvertStringChar.stringToBytes(strBarCode, 40);
+                   byte[] b = Common.ConvertStringChar.stringToByte(strBarCode, 80);
                    WriteToService("StockPLC_01", "01_2_124_1", b); //写入条码  
                    WriteToService("StockPLC_01", "01_2_124_2", 1);//写入标识。
                   

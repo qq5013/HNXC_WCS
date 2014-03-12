@@ -40,12 +40,12 @@ namespace THOK.XC.Dispatching.OperateView
             parameter.Password = config.Parameters["password"].ToString();
 
 
-            //扫描枪
-            ConfigUtil configUtil = new ConfigUtil();
-            attributes = configUtil.GetAttribute();
+            //扫描枪--由于使用USB接口，而屏蔽
+            //ConfigUtil configUtil = new ConfigUtil();
+            //attributes = configUtil.GetAttribute();
 
-            parameter.ScanPortName = attributes["ScanPortName"];
-            parameter.ScanBaudRate = attributes["ScanBaudRate"];
+            //parameter.ScanPortName = attributes["ScanPortName"];
+            //parameter.ScanBaudRate = attributes["ScanBaudRate"];
 
            
 
@@ -80,12 +80,13 @@ namespace THOK.XC.Dispatching.OperateView
                 config.Save();
 
 
-                //保存Context参数
-                attributes["ScanPortName"] = parameter.ScanPortName;
-                attributes["ScanBaudRate"] = parameter.ScanBaudRate;
+                //由于扫码枪使用USB接口，而屏蔽。
+                ////保存Context参数
+                //attributes["ScanPortName"] = parameter.ScanPortName;
+                //attributes["ScanBaudRate"] = parameter.ScanBaudRate;
                
-                ConfigUtil configUtil = new ConfigUtil();
-                configUtil.Save(attributes);
+                //ConfigUtil configUtil = new ConfigUtil();
+                //configUtil.Save(attributes);
 
 
                 TcpConfg.IP = parameter.IP;

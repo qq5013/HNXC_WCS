@@ -278,9 +278,9 @@ namespace THOK.XC.Process.Process_Car
                                 palletcode = dr["PALLET_CODE"].ToString();
                             }
 
-                            sbyte[] b = new sbyte[190];
-                            Common.ConvertStringChar.stringToBytes(barcode, 80).CopyTo(b, 0);
-                            Common.ConvertStringChar.stringToBytes(palletcode, 110).CopyTo(b, 80);
+                            byte[] b = new byte[190];
+                            Common.ConvertStringChar.stringToByte(barcode, 80).CopyTo(b, 0);
+                            Common.ConvertStringChar.stringToByte(palletcode, 110).CopyTo(b, 80);
                             
 
 
@@ -580,9 +580,9 @@ namespace THOK.XC.Process.Process_Car
                         palletcode = dr["PALLET_CODE"].ToString();
                     }
 
-                    sbyte[] b = new sbyte[190];
-                    Common.ConvertStringChar.stringToBytes(barcode, 80).CopyTo(b, 0);
-                    Common.ConvertStringChar.stringToBytes(palletcode, 110).CopyTo(b, 80);
+                    byte[] b = new byte[190];
+                    Common.ConvertStringChar.stringToByte(barcode, 80).CopyTo(b, 0);
+                    Common.ConvertStringChar.stringToByte(palletcode, 110).CopyTo(b, 80);
                     WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_1", WriteTaskValue);//任务号。
                     WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_2", WriteValue);//地址。
                     WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_3", b);
@@ -750,9 +750,9 @@ namespace THOK.XC.Process.Process_Car
                                     palletcode = dr["PALLET_CODE"].ToString();
                                 }
 
-                                sbyte[] b = new sbyte[190];
-                                Common.ConvertStringChar.stringToBytes(barcode, 80).CopyTo(b, 0);
-                                Common.ConvertStringChar.stringToBytes(palletcode, 110).CopyTo(b, 80);
+                                byte[] b = new byte[190];
+                                Common.ConvertStringChar.stringToByte(barcode, 80).CopyTo(b, 0);
+                                Common.ConvertStringChar.stringToByte(palletcode, 110).CopyTo(b, 80);
                                 WriteToService("StockPLC_02", WriteItem + "_1", WriteTaskValue);//任务号。
                                 WriteToService("StockPLC_02", WriteItem + "_2", WriteValue);//地址。
                                 WriteToService("StockPLC_02", WriteItem + "_3", b);
@@ -797,9 +797,9 @@ namespace THOK.XC.Process.Process_Car
                               
 
 
-                                sbyte[] b = new sbyte[190];
-                                Common.ConvertStringChar.stringToBytes(barcode, 80).CopyTo(b, 0);
-                                Common.ConvertStringChar.stringToBytes(palletcode, 110).CopyTo(b, 80);
+                                byte[] b = new byte[190];
+                                Common.ConvertStringChar.stringToByte(barcode, 80).CopyTo(b, 0);
+                                Common.ConvertStringChar.stringToByte(palletcode, 110).CopyTo(b, 80);
                                 WriteToService("StockPLC_02", WriteItem + "_1", WriteTaskValue);//任务号。
                                 WriteToService("StockPLC_02", WriteItem + "_2", WriteValue);//地址。
                                 WriteToService("StockPLC_02", WriteItem + "_3", b);
@@ -844,7 +844,7 @@ namespace THOK.XC.Process.Process_Car
                             string barcode = "";
                             string palletcode = "";
 
-                            sbyte[] b = new sbyte[190];
+                            byte[] b = new byte[190];
                             Common.ConvertStringChar.stringToBytes(barcode, 80).CopyTo(b, 0);
                             Common.ConvertStringChar.stringToBytes(palletcode, 110).CopyTo(b, 80);
                             WriteToService("StockPLC_02", drMax[i]["WriteItem"].ToString() + "_1", WriteTaskValue);//任务号。
