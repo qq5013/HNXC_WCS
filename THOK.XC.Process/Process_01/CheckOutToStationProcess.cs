@@ -16,7 +16,6 @@ namespace THOK.XC.Process.Process_01
         {
             try
             {
-
                 object sta = ObjectUtil.GetObject(stateItem.State);
 
                 if (sta==null || sta.ToString() == "0")
@@ -93,7 +92,6 @@ namespace THOK.XC.Process.Process_01
             {
                 Logger.Error("THOK.XC.Process.Process_01.CheckOutToStationProcess:" + ex.Message);
             }
-
         }
     }
 }

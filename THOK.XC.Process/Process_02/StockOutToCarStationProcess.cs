@@ -90,7 +90,8 @@ namespace THOK.XC.Process.Process_02
                         StationState[1] = "3";
 
                         //this.Context.Processes["CraneProcess"].Start();
-                        WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为3.
+                        //更新堆垛机Process 状态为3.
+                        WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); 
                         Celldal.UpdateCellOutFinishUnLock(CellCode);//解除货位锁定
                         ProductStateDal psdal = new ProductStateDal();
                         psdal.UpdateOutBillNo(strTask[0]); //更新出库单

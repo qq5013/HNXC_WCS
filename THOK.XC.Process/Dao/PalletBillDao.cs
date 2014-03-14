@@ -82,7 +82,7 @@ namespace THOK.XC.Process.Dao
                 parameters.AddParameter("VCELL", "00000000", DbType.String, ParameterDirection.Output);
                 ExecuteNonQuery("APPLYPALLETOUTCELL", parameters);
                 string VCell = parameters["VCELL"].ToString();
-
+                //VCell=-1表示找不到可以出库的空托盘组
                 if (VCell != "-1")
                 {
                     string strBillNo = GetBillNo("POS");

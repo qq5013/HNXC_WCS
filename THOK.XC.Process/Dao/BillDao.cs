@@ -324,7 +324,6 @@ namespace THOK.XC.Process.Dao
              parameters.AddParameter("VBILLNO", BillNo);
              parameters.AddParameter("VISBILL", isBill);
              ExecuteNonQuery("CONFIRMBILLFINSHED", parameters);
-
          }
          /// <summary>
          /// 更新单号完成标志。
@@ -335,7 +334,6 @@ namespace THOK.XC.Process.Dao
              StoredProcParameter parameters = new StoredProcParameter();
              parameters.AddParameter("VBILLNO", BillNo);
              ExecuteNonQuery("CONFIRMOUTBILLFINSHED", parameters);
-
          }
          /// <summary>
          /// 更新单号开始标志。

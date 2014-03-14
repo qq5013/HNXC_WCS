@@ -28,7 +28,7 @@ namespace THOK.XC.Process.Process_01
                 string[] strInfo = dal.GetTaskInfo(sta.ToString().PadLeft(4, '0'));
                 DataTable dt = dal.TaskInfo(string.Format("TASK_ID='{0}'", strInfo[0]));
                 DataTable dtProductInfo = dal.GetProductInfoByTaskID(strInfo[0]);
-                ; //线程停止
+                //线程停止
                 while (FormDialog.ShowDialog(str, dtProductInfo) != "")
                 {
                     dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=2", strInfo[0]), "2");
