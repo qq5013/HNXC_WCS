@@ -98,7 +98,7 @@ namespace THOK.CRANE
             return tgm;
         }
         /// <summary>
-        /// CRQ指令
+        /// DUA指令
         /// </summary>
         /// <param name="tgm"></param>
         /// <param name="tgd"></param>
@@ -106,6 +106,18 @@ namespace THOK.CRANE
         public Telegram TelegramDUA(Telegram tgm, TelegramData tgd)
         {
             tgm.TelegramData = "DUA00000";
+
+            return tgm;
+        }
+        /// <summary>
+        /// DUM指令
+        /// </summary>
+        /// <param name="tgm"></param>
+        /// <param name="tgd"></param>
+        /// <returns></returns>
+        public Telegram TelegramDUM(Telegram tgm, TelegramData tgd)
+        {
+            tgm.TelegramData = "DUM00000";
 
             return tgm;
         }

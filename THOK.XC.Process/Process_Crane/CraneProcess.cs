@@ -719,9 +719,6 @@ namespace THOK.XC.Process.Process_Crane
                                 break;
                             }
                         }
-
-
-
                     }
                     if (msg["AssignmenID"] == "00000000")
                     {
