@@ -121,5 +121,29 @@ namespace THOK.CRANE
 
             return tgm;
         }
+        /// <summary>
+        /// ACK指令
+        /// </summary>
+        /// <param name="tgm"></param>
+        /// <param name="tgd"></param>
+        /// <returns></returns>
+        public Telegram TelegramACK(Telegram tgm, TelegramData tgd)
+        {
+            tgm.TelegramData = "ACK0";
+            tgm.TelegramData += tgd.SequenceNo;
+            return tgm;
+        }
+        /// <summary>
+        /// SYN指令
+        /// </summary>
+        /// <param name="tgm"></param>
+        /// <param name="tgd"></param>
+        /// <returns></returns>
+        public Telegram TelegramSYN(Telegram tgm, TelegramData tgd)
+        {
+            tgm.TelegramData = "SYN00000";
+
+            return tgm;
+        }
     }
 }
