@@ -76,21 +76,19 @@ namespace THOK.XC.Process.Process_Crane
                         
                     //二楼出库RFID校验,Task_Detail ItemNo=1 状态更新为2,确认检验完成后，才可下下一产品的下一任务
                     case "StockOutToCarStation": 
-                        string[] strdd = (string[])stateItem.State;
+                        string  strdd = (string)stateItem.State;
                         if (dtCrane != null)
                         {
-                            DataRow[] drs = dtCrane.Select(string.Format("TASK_ID='{0}'", strdd[0]));
+                            DataRow[] drs = dtCrane.Select(string.Format("TASK_ID='{0}'", strdd));
                             if (drs.Length > 0)
                             {
-                                //ItemNo=1 状态更新为2
-                                TaskDal tdal = new TaskDal();
-                                tdal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=1", drs[0]["TASK_ID"].ToString()), "2");
-
-                                //更新出库单号PRODUCT_STATE,OUT_BILLNO
-                                ProductStateDal psdal = new ProductStateDal();
-                                psdal.UpdateOutBillNo(strdd[0]);
                                 dtCrane.Rows.Remove(drs[0]);
                             }
+
+                            TaskDal tdal = new TaskDal();
+                            //ItemNo=1 状态更新为2
+                            tdal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=1", strdd), "2");
+
                             //更新完成之后，线程调用堆垛机，避免堆垛机因调度原因而是堆垛机没有任务。
                             CraneThreadStart();
                         }

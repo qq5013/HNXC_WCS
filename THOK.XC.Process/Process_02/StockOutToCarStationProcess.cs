@@ -69,7 +69,7 @@ namespace THOK.XC.Process.Process_02
 
                 
               
-                string[] StationState = new string[2];
+               string StationState ="";
 
                 TaskDal dal = new TaskDal();
                 string[] strTask = dal.GetTaskInfo(obj[0].ToString().PadLeft(4, '0'));
@@ -83,14 +83,10 @@ namespace THOK.XC.Process.Process_02
                     DataTable dtTask = dal.TaskInfo(string.Format("TASK_ID='{0}'", strTask[0]));
                     string CellCode = dtTask.Rows[0]["CELL_CODE"].ToString();
                     CellDal Celldal = new CellDal(); //更新货位，新托盘RFID，错误标志。
-
+                    StationState = strTask[0];//任务号;
                     if (obj[1].ToString() == "1") //正常烟包
                     {
-                        StationState[0] = obj[0].ToString();//任务号;
-                        StationState[1] = "3";
-
-                        //this.Context.Processes["CraneProcess"].Start();
-                        //更新堆垛机Process 状态为3.
+                      
                         WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); 
                         Celldal.UpdateCellOutFinishUnLock(CellCode);//解除货位锁定
                         ProductStateDal psdal = new ProductStateDal();
@@ -121,11 +117,7 @@ namespace THOK.XC.Process.Process_02
                             {
                                 if (strNewBillNo == "1")
                                 {
-                                    StationState[0] = obj[0].ToString();//任务号;
-                                    StationState[1] = "3";
-
-                                    //this.Context.Processes["CraneProcess"].Start();
-                                    WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为3.
+                                    WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机任务明细为完成状态。
                                     Celldal.UpdateCellOutFinishUnLock(CellCode);//解除货位锁定
                                     ProductStateDal psdal = new ProductStateDal();
                                     psdal.UpdateOutBillNo(strTask[0]); //更新出库单
@@ -167,9 +159,8 @@ namespace THOK.XC.Process.Process_02
                                     {
                                         i++;
                                     }
-                                    StationState[0] = strTask[0];//TaskID;
-                                    StationState[1] = "4";
-                                    WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为4.
+                                 
+                                    WriteToProcess("CraneProcess", "StockOutToCarStation", StationState); //更新堆垛机Process 状态为2.
 
                                     DataTable dtNewProductInfo = dal.GetProductInfoByTaskID(strOutTaskID);
                                     dal.InsertChangeProduct(dtProductInfo.Rows[0]["PRODUCT_BARCODE"].ToString(), dtProductInfo.Rows[0]["PRODUCT_CODE"].ToString(), dtNewProductInfo.Rows[0]["PRODUCT_BARCODE"].ToString(), dtNewProductInfo.Rows[0]["PRODUCT_CODE"].ToString());
