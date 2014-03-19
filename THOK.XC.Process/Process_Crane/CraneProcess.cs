@@ -184,7 +184,7 @@ namespace THOK.XC.Process.Process_Crane
                     if (drs[i]["TASK_TYPE"].ToString() == "22")
                     {
                         //判断是否能出库
-                        bool blnCan = dal.ProductCanToCar(drs[i]["FORDERBILLNO"].ToString(), drs[i]["FORDER"].ToString(), drs[i]["IS_MIX"].ToString());  //判断能否出库
+                        bool blnCan = dal.ProductCanToCar(drs[i]["FORDERBILLNO"].ToString(), drs[i]["FORDER"].ToString(), drs[i]["IS_MIX"].ToString(),false);  //判断能否出库
                         if (!blnCan)
                             continue;
                     }
@@ -457,7 +457,6 @@ namespace THOK.XC.Process.Process_Crane
                     }
 
                     string strWhere = string.Format("TASK_ID='{0}' and ITEM_NO='{1}'", TaskID, ItemNo);
-                    dal.UpdateTaskDetailState(strWhere, "2"); //更新堆垛机状态
                     //出库，一楼盘点出库
                     if (TaskType.Substring(1, 1) == "2" || (TaskType == "13" && ItemNo == "1")) 
                     {
@@ -471,14 +470,26 @@ namespace THOK.XC.Process.Process_Crane
                             psdal.UpdateOutBillNo(TaskID);
 
                         }
+                        if(TaskType=="12" || TaskType=="13")
+                            dal.UpdateTaskDetailState(strWhere, "2"); //更新堆垛机状态
+                        string ToStation;
+                        if (TaskType == "22")
+                            ToStation =  dr["MEMO"].ToString();
+                        else
+                            ToStation =  dr["TARGET_CODE"].ToString();
+
+                        //更新TASK_DETAIL FROM_STATION TO_STATION STATE
+                        dal.UpdateTaskDetailStation(dr["STATION_NO"].ToString(), ToStation, "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", TaskID));
+
+
                         int[] WriteValue = new int[3];
                         WriteValue[0] = int.Parse(dr["TASK_NO"].ToString());
                         if (TaskType == "22")
                             WriteValue[1] = int.Parse(dr["MEMO"].ToString());
                         else
                             WriteValue[1] = int.Parse(dr["TARGET_CODE"].ToString());
-                        WriteValue[2] = int.Parse(dr["PRODUCT_TYPE"].ToString());
 
+                        WriteValue[2] = int.Parse(dr["PRODUCT_TYPE"].ToString());
 
                         string Barcode = dr["PRODUCT_BARCODE"].ToString();
                         string PalletCode = dr["PALLET_CODE"].ToString();
@@ -486,9 +497,6 @@ namespace THOK.XC.Process.Process_Crane
                         byte[] b = new byte[190];
                         Common.ConvertStringChar.stringToByte(Barcode, 80).CopyTo(b, 0);
                         Common.ConvertStringChar.stringToByte(PalletCode, 110).CopyTo(b, 80);
-                        //更新TASK_DETAIL FROM_STATION TO_STATION STATE
-                        dal.UpdateTaskDetailStation(dr["STATION_NO"].ToString(), WriteValue[1].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", TaskID));
-
                         //到达出库站台，再下任务给PLC
                         WriteToService(dr["SERVICE_NAME"].ToString(), dr["ITEM_NAME_2"].ToString() + "_1", WriteValue);
                         WriteToService(dr["SERVICE_NAME"].ToString(), dr["ITEM_NAME_2"].ToString() + "_2", b);
@@ -497,6 +505,7 @@ namespace THOK.XC.Process.Process_Crane
                     //入库完成，更新Task任务完成。
                     else if (TaskType.Substring(1, 1) == "1" || (TaskType == "13" && dr["ITEM_NO"].ToString() == "4"))
                     {
+                        dal.UpdateTaskDetailState(strWhere, "2"); //更新堆垛机状态
                         dal.UpdateTaskState(TaskID, "2");//更新任务状态。
                         if (TaskType == "11")
                         {
@@ -517,11 +526,16 @@ namespace THOK.XC.Process.Process_Crane
                         //如果目标地址与源地址不同巷道
                         if (dr["CRANE_NO"].ToString() != dr["NEW_CRANE_NO"].ToString())
                         {
+                            dal.UpdateTaskDetailState(strWhere, "2"); //更新堆垛机状态
                             if (ItemNo == "1")
                             {
                                 //更新货位信息
                                 CellDal Cdal = new CellDal();
                                 Cdal.UpdateCellOutFinishUnLock(dr["CELL_CODE"].ToString());
+                                //更新TASK_DETAIL FROM_STATION TO_STATION STATE
+                                dal.UpdateTaskDetailStation(dr["STATION_NO"].ToString(), dr["NEW_TARGET_CODE"].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", TaskID));
+
+
                                 //下达给PLC任务
                                 int[] WriteValue = new int[3];
                                 WriteValue[0] = int.Parse(dr["TASK_NO"].ToString());
@@ -535,9 +549,7 @@ namespace THOK.XC.Process.Process_Crane
                                 byte[] b = new byte[190];
                                 Common.ConvertStringChar.stringToByte(Barcode, 80).CopyTo(b, 0);
                                 Common.ConvertStringChar.stringToByte(PalletCode, 110).CopyTo(b, 80);
-                                //更新TASK_DETAIL FROM_STATION TO_STATION STATE
-                                dal.UpdateTaskDetailStation(dr["STATION_NO"].ToString(), WriteValue[1].ToString(), "1", string.Format("TASK_ID='{0}' AND ITEM_NO=2", TaskID));
-
+                              
 
                                 WriteToService(dr["SERVICE_NAME"].ToString(), dr["ITEM_NAME_2"].ToString() + "_1", WriteValue);
 
@@ -567,7 +579,8 @@ namespace THOK.XC.Process.Process_Crane
                         }
                         else   //相同巷道
                         {
-                            dal.UpdateTaskState(dr["TASK_ID"].ToString(), "2");//更新任务状态。
+                            dal.UpdateTaskDetailState(strWhere, "2"); //更新堆垛机状态
+                            dal.UpdateTaskState(TaskID, "2");//更新任务状态。
 
                             CellDal Cdal = new CellDal();
                             Cdal.UpdateCellRemoveFinish(dr["NEWCELL_CODE"].ToString(), dr["CELL_CODE"].ToString()); //入库完成，更新货位。

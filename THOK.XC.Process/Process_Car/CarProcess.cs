@@ -174,7 +174,7 @@ namespace THOK.XC.Process.Process_Car
                             ToPostion = -1;
 
                             //判断二楼能否出库
-                            bool blnCan = dal.ProductCanToCar(dr["FORDERBILLNO"].ToString(), dr["FORDER"].ToString(), dr["IS_MIX"].ToString());
+                            bool blnCan = dal.ProductCanToCar(dr["FORDERBILLNO"].ToString(), dr["FORDER"].ToString(), dr["IS_MIX"].ToString(),true);
                             if (blnCan)
                             {
                                 if (!dBillUseTarget.ContainsKey(dr["FORDERBILLNO"].ToString()))
@@ -316,7 +316,7 @@ namespace THOK.XC.Process.Process_Car
                                 if (drs[0]["TASK_TYPE"].ToString() == "21")
                                     blnCan = true;
                                 else
-                                    blnCan = dal.ProductCanToCar(drs[0]["FORDERBILLNO"].ToString(), drs[0]["FORDER"].ToString(), drs[0]["IS_MIX"].ToString());
+                                    blnCan = dal.ProductCanToCar(drs[0]["FORDERBILLNO"].ToString(), drs[0]["FORDER"].ToString(), drs[0]["IS_MIX"].ToString(),true);
                                 if (blnCan)
                                 {
 
@@ -643,7 +643,7 @@ namespace THOK.XC.Process.Process_Car
                                 //判断二楼能否出库
                                 bool blnCan = false;
                                  
-                                blnCan = dal.ProductCanToCar(dr["FORDERBILLNO"].ToString(), dr["FORDE"].ToString(), dr["IS_MIX"].ToString());
+                                blnCan = dal.ProductCanToCar(dr["FORDERBILLNO"].ToString(), dr["FORDE"].ToString(), dr["IS_MIX"].ToString(),true);
                                 if (blnCan)
                                 {
                                     if (!dBillUseTarget.ContainsKey(dr["FORDERBILLNO"].ToString()))
