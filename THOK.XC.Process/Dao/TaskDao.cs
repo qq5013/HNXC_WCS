@@ -593,17 +593,17 @@ namespace THOK.XC.Process.Dao
         }
 
         /// <summary>
-        /// 出库任务排序，判断能否给穿梭车下达出库任务
+        /// 出库任务排序，判断能否给穿梭车下达出库任务,blnCar表示小车出库
         /// </summary>
         /// <param name="ForderBillNo"></param>
         /// <param name="Forder"></param>
         /// <param name="IsMix"></param>
         /// <returns></returns>
-        public bool ProductCanToCar(string ForderBillNo,string Forder,string IsMix)
+        public bool ProductCanToCar(string ForderBillNo,string Forder,string IsMix,bool blnCar)
         {
             bool blnValue = false;
             string strSQL = string.Format("SELECT COUNT(*) FROM WCS_TASK_DETAIL DETAIL LEFT JOIN WCS_TASK TASK ON DETAIL.TASK_ID=TASK.TASK_ID " +
-                            "WHERE DETAIL.ITEM_NO=3 AND DETAIL.STATE=1 AND TASK.IS_MIX='{0}' AND TASK.FORDER ={1} AND TASK.FORDERBILLNO='{2}' ", IsMix, Forder, ForderBillNo);
+                "WHERE DETAIL.ITEM_NO={4} AND DETAIL.STATE=1 AND TASK.IS_MIX='{0}' AND TASK.FORDER ={1} AND TASK.FORDERBILLNO='{2}' ", IsMix, Forder, ForderBillNo, (blnCar ? 3 : 1));
 
             DataTable dt = ExecuteQuery(strSQL).Tables[0];
             if (int.Parse(dt.Rows[0][0].ToString()) > 0)
@@ -615,12 +615,12 @@ namespace THOK.XC.Process.Dao
                 if (IsMix == "1") //混装，先判断整包是否出库完成
                 {
                     strSQL = string.Format("SELECT COUNT(*) FROM WCS_TASK_DETAIL DETAIL LEFT JOIN WCS_TASK TASK ON DETAIL.TASK_ID=TASK.TASK_ID " +
-                           "WHERE DETAIL.ITEM_NO=3 AND DETAIL.STATE=0 AND TASK.IS_MIX=0 AND TASK.FORDERBILLNO='{0}' ", ForderBillNo);
+                           "WHERE DETAIL.ITEM_NO={1} AND DETAIL.STATE=0 AND TASK.IS_MIX=0 AND TASK.FORDERBILLNO='{0}' ", ForderBillNo, (blnCar ? 3 : 1));
                     dt = ExecuteQuery(strSQL).Tables[0];
                     if (int.Parse(dt.Rows[0][0].ToString()) == 0) //整包未出完
                     {
                         strSQL = string.Format("SELECT COUNT(*) FROM WCS_TASK_DETAIL DETAIL LEFT JOIN WCS_TASK TASK ON DETAIL.TASK_ID=TASK.TASK_ID " +
-                                   "WHERE DETAIL.ITEM_NO=3 AND DETAIL.STATE=0 AND TASK.IS_MIX=1 AND TASK.FORDER<{1} AND TASK.FORDERBILLNO='{0}' ", ForderBillNo, Forder);
+                                   "WHERE DETAIL.ITEM_NO={2} AND DETAIL.STATE=0 AND TASK.IS_MIX=1 AND TASK.FORDER<{1} AND TASK.FORDERBILLNO='{0}' ", ForderBillNo, Forder, (blnCar ? 3 : 1));
                         dt = ExecuteQuery(strSQL).Tables[0];
                         if (int.Parse(dt.Rows[0][0].ToString()) == 0) //整包未出完
                         {
@@ -631,7 +631,7 @@ namespace THOK.XC.Process.Dao
                 else
                 {
                     strSQL = string.Format("SELECT COUNT(*) FROM WCS_TASK_DETAIL DETAIL LEFT JOIN WCS_TASK TASK ON DETAIL.TASK_ID=TASK.TASK_ID " +
-                                  "WHERE DETAIL.ITEM_NO=3 AND DETAIL.STATE=0 AND TASK.IS_MIX=0 AND TASK.FORDER<{1} AND TASK.FORDERBILLNO='{0}' ", ForderBillNo, Forder);
+                                  "WHERE DETAIL.ITEM_NO={2} AND DETAIL.STATE=0 AND TASK.IS_MIX=0 AND TASK.FORDER<{1} AND TASK.FORDERBILLNO='{0}' ", ForderBillNo, Forder, (blnCar ? 3 : 1));
                     dt = ExecuteQuery(strSQL).Tables[0];
                     if (int.Parse(dt.Rows[0][0].ToString()) == 0) //整包未出完
                     {
