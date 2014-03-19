@@ -100,8 +100,8 @@ namespace THOK.XC.Process.Process_01
                 }
                 else
                 {
-                    sbyte[] b = new sbyte[110];
-                    Common.ConvertStringChar.stringToBytes(dtTask.Rows[0]["PALLET_CODE"].ToString(), 110).CopyTo(b, 0);
+                    byte[] b = new byte[110];
+                    Common.ConvertStringChar.stringToByte(dtTask.Rows[0]["PALLET_CODE"].ToString(), 110).CopyTo(b, 0);
                     //写入RFID
                     WriteToService("StockPLC_01", writeItem + "2", b);
                     //标识位置1

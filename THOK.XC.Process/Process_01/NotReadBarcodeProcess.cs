@@ -21,10 +21,10 @@ namespace THOK.XC.Process.Process_01
                 object obj = ObjectUtil.GetObject(stateItem.State);
                 if (obj == null || obj.ToString() == "0")
                     return;
-               
+
 
                 string strBadFlag = "";
-              
+                //其他情况电控报警处理
                 switch (obj.ToString())
                 {
                     case "1":
@@ -41,19 +41,18 @@ namespace THOK.XC.Process.Process_01
                         break;
                 }
                 string strBarCode;
-               string[]  strMessage=new string[3];
-               strMessage[0] = "3";
-               strMessage[1] = strBadFlag;
-              
-               while ((strBarCode = FormDialog.ShowDialog(strMessage,null)) != "")
-               {
-                   byte[] b = Common.ConvertStringChar.stringToByte(strBarCode, 80);
-                   WriteToService("StockPLC_01", "01_2_124_1", b); //写入条码  
-                   WriteToService("StockPLC_01", "01_2_124_2", 1);//写入标识。
-                  
-                   break;
-               }
-              
+                string[] strMessage = new string[3];
+                strMessage[0] = "3";
+                strMessage[1] = strBadFlag;
+
+                while ((strBarCode = FormDialog.ShowDialog(strMessage, null)) != "")
+                {
+                    byte[] b = Common.ConvertStringChar.stringToByte(strBarCode, 80);
+                    WriteToService("StockPLC_01", "01_2_124_1", b); //写入条码  
+                    WriteToService("StockPLC_01", "01_2_124_2", 1);//写入标识。
+
+                    break;
+                }
             }
             catch (Exception e)
             {

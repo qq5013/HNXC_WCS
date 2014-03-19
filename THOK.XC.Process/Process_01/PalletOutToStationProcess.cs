@@ -32,17 +32,19 @@ namespace THOK.XC.Process.Process_01
                         break;
                 }
                 string TaskNo = ((short)obj).ToString().PadLeft(4, '0');
-                
-                TaskDal dal = new TaskDal(); //更具任务号，获取TaskID及BILL_NO
+                //根据任务号，获取TaskID及BILL_NO
+                TaskDal dal = new TaskDal(); 
                 string[] strInfo = dal.GetTaskInfo(TaskNo);
                 if (!string.IsNullOrEmpty(strInfo[0]))
                 {
+                    //更新路线状态
                     dal.UpdateTaskDetailState(string.Format("TASK_ID='{0}' AND ITEM_NO=2", strInfo[0]), "2");
                     dal.UpdateTaskState(strInfo[0], "2");
-
+                    //更新BillMaster状态完成
                     BillDal billdal = new  BillDal();
                     billdal.UpdateInBillMasterFinished(strInfo[1],"0");
-                    WriteToService("StockPLC_01", writeItem, 1); //通知电控，空托盘组到达158,200       
+                    //通知电控，空托盘组到达158,200    
+                    WriteToService("StockPLC_01", writeItem, 1);   
                 }
             }
             catch (Exception e)

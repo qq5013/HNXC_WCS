@@ -16,7 +16,6 @@ namespace THOK.XC.Process.Process_01
         {
             try
             {
-
                 object sta = ObjectUtil.GetObject(stateItem.State);
 
                 if (sta==null || sta.ToString() == "0")
@@ -30,11 +29,13 @@ namespace THOK.XC.Process.Process_01
                     str[0] = "6";
                 str[1] = "";
                 str[2] = "";
-                TaskDal dal = new TaskDal(); //更具任务号，获取TaskID及BILL_NO
+
+                //根据任务号，获取TaskID及BILL_NO
+                TaskDal dal = new TaskDal();
                 string[] strInfo = dal.GetTaskInfo(sta.ToString().PadLeft(4, '0'));
                 DataTable dt = dal.TaskInfo(string.Format("TASK_ID='{0}'", strInfo[0]));
                 DataTable dtProductInfo = dal.GetProductInfoByTaskID(strInfo[0]);
-                 //线程停止
+                //线程停止
                 string strValue = "";
                 while ((strValue = FormDialog.ShowDialog(str, dtProductInfo)) != "")
                 {
@@ -93,7 +94,6 @@ namespace THOK.XC.Process.Process_01
             {
                 Logger.Error("THOK.XC.Process.Process_01.CheckOutToStationProcess:" + ex.Message);
             }
-
         }
     }
 }
