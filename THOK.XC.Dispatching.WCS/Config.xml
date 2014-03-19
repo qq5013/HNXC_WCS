@@ -20,7 +20,7 @@
       <Item ServiceName="Crane" ItemName="DUU" />
       <Item ServiceName="Crane" ItemName="NCK" />
       <Item ServiceName="Crane" ItemName="DEC" />
-      <Item ServiceName="Crane" ItemName="PDA" />
+      <Item ServiceName="Crane" ItemName="SYN" />
       <Item ServiceName="Crane" ItemName="DUA" />
     </Process>
     <!--一层入库申请-->

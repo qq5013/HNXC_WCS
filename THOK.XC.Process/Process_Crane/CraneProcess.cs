@@ -117,7 +117,7 @@ namespace THOK.XC.Process.Process_Crane
                         WriteToService("Crane", "DUA", str);
                         break;
                     case "DUU":
-                        WriteToService("Crane", "DUM", "<00000CRAN30THOK01DUM0000000>");
+                        SendDUM();
                         break;
                     case "NCK":
                         NCK(stateItem.State);
@@ -826,14 +826,15 @@ namespace THOK.XC.Process.Process_Crane
                     SysStationDal dal = new SysStationDal();
                     dal.ResetSQueNo();
                     //重新发送SYN
-                    WriteToService("Crane", "DUM", "<00000CRAN30THOK01SYN0000000>");
+                    SendSYN();
                     NCK001 = 0;
                 }
                 else
                 {
                     if (NCK001 == 100)
                     {
-                        WriteToService("Crane", "DUM", "<00000CRAN30THOK01SYN0000000>");
+                        //重新发送SYN
+                        SendSYN();
                         NCK001 = 0;
                     }
                     else
@@ -1043,9 +1044,32 @@ namespace THOK.XC.Process.Process_Crane
         {
             if (msg["ConfirmFlag"] == "1")
             {
-                string str = "<00000CRAN30THOK01ACK0" + msg["SeqNo"] + "00>";
+                THOK.CRANE.TelegramData tgd = new CRANE.TelegramData();
+                tgd.SequenceNo = msg["SeqNo"];
+                THOK.CRANE.TelegramFraming tf = new CRANE.TelegramFraming();
+                string str = tf.DataFraming("00000", tgd, tf.TelegramACK);
+                //string str = "<00000CRAN30THOK01ACK0" + msg["SeqNo"] + "00>";
                 WriteToService("Crane", "ACK", str);
             }
+        }
+
+        private void SendSYN()
+        {
+            THOK.CRANE.TelegramData tgd = new CRANE.TelegramData();
+
+            THOK.CRANE.TelegramFraming tf = new CRANE.TelegramFraming();
+            string str = tf.DataFraming("00000", tgd, tf.TelegramSYN);
+            WriteToService("Crane", "SYN", str);
+            //WriteToService("Crane", "DUM", "<00000CRAN30THOK01SYN0000000>");
+        }
+        private void SendDUM()
+        {
+            THOK.CRANE.TelegramData tgd = new CRANE.TelegramData();
+
+            THOK.CRANE.TelegramFraming tf = new CRANE.TelegramFraming();
+            string str = tf.DataFraming("00000", tgd, tf.TelegramDUM);
+            WriteToService("Crane", "DUM", str);
+            //WriteToService("Crane", "DUM", "<00000CRAN30THOK01DUM0000000>");
         }
         /// <summary>
         /// 堆垛机返回错误号，写入PLC
