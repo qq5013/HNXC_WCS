@@ -24,7 +24,7 @@ namespace THOK.XC.Process.Process_01
 
 
                 string strBadFlag = "";
-
+                //其他情况电控报警处理
                 switch (obj.ToString())
                 {
                     case "1":
