@@ -114,40 +114,46 @@
             // 
             // btnMoveOut
             // 
+            this.btnMoveOut.BackColor = System.Drawing.Color.Wheat;
             this.btnMoveOut.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnMoveOut.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnMoveOut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnMoveOut.Font = new System.Drawing.Font("YouYuan", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnMoveOut.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnMoveOut.ImageIndex = 21;
             this.btnMoveOut.ImageList = this.imgList;
-            this.btnMoveOut.Location = new System.Drawing.Point(116, 68);
+            this.btnMoveOut.Location = new System.Drawing.Point(3, 68);
             this.btnMoveOut.Name = "btnMoveOut";
-            this.btnMoveOut.Size = new System.Drawing.Size(104, 59);
+            this.btnMoveOut.Size = new System.Drawing.Size(107, 59);
             this.btnMoveOut.TabIndex = 17;
             this.btnMoveOut.Text = "倒库出库";
             this.btnMoveOut.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnMoveOut.UseVisualStyleBackColor = true;
+            this.btnMoveOut.UseVisualStyleBackColor = false;
             this.btnMoveOut.Click += new System.EventHandler(this.btnMoveOut_Click);
             // 
             // btnInspect
             // 
+            this.btnInspect.BackColor = System.Drawing.Color.Wheat;
             this.btnInspect.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnInspect.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnInspect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnInspect.Font = new System.Drawing.Font("YouYuan", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnInspect.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnInspect.ImageIndex = 17;
             this.btnInspect.ImageList = this.imgList;
-            this.btnInspect.Location = new System.Drawing.Point(3, 68);
+            this.btnInspect.Location = new System.Drawing.Point(116, 68);
             this.btnInspect.Name = "btnInspect";
-            this.btnInspect.Size = new System.Drawing.Size(107, 59);
+            this.btnInspect.Size = new System.Drawing.Size(104, 59);
             this.btnInspect.TabIndex = 16;
             this.btnInspect.Text = "抽检补料";
             this.btnInspect.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnInspect.UseVisualStyleBackColor = true;
+            this.btnInspect.UseVisualStyleBackColor = false;
             this.btnInspect.Click += new System.EventHandler(this.btnSpotCheck_Click);
             // 
             // btnStart
             // 
+            this.btnStart.BackColor = System.Drawing.Color.Wheat;
             this.btnStart.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnStart.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnStart.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStart.Font = new System.Drawing.Font("YouYuan", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnStart.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnStart.ImageIndex = 26;
             this.btnStart.ImageList = this.imgList;
@@ -157,14 +163,16 @@
             this.btnStart.TabIndex = 6;
             this.btnStart.Text = "开始出库";
             this.btnStart.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.UseVisualStyleBackColor = false;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // btnStop
             // 
+            this.btnStop.BackColor = System.Drawing.Color.Wheat;
             this.btnStop.Dock = System.Windows.Forms.DockStyle.Fill;
             this.btnStop.Enabled = false;
-            this.btnStop.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnStop.Font = new System.Drawing.Font("YouYuan", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnStop.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnStop.ImageIndex = 27;
             this.btnStop.ImageList = this.imgList;
@@ -174,13 +182,15 @@
             this.btnStop.TabIndex = 11;
             this.btnStop.Text = "停止出库";
             this.btnStop.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.UseVisualStyleBackColor = false;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
             // btnSimulate
             // 
+            this.btnSimulate.BackColor = System.Drawing.Color.Wheat;
             this.btnSimulate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnSimulate.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnSimulate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSimulate.Font = new System.Drawing.Font("YouYuan", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnSimulate.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnSimulate.ImageIndex = 15;
             this.btnSimulate.ImageList = this.imgList;
@@ -190,13 +200,15 @@
             this.btnSimulate.TabIndex = 12;
             this.btnSimulate.Text = "恢复出库";
             this.btnSimulate.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnSimulate.UseVisualStyleBackColor = true;
+            this.btnSimulate.UseVisualStyleBackColor = false;
             this.btnSimulate.Click += new System.EventHandler(this.btnSimulate_Click);
             // 
             // btnOperate
             // 
+            this.btnOperate.BackColor = System.Drawing.Color.Wheat;
             this.btnOperate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnOperate.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnOperate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnOperate.Font = new System.Drawing.Font("YouYuan", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnOperate.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnOperate.ImageIndex = 18;
             this.btnOperate.ImageList = this.imgList;
@@ -206,13 +218,15 @@
             this.btnOperate.TabIndex = 13;
             this.btnOperate.Text = "操作";
             this.btnOperate.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnOperate.UseVisualStyleBackColor = true;
+            this.btnOperate.UseVisualStyleBackColor = false;
             this.btnOperate.Click += new System.EventHandler(this.btnOperate_Click);
             // 
             // btnPalletIn
             // 
+            this.btnPalletIn.BackColor = System.Drawing.Color.Wheat;
             this.btnPalletIn.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnPalletIn.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnPalletIn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnPalletIn.Font = new System.Drawing.Font("YouYuan", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnPalletIn.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnPalletIn.ImageIndex = 25;
             this.btnPalletIn.ImageList = this.imgList;
@@ -222,13 +236,15 @@
             this.btnPalletIn.TabIndex = 5;
             this.btnPalletIn.Text = "托盘入库";
             this.btnPalletIn.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnPalletIn.UseVisualStyleBackColor = true;
+            this.btnPalletIn.UseVisualStyleBackColor = false;
             this.btnPalletIn.Click += new System.EventHandler(this.btnPalletIn_Click);
             // 
             // btnCheckScan
             // 
+            this.btnCheckScan.BackColor = System.Drawing.Color.Wheat;
             this.btnCheckScan.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnCheckScan.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnCheckScan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnCheckScan.Font = new System.Drawing.Font("YouYuan", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnCheckScan.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnCheckScan.ImageIndex = 23;
             this.btnCheckScan.ImageList = this.imgList;
@@ -238,13 +254,15 @@
             this.btnCheckScan.TabIndex = 18;
             this.btnCheckScan.Text = "盘点扫码";
             this.btnCheckScan.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnCheckScan.UseVisualStyleBackColor = true;
+            this.btnCheckScan.UseVisualStyleBackColor = false;
             this.btnCheckScan.Click += new System.EventHandler(this.btnCheckScan_Click);
             // 
             // btnHelp
             // 
+            this.btnHelp.BackColor = System.Drawing.Color.Wheat;
             this.btnHelp.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnHelp.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnHelp.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnHelp.Font = new System.Drawing.Font("YouYuan", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnHelp.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnHelp.ImageIndex = 7;
             this.btnHelp.ImageList = this.imgList;
@@ -254,13 +272,15 @@
             this.btnHelp.TabIndex = 14;
             this.btnHelp.Text = "帮助";
             this.btnHelp.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnHelp.UseVisualStyleBackColor = true;
+            this.btnHelp.UseVisualStyleBackColor = false;
             this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
             // 
             // btnExit
             // 
+            this.btnExit.BackColor = System.Drawing.Color.Wheat;
             this.btnExit.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnExit.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnExit.Font = new System.Drawing.Font("YouYuan", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnExit.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnExit.ImageIndex = 24;
             this.btnExit.ImageList = this.imgList;
@@ -270,13 +290,15 @@
             this.btnExit.TabIndex = 15;
             this.btnExit.Text = "退出";
             this.btnExit.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnExit.UseVisualStyleBackColor = true;
+            this.btnExit.UseVisualStyleBackColor = false;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
             // btnVerficate
             // 
+            this.btnVerficate.BackColor = System.Drawing.Color.Wheat;
             this.btnVerficate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnVerficate.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnVerficate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnVerficate.Font = new System.Drawing.Font("YouYuan", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnVerficate.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnVerficate.ImageIndex = 16;
             this.btnVerficate.ImageList = this.imgList;
@@ -286,13 +308,15 @@
             this.btnVerficate.TabIndex = 19;
             this.btnVerficate.Text = "校验处理";
             this.btnVerficate.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnVerficate.UseVisualStyleBackColor = true;
+            this.btnVerficate.UseVisualStyleBackColor = false;
             this.btnVerficate.Click += new System.EventHandler(this.btnVerficate_Click);
             // 
             // btnBarcodeScan
             // 
+            this.btnBarcodeScan.BackColor = System.Drawing.Color.Wheat;
             this.btnBarcodeScan.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.btnBarcodeScan.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.btnBarcodeScan.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnBarcodeScan.Font = new System.Drawing.Font("YouYuan", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.btnBarcodeScan.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnBarcodeScan.ImageIndex = 20;
             this.btnBarcodeScan.ImageList = this.imgList;
@@ -302,7 +326,7 @@
             this.btnBarcodeScan.TabIndex = 20;
             this.btnBarcodeScan.Text = "条码故障";
             this.btnBarcodeScan.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnBarcodeScan.UseVisualStyleBackColor = true;
+            this.btnBarcodeScan.UseVisualStyleBackColor = false;
             this.btnBarcodeScan.Click += new System.EventHandler(this.btnBarcodeScan_Click);
             // 
             // timer1

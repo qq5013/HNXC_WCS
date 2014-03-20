@@ -30,16 +30,17 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.pnlTitle = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.monitorView = new THOK.MCP.View.MonitorView();
+            this.monitorView1 = new THOK.MCP.View.MonitorView();
             this.pnlBottom = new System.Windows.Forms.Panel();
             this.scBottom = new System.Windows.Forms.SplitContainer();
             this.lbLog = new System.Windows.Forms.ListBox();
             this.buttonArea = new THOK.XC.Dispatching.View.ButtonArea();
-            this.monitorView = new THOK.MCP.View.MonitorView();
-            this.monitorView1 = new THOK.MCP.View.MonitorView();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pnlTitle.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.pnlMain.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -48,7 +49,6 @@
             this.scBottom.Panel1.SuspendLayout();
             this.scBottom.Panel2.SuspendLayout();
             this.scBottom.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlTitle
@@ -59,6 +59,16 @@
             this.pnlTitle.Name = "pnlTitle";
             this.pnlTitle.Size = new System.Drawing.Size(1024, 84);
             this.pnlTitle.TabIndex = 0;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pictureBox1.Image = global::THOK.XC.Dispatching.WCS.Properties.Resources.banner1;
+            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(1024, 84);
+            this.pictureBox1.TabIndex = 0;
+            this.pictureBox1.TabStop = false;
             // 
             // pnlMain
             // 
@@ -87,6 +97,28 @@
             this.splitContainer1.SplitterDistance = 521;
             this.splitContainer1.SplitterWidth = 1;
             this.splitContainer1.TabIndex = 1;
+            // 
+            // monitorView
+            // 
+            this.monitorView.BackColor = System.Drawing.SystemColors.Highlight;
+            this.monitorView.BackgroundImage = global::THOK.XC.Dispatching.WCS.Properties.Resources.S2;
+            this.monitorView.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.monitorView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.monitorView.Location = new System.Drawing.Point(0, 0);
+            this.monitorView.Name = "monitorView";
+            this.monitorView.Size = new System.Drawing.Size(521, 554);
+            this.monitorView.TabIndex = 0;
+            // 
+            // monitorView1
+            // 
+            this.monitorView1.BackColor = System.Drawing.SystemColors.Highlight;
+            this.monitorView1.BackgroundImage = global::THOK.XC.Dispatching.WCS.Properties.Resources.S3;
+            this.monitorView1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.monitorView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.monitorView1.Location = new System.Drawing.Point(0, 0);
+            this.monitorView1.Name = "monitorView1";
+            this.monitorView1.Size = new System.Drawing.Size(502, 554);
+            this.monitorView1.TabIndex = 1;
             // 
             // pnlBottom
             // 
@@ -135,38 +167,6 @@
             this.buttonArea.Size = new System.Drawing.Size(500, 130);
             this.buttonArea.TabIndex = 0;
             // 
-            // monitorView
-            // 
-            this.monitorView.BackColor = System.Drawing.SystemColors.Highlight;
-            this.monitorView.BackgroundImage = global::THOK.XC.Dispatching.WCS.Properties.Resources.S2;
-            this.monitorView.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.monitorView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.monitorView.Location = new System.Drawing.Point(0, 0);
-            this.monitorView.Name = "monitorView";
-            this.monitorView.Size = new System.Drawing.Size(521, 554);
-            this.monitorView.TabIndex = 0;
-            // 
-            // monitorView1
-            // 
-            this.monitorView1.BackColor = System.Drawing.SystemColors.Highlight;
-            this.monitorView1.BackgroundImage = global::THOK.XC.Dispatching.WCS.Properties.Resources.S3;
-            this.monitorView1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.monitorView1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.monitorView1.Location = new System.Drawing.Point(0, 0);
-            this.monitorView1.Name = "monitorView1";
-            this.monitorView1.Size = new System.Drawing.Size(502, 554);
-            this.monitorView1.TabIndex = 1;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pictureBox1.Image = global::THOK.XC.Dispatching.WCS.Properties.Resources.banner1;
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1024, 84);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -188,6 +188,7 @@
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.Resize += new System.EventHandler(this.MainForm_Resize);
             this.pnlTitle.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.pnlMain.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -196,7 +197,6 @@
             this.scBottom.Panel1.ResumeLayout(false);
             this.scBottom.Panel2.ResumeLayout(false);
             this.scBottom.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
