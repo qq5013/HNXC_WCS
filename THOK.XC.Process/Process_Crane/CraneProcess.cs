@@ -731,16 +731,19 @@ namespace THOK.XC.Process.Process_Crane
                 string TaskType = dr["TASK_TYPE"].ToString();
                 string ItemNo = dr["ITEM_NO"].ToString();
                 BillDal bdal = new BillDal();
-                if (TaskType.Substring(1, 1) == "2" || (TaskType.Substring(1, 1) == "3" && ItemNo == "1") || (TaskType.Substring(1, 1) == "4" && ItemNo == "1" && dr["CRANE_NO"].ToString() != dr["NEW_CRANE_NO"].ToString()))
+                if (TaskType.Substring(1, 1) == "2" || (TaskType == "13" && ItemNo == "1") || (TaskType == "14" && ItemNo == "1" && dr["CRANE_NO"].ToString() != dr["NEW_CRANE_NO"].ToString()))
                 {
-                    dal.UpdateTaskState(dr["TASK_ID"].ToString(), "1");//出库任务 更新任务状态--任务开始。
+                    
+                    dal.UpdateTaskState(dr["TASK_ID"].ToString(), "1");
                     dal.UpdateTaskDetailCrane(dr["CELL_CODE"].ToString(), dr["STATION_NO"].ToString(), "1", dr["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO={1}", dr["TASK_ID"], dr["ITEM_NO"]));
+                    //更新BILL_MASTER 单据状态作业中
                     bdal.UpdateBillMasterStart(dr["BILL_NO"].ToString(), dr["PRODUCT_CODE"].ToString() == "0000" ? false : true);
 
                 }
-                else if (TaskType.Substring(1, 1) == "4" && ItemNo == "1" && dr["CRANE_NO"].ToString() == dr["NEW_CRANE_NO"].ToString())
+                else if (TaskType == "14" && ItemNo == "1" && dr["CRANE_NO"].ToString() == dr["NEW_CRANE_NO"].ToString())
                 {
-                    dal.UpdateTaskState(dr["TASK_ID"].ToString(), "1");//出库任务 更新任务状态--任务开始。
+                    //出库任务 更新任务状态:任务执行中
+                    dal.UpdateTaskState(dr["TASK_ID"].ToString(), "1");
                     dal.UpdateTaskDetailCrane(dr["CELL_CODE"].ToString(), dr["NEWCELL_CODE"].ToString(), "1", dr["CRANE_NO"].ToString(), string.Format("TASK_ID='{0}' AND ITEM_NO={1}", dr["TASK_ID"], dr["ITEM_NO"]));
                     bdal.UpdateBillMasterStart(dr["BILL_NO"].ToString(), true);
                 }
@@ -756,8 +759,7 @@ namespace THOK.XC.Process.Process_Crane
                         drs[0]["state"]="1";
                         drs[0].EndEdit();
                         dtCrane.AcceptChanges();
-                    }
-                     
+                    }                     
                 }
             }
             #endregion
@@ -771,7 +773,8 @@ namespace THOK.XC.Process.Process_Crane
         private void NCK(object state)
         {
             Dictionary<string, string> msg = (Dictionary<string, string>)state;
-            if (msg["FaultIndicator"] == "1" ) //序列号出错，重新发送报文
+            //序列号出错，重新发送报文
+            if (msg["FaultIndicator"] == "1" ) 
             {
                 if (msg["SequenceNo"] != "0001")
                 {
@@ -794,8 +797,7 @@ namespace THOK.XC.Process.Process_Crane
                     {
                         CraneThreadStart();
                     }
-                }
-          
+                }          
             }
         }
         /// <summary>
@@ -808,7 +810,7 @@ namespace THOK.XC.Process.Process_Crane
             if (msg["ReturnCode"] == "000") //序列号出错，重新发送报文
             {
                 TaskDal dal = new TaskDal();
-                DataTable dt = dal.CraneTaskIn(string.Format("DETAIL.CRANE_NO='' AND ASSIGNMENT_ID=''", msg["CraneNo"], msg["AssignmenID"]));
+                DataTable dt = dal.CraneTaskIn(string.Format("DETAIL.CRANE_NO='{0}' AND ASSIGNMENT_ID='{1}'", msg["CraneNo"], msg["AssignmenID"]));
                 DataRow dr = null;
                 if (dt.Rows.Count > 0)
                     dr = dt.Rows[0];
@@ -887,7 +889,6 @@ namespace THOK.XC.Process.Process_Crane
         /// <param name="blnValue"></param>
         private void SendTelegramARQ(DataRow dr,bool blnValue)
         {
-
             THOK.CRANE.TelegramData tgd = new CRANE.TelegramData();
             tgd.CraneNo = dr["CRANE_NO"].ToString();
             tgd.AssignmenID = dr["ASSIGNMENT_ID"].ToString();
@@ -986,7 +987,6 @@ namespace THOK.XC.Process.Process_Crane
             string str = tf.DataFraming("1" + QuenceNo, tgd, tf.TelegramDER);
             WriteToService("Crane", "DER", str);
         }
-
 
         private string GetNextSQuenceNo()
         {

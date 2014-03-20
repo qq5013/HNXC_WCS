@@ -147,22 +147,18 @@ namespace THOK.XC.Process.Process_Car
                 string TargetCode = "";
                 if (dr["TASK_TYPE"].ToString() == "21")
                 {
-
                     CurPostion = int.Parse(dr["IN_STATION_ADDRESS"].ToString());
                     ToPostion = int.Parse(dr["STATION_NO_ADDRESS"].ToString());
                     FromStation = dr["IN_STATION"].ToString();
                     ToStation = dr["STATION_NO"].ToString();
-
                 }
                 else
                 {
                     CurPostion = int.Parse(dr["STATION_NO_ADDRESS"].ToString());
                     ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
                     ToStation = dr["OUT_STATION_1"].ToString();
-
                     FromStation = dr["STATION_NO"].ToString();
                 }
-
 
                 TaskDal dal = new TaskDal();
 
@@ -199,8 +195,6 @@ namespace THOK.XC.Process.Process_Car
                                         ToPostion = int.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
                                         ToStation = dr["OUT_STATION_2"].ToString();
                                     }
-
-
                                 }
                                 else
                                 {
@@ -222,7 +216,6 @@ namespace THOK.XC.Process.Process_Car
                                                 ToStation = dr["OUT_STATION_2"].ToString();
                                                 TargetCode = "390";
                                             }
-
                                         }
                                     }
                                     else
@@ -243,7 +236,6 @@ namespace THOK.XC.Process.Process_Car
                                                 ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
                                                 TargetCode = "370";
                                             }
-
                                         }
                                     }
 
@@ -251,7 +243,6 @@ namespace THOK.XC.Process.Process_Car
                                     {
                                         dBillUseTarget[dr["FORDERBILLNO"].ToString()] = true;
                                         dBillTargetCode[dr["FORDERBILLNO"].ToString()] = TargetCode;
-
                                     }
                                     else
                                     {
@@ -285,15 +276,11 @@ namespace THOK.XC.Process.Process_Car
                             byte[] b = new byte[190];
                             Common.ConvertStringChar.stringToByte(barcode, 80).CopyTo(b, 0);
                             Common.ConvertStringChar.stringToByte(palletcode, 110).CopyTo(b, 80);
-                            
-
 
                             WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_1", WriteTaskValue);//任务号。
                             WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_2", WriteValue);//地址。
                             WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_3", b);
                             WriteToService("StockPLC_02", drsOrder[i]["WriteItem"].ToString() + "_4", 1);
-
-
 
                             dr.BeginEdit();
                             dr["CAR_NO"] = drsOrder[i]["CAR_NO"].ToString();
@@ -301,7 +288,6 @@ namespace THOK.XC.Process.Process_Car
                             dr.EndEdit();
 
                             dal.UpdateTaskDetailCar(FromStation, ToStation, "1", dr["CAR_NO"].ToString(), string.Format("TASK_ID='{0}' and ITEM_NO='{1}'", dr["TASK_ID"], dr["ITEM_NO"]));
-
                         }
                         break;
                         #endregion
@@ -311,7 +297,6 @@ namespace THOK.XC.Process.Process_Car
                         #region 小车不空闲，但是目的地小于当前位置
                         if (int.Parse(drsOrder[i]["ToStation"].ToString()) < CurPostion) //小车不空闲，但是目的地小于当前位置
                         {
-
                             if (dtCar.Select(string.Format("STATE=0 and CAR_NO='{0}'", drsOrder[i]["CAR_NO"].ToString())).Length == 0) //判断当前小车，是否已经有分配未执行的任务，则给小车分配任务
                             {
                                 DataRow[] drs = dtCar.Select(string.Format("TASK_ID='{0}'", dr["TASK_ID"]));
@@ -338,8 +323,6 @@ namespace THOK.XC.Process.Process_Car
                         }
                         #endregion
                     }
-
-
                 }
             }
         }
@@ -370,16 +353,14 @@ namespace THOK.XC.Process.Process_Car
         
         private void InsertCarOrder(DataTable dt, string CarNo, string WriteItem, long CurStation, string ReadItem)
         {
-
-
             object[] obj1 = ObjectUtil.GetObjects(WriteToService("StockPLC_02", ReadItem + "_1"));//小车任务号， 状态
             object[] obj2 = ObjectUtil.GetObjects(WriteToService("StockPLC_02", ReadItem + "_2"));//小车位置,目标地址
-
-
-            long Position = long.Parse(obj2[0].ToString()); //小车位置
-            int Status = int.Parse(obj1[1].ToString());//
-            long DesPosition = long.Parse(obj2[1].ToString());//小车目的地址
-
+            
+            //小车位置
+            long Position = long.Parse(obj2[0].ToString()); 
+            int Status = int.Parse(obj1[1].ToString());
+            //小车目的地址
+            long DesPosition = long.Parse(obj2[1].ToString());
 
             if (Status != 2)//故障
             {
@@ -390,11 +371,6 @@ namespace THOK.XC.Process.Process_Car
                 dr["CurStation"] = Position;//当前位置
                 if (Position <= CurStation)
                     dr["OrderNo"] = Position + 10000; //小车位置小于当前位置，加上最大码尺地址。
-
-
-
-
-
                 else
                     dr["OrderNo"] = Position;
                 dr["ToStation"] = DesPosition; //目的地
@@ -405,11 +381,8 @@ namespace THOK.XC.Process.Process_Car
             }
         }
 
-
-
         private void CarStateChange(string Objstate, string CarNO, string CarItem, string WriteItem)
         {
-
             string CarNo = "";
             if (Objstate == "2") //送货完成
             {
@@ -428,7 +401,6 @@ namespace THOK.XC.Process.Process_Car
                     if (strStationNo == "340" || strStationNo == "360")
                     {
                         strItemName = "StockOutCarFinishProcess";
-
                     }
                     else
                     {
