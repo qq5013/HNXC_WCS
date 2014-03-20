@@ -109,10 +109,7 @@ namespace THOK.XC.Process.Process_Crane
                         ACK(stateItem.State);
                         break;
                     case "DUM":
-                        THOK.CRANE.TelegramData tgd = new CRANE.TelegramData();
-                        THOK.CRANE.TelegramFraming tf = new CRANE.TelegramFraming();
-                        string str = tf.DataFraming("00000", tgd, tf.TelegramDUA);
-                        WriteToService("Crane", "DUA", str);
+                        SendDUA();
                         break;
                     case "DUU":
                         SendDUM();
@@ -237,53 +234,6 @@ namespace THOK.XC.Process.Process_Crane
            
             return blnSend;
         }
-
-        ///// <summary>
-        ///// 能否发送出库报文。
-        ///// </summary>
-        ///// <param name="TaskID"></param>
-        ///// <returns></returns>
-        //private bool ProductCanOut(DataRow drTaskID)
-        //{
-            
-        //    bool blnvalue = false;
-        //    DataRow[] drs = dtCrane.Select(string.Format("BILL_NO='{0}' and PRODUCT_CODE='{1}' and IS_MIX='{2}' and STATE=1", drTaskID["BILL_NO"], drTaskID["PRODUCT_CODE"], drTaskID["IS_MIX"]));   //判断当前单号，当前产品，当前形态是否有state=1的出库任务，有则返回true;
-        //    if (drs.Length > 0)
-        //    {
-        //        blnvalue = true;
-        //    }
-        //    else
-        //    {
-
-        //        drs = dtOrderCrane.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and IS_MIX={2} and FORDER={3} and PRODUCT_CODE={4}", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["IS_MIX"], drTaskID["FORDER"], drTaskID["PRODUCT_CODE"] }));
-        //        if (drs.Length > 0)
-        //        {
-        //            drs = dtOrderCrane.Select(string.Format("Index<{0}", drs[0]["Index"]));
-        //            if (drs.Length > 0)
-        //            {
-        //                for (int i = 0; i < drs.Length; i++)
-        //                {
-        //                    drs = dtCrane.Select(string.Format("TASK_LEVEL={0} and TASK_DATE={1} and IS_MIX={2} and FORDER={3} and PRODUCT_CODE={4} and TASK_TYPE='22' and STATE in (0,1,2)", new object[] { drTaskID["TASK_LEVEL"], drTaskID["TASK_DATE"], drTaskID["IS_MIX"], drTaskID["FORDER"], drTaskID["PRODUCT_CODE"] }));//判断小于当前Index的出库任务，是否有未完成的出库任务，如果没有，则返回True.
-        //                    if (drs.Length == 0)
-        //                    {
-        //                        blnvalue = true;
-        //                    }
-        //                    else
-        //                    {
-        //                        blnvalue = false;
-        //                        break;
-        //                    }
-
-        //                }
-        //            }
-        //            else
-        //            {
-        //                blnvalue = true;
-        //            }
-        //        }                
-        //    }
-        //    return blnvalue;
-        //}
 
         /// <summary>
         ///  接收ACP后，根据获取的任务类型，重新获取新的TaskID;
@@ -722,8 +672,6 @@ namespace THOK.XC.Process.Process_Crane
                                 cdal.UpdateCellUnLock(dr["CELL_CODE"].ToString());
                                 dal.UpdateTaskState(dr["TASK_ID"].ToString(), "3");
                                 break;
-
-
                             }
                             else
                             {
@@ -1069,6 +1017,13 @@ namespace THOK.XC.Process.Process_Crane
             WriteToService("Crane", "DUM", str);
             //WriteToService("Crane", "DUM", "<00000CRAN30THOK01DUM0000000>");
         }
+        private void SendDUA()
+        {
+            THOK.CRANE.TelegramData tgd = new CRANE.TelegramData();
+            THOK.CRANE.TelegramFraming tf = new CRANE.TelegramFraming();
+            string str = tf.DataFraming("00000", tgd, tf.TelegramDUA);
+            WriteToService("Crane", "DUA", str);
+        }
         /// <summary>
         /// 堆垛机返回错误号，写入PLC
         /// </summary>
@@ -1080,6 +1035,5 @@ namespace THOK.XC.Process.Process_Crane
             WriteToService("StockPLC_02", "02_2_C" + CraneNo, ErrCode);
         }
         #endregion
-
     }
 }
