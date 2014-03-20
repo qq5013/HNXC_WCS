@@ -9,8 +9,6 @@ namespace THOK.XC.Process.Process_02
 {
     public class PalletInRequestProcess : AbstractProcess
     {
-     
-       
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
         {
             /*  处理事项：
@@ -23,10 +21,8 @@ namespace THOK.XC.Process.Process_02
                 if (obj[0] == null || obj[0].ToString() == "0")
                     return;
 
-
                 int PalletCount = int.Parse(obj[1].ToString());
-                string TaskID = "";
-             
+                string TaskID = "";             
 
                 //判断是否还有出库任务
                 TaskDal dal = new TaskDal();
@@ -34,7 +30,8 @@ namespace THOK.XC.Process.Process_02
 
                 if (PalletCount >= 4 || TaskOutCount <= 4)
                 {
-                    TaskID = dal.GetPalletInTask();//获取托盘组入库下达排程任务而小车未接货的任务号，防止托盘组数量变化引起触发
+                    //获取托盘组入库下达排程任务而小车未接货的任务号，防止托盘组数量变化引起触发
+                    TaskID = dal.GetPalletInTask();
                     string strWhere = "";
                     if (TaskID == "")
                     {
@@ -48,21 +45,21 @@ namespace THOK.XC.Process.Process_02
                         dal.UpdateTaskState(CellValue[0], "1");//更新任务开始执行
 
                         ProductStateDal StateDal = new ProductStateDal();
-                        StateDal.UpdateProductCellCode(CellValue[0], CellValue[1]); //更新Product_State 货位
-                        dal.UpdateTaskDetailStation("357", "359", "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", CellValue[0])); //更新货位申请起始地址及目标地址。
+                        //更新Product_State 货位
+                        StateDal.UpdateProductCellCode(CellValue[0], CellValue[1]); 
+
+                        //更新货位申请起始地址及目标地址。
+                        dal.UpdateTaskDetailStation("357", "359", "2", string.Format("TASK_ID='{0}' AND ITEM_NO=1", CellValue[0])); 
                     }
                     strWhere = string.Format("WCS_TASK.TASK_ID='{0}' AND ITEM_NO=2 AND DETAIL.STATE=0 ", TaskID);
                     DataTable dt = dal.TaskCarDetail(strWhere);
                     WriteToProcess("CarProcess", "CarInRequest", dt);
-
                 }
             }
             catch (Exception e)
             {
                 Logger.Error("THOK.XC.Process.Process_02.PalletInRequestProcess：" + e.Message);
             }
-        }
-
-      
+        }      
     }
 }
