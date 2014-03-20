@@ -19,6 +19,8 @@ namespace THOK.XC.Process.Process_Crane
         private DataTable dtSendCRQ;
         private DataTable dtErrMesage;
         private int NCK001;
+        //二楼出库是否排序，参数控制。
+        private bool blnOutOrder = true; 
 
         //process.Initialize(context);初始化的时候执行
         public override void Initialize(Context context)
@@ -39,6 +41,10 @@ namespace THOK.XC.Process.Process_Crane
                         dCraneWait.Add(CraneNo, null);
                     }
                 }
+
+                THOK.MCP.Config.Configuration conf = new MCP.Config.Configuration();
+                conf.Load("Config.xml");
+                blnOutOrder = conf.Attributes["IsOutOrder"] == "1" ? true : false;
             }
             catch (Exception ex)
             {
@@ -178,8 +184,9 @@ namespace THOK.XC.Process.Process_Crane
                      //如果是二楼出库,判断当前任务的产品是不是
                     if (drs[i]["TASK_TYPE"].ToString() == "22")
                     {
+
                         //判断是否能出库
-                        bool blnCan = dal.ProductCanToCar(drs[i]["FORDERBILLNO"].ToString(), drs[i]["FORDER"].ToString(), drs[i]["IS_MIX"].ToString(),false);  //判断能否出库
+                        bool blnCan = dal.ProductCanToCar(drs[i]["FORDERBILLNO"].ToString(), drs[i]["FORDER"].ToString(), drs[i]["IS_MIX"].ToString(), false, blnOutOrder);  //判断能否出库
                         if (!blnCan)
                             continue;
                     }

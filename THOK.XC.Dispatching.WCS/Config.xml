@@ -4,6 +4,7 @@
   <Attributes>
     <Attribute Name="ScanPortName" Value="COM11" />
     <Attribute Name="ScanBaudRate" Value="9600" />
+    <Attribute Name="IsOutOrder" Value="1" />
   </Attributes>
   <Services>
     <Service Name="StockPLC_01" Type="THOK.MCP.Service.Siemens.dll, THOK.MCP.Service.Siemens.OPCService" ConfigFile="StockPLC_01.xml" />

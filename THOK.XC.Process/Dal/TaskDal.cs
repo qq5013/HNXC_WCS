@@ -333,12 +333,19 @@ namespace THOK.XC.Process.Dal
         /// <param name="Forder"></param>
         /// <param name="IsMix"></param>
         /// <returns></returns>
-        public bool ProductCanToCar(string ForderBillNo, string Forder, string IsMix,bool blnCar)
+        public bool ProductCanToCar(string ForderBillNo, string Forder, string IsMix, bool blnCar, bool blnOutOrder)
         {
-            using (PersistentManager pm = new PersistentManager())
+            if (!blnOutOrder) //不需要排序
             {
-                TaskDao dao = new TaskDao();
-                return dao.ProductCanToCar(ForderBillNo, Forder, IsMix, blnCar);
+                return true;
+            }
+            else
+            {
+                using (PersistentManager pm = new PersistentManager())
+                {
+                    TaskDao dao = new TaskDao();
+                    return dao.ProductCanToCar(ForderBillNo, Forder, IsMix, blnCar);
+                }
             }
         }
 

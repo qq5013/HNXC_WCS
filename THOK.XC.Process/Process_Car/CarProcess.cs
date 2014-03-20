@@ -15,6 +15,7 @@ namespace THOK.XC.Process.Process_Car
         private Dictionary<string, string> dBillTargetCode = new Dictionary<string, string>();
         private Dictionary<string, bool> dBillUseTarget = new Dictionary<string, bool>();
         private int OrderIndex;
+        private bool blnOutOrder = true;
 
         public override void Initialize(Context context)
         {
@@ -44,6 +45,9 @@ namespace THOK.XC.Process.Process_Car
                 dtCarOrder.Columns.Add(dc6);
                 dtCarOrder.Columns.Add(dc7);
             }
+            THOK.MCP.Config.Configuration conf = new MCP.Config.Configuration();
+            conf.Load("Config.xml");
+            blnOutOrder = conf.Attributes["IsOutOrder"] == "1" ? true : false;
 
             base.Initialize(context);
         }
@@ -174,7 +178,7 @@ namespace THOK.XC.Process.Process_Car
                             ToPostion = -1;
 
                             //判断二楼能否出库
-                            bool blnCan = dal.ProductCanToCar(dr["FORDERBILLNO"].ToString(), dr["FORDER"].ToString(), dr["IS_MIX"].ToString(),true);
+                            bool blnCan = dal.ProductCanToCar(dr["FORDERBILLNO"].ToString(), dr["FORDER"].ToString(), dr["IS_MIX"].ToString(), true, blnOutOrder);
                             if (blnCan)
                             {
                                 if (!dBillUseTarget.ContainsKey(dr["FORDERBILLNO"].ToString()))
@@ -316,7 +320,7 @@ namespace THOK.XC.Process.Process_Car
                                 if (drs[0]["TASK_TYPE"].ToString() == "21")
                                     blnCan = true;
                                 else
-                                    blnCan = dal.ProductCanToCar(drs[0]["FORDERBILLNO"].ToString(), drs[0]["FORDER"].ToString(), drs[0]["IS_MIX"].ToString(),true);
+                                    blnCan = dal.ProductCanToCar(drs[0]["FORDERBILLNO"].ToString(), drs[0]["FORDER"].ToString(), drs[0]["IS_MIX"].ToString(), true, blnOutOrder);
                                 if (blnCan)
                                 {
 
@@ -642,8 +646,8 @@ namespace THOK.XC.Process.Process_Car
 
                                 //判断二楼能否出库
                                 bool blnCan = false;
-                                 
-                                blnCan = dal.ProductCanToCar(dr["FORDERBILLNO"].ToString(), dr["FORDE"].ToString(), dr["IS_MIX"].ToString(),true);
+
+                                blnCan = dal.ProductCanToCar(dr["FORDERBILLNO"].ToString(), dr["FORDE"].ToString(), dr["IS_MIX"].ToString(), true, blnOutOrder);
                                 if (blnCan)
                                 {
                                     if (!dBillUseTarget.ContainsKey(dr["FORDERBILLNO"].ToString()))
