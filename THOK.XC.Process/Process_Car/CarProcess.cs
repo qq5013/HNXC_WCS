@@ -51,8 +51,6 @@ namespace THOK.XC.Process.Process_Car
 
             base.Initialize(context);
         }
-
-
         protected override void StateChanged(StateItem stateItem, IProcessDispatcher dispatcher)
         {
             bool blnChange = false;
@@ -116,7 +114,6 @@ namespace THOK.XC.Process.Process_Car
             }
             if (dt.Rows.Count == 0)
                 return;
-
 
             //插入
 
@@ -389,9 +386,12 @@ namespace THOK.XC.Process.Process_Car
                 TaskDal dal = new TaskDal();
 
                 #region 送货完成,写入站台
-                object[] obj1 = ObjectUtil.GetObjects(WriteToService("StockPLC_02", CarItem + "_1"));//小车任务号，状态
-                object[] obj2 = ObjectUtil.GetObjects(WriteToService("StockPLC_02", CarItem+"_2"));//读取小车位置,目标地址
+                //小车任务号，状态
+                object[] obj1 = ObjectUtil.GetObjects(WriteToService("StockPLC_02", CarItem + "_1"));
+                //读取小车位置,目标地址
+                object[] obj2 = ObjectUtil.GetObjects(WriteToService("StockPLC_02", CarItem+"_2"));
 
+                //站台与码尺地址对应表过滤，获取当前任务目标地址的站台
                 DataRow[] drsAddress = dtCarAddress.Select(string.Format("CAR_ADDRESS='{0}'", obj2[1].ToString()));
                 if (drsAddress.Length > 0)
                 {
@@ -409,7 +409,7 @@ namespace THOK.XC.Process.Process_Car
                             strItemName = "PalletToCarStationProcess";
                         }
                     }
-
+                    //下任务给PLC，执行输送任务
                     if (strItemName != "")
                         WriteToProcess(strItemName, strItemState, obj1[0].ToString());
                 }
@@ -418,7 +418,8 @@ namespace THOK.XC.Process.Process_Car
                 if (dtCar == null)
                     return;
 
-                DataRow[] drexist = dtCar.Select(string.Format("CAR_NO='{0}' and STATE=1", CarNo));//获取小车开始执行完毕之后
+                //获取小车当前任务，并移除任务
+                DataRow[] drexist = dtCar.Select(string.Format("CAR_NO='{0}' and STATE=1", CarNo));
                 if (drexist.Length > 0)
                 {
                     FinshedTaskType = drexist[0]["TASK_TYPE"].ToString();
@@ -426,6 +427,7 @@ namespace THOK.XC.Process.Process_Car
                 }
                 #endregion
 
+                //获取待分配的任务
                 DataRow[] drs = dtCar.Select(string.Format("CAR_NO='{0}' and STATE=0", CarNo));
                 if (drs.Length > 0) //有待分配的任务
                 {
@@ -442,12 +444,10 @@ namespace THOK.XC.Process.Process_Car
                     string TargetCode = "";
                     if (dr["TASK_TYPE"].ToString() == "21")
                     {
-
                         CurPostion = int.Parse(dr["IN_STATION_ADDRESS"].ToString());
                         ToPostion = int.Parse(dr["STATION_NO_ADDRESS"].ToString());
                         FromStation = dr["IN_STATION"].ToString();
                         ToStation = dr["STATION_NO"].ToString();
-
                     }
                     else
                     {
@@ -456,15 +456,13 @@ namespace THOK.XC.Process.Process_Car
                         FromStation = dr["STATION_NO"].ToString();
                         ToStation = dr["OUT_STATION_1"].ToString();
 
-
-
                         if (!dBillUseTarget.ContainsKey(dr["FORDERBILLNO"].ToString()))
                         {
                             dBillUseTarget.Add(dr["FORDERBILLNO"].ToString(), false);
                             dBillTargetCode.Add(dr["FORDERBILLNO"].ToString(), "");
                         }
-
-                        if (dBillUseTarget[dr["FORDERBILLNO"].ToString()]) //已经使用过两次
+                        //dBillUseTarget["dr["FORDERBILLNO"].ToString()] 340、360都有出过
+                        if (dBillUseTarget[dr["FORDERBILLNO"].ToString()])
                         {
                             if (dBillTargetCode[dr["FORDERBILLNO"].ToString()] == "370")
                             {
@@ -476,8 +474,6 @@ namespace THOK.XC.Process.Process_Car
                                 ToPostion = int.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
                                 ToStation = dr["OUT_STATION_2"].ToString();
                             }
-
-
                         }
                         else
                         {
@@ -520,7 +516,6 @@ namespace THOK.XC.Process.Process_Car
                                         ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
                                         TargetCode = "370";
                                     }
-
                                 }
                             }
 
@@ -564,11 +559,6 @@ namespace THOK.XC.Process.Process_Car
                     WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_3", b);
                     WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_4", 1);
 
-
-
-
-
-
                     dal.UpdateTaskDetailCar(FromStation, ToStation, "1", dr["CAR_NO"].ToString(), string.Format("TASK_ID='{0}' and ITEM_NO='{1}'", dr["TASK_ID"], dr["ITEM_NO"]));
 
                     #endregion
@@ -585,14 +575,9 @@ namespace THOK.XC.Process.Process_Car
                     DataRow[] drsNotCar = dtCar.Select("CAR_NO='' and STATE=0", "Index");
                     if (drsNotCar.Length > 0)
                     {
-
-
-
                         for (int i = 0; i < drs.Length; i++)
                         {
-
                             DataRow dr = drs[i];
-
                             if (dr["TASK_TYPE"].ToString() == "21")
                             {
 
@@ -600,26 +585,22 @@ namespace THOK.XC.Process.Process_Car
                                 ToPostion = int.Parse(dr["STATION_NO_ADDRESS"].ToString());
                                 FromStation = dr["IN_STATION"].ToString();
                                 ToStation = dr["STATION_NO"].ToString();
-
                             }
                             else
                             {
                                 CurPostion = int.Parse(dr["STATION_NO_ADDRESS"].ToString());
                                 //判断使用哪个出口？
-
                                 ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
                                 ToStation = dr["OUT_STATION_1"].ToString();
 
                                 FromStation = dr["STATION_NO"].ToString();
-
-
 
                                 ToPostion = -1;
 
                                 //判断二楼能否出库
                                 bool blnCan = false;
 
-                                blnCan = dal.ProductCanToCar(dr["FORDERBILLNO"].ToString(), dr["FORDE"].ToString(), dr["IS_MIX"].ToString(), true, blnOutOrder);
+                                blnCan = dal.ProductCanToCar(dr["FORDERBILLNO"].ToString(), dr["FORDER"].ToString(), dr["IS_MIX"].ToString(), true, blnOutOrder);
                                 if (blnCan)
                                 {
                                     if (!dBillUseTarget.ContainsKey(dr["FORDERBILLNO"].ToString()))
@@ -640,8 +621,6 @@ namespace THOK.XC.Process.Process_Car
                                             ToPostion = int.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
                                             ToStation = dr["OUT_STATION_2"].ToString();
                                         }
-
-
                                     }
                                     else
                                     {
