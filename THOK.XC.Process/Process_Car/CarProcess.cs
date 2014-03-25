@@ -422,7 +422,8 @@ namespace THOK.XC.Process.Process_Car
                 #endregion
 
                 DataRow[] drs = dtCar.Select(string.Format("CAR_NO='{0}' and STATE=0", CarNo));
-                if (drs.Length > 0) //有待分配的任务
+                //有待分配的任务
+                if (drs.Length > 0)
                 {
                     #region 有待分配的任务
                     DataRow dr = drs[0];
@@ -437,12 +438,10 @@ namespace THOK.XC.Process.Process_Car
                     string TargetCode = "";
                     if (dr["TASK_TYPE"].ToString() == "21")
                     {
-
                         CurPostion = int.Parse(dr["IN_STATION_ADDRESS"].ToString());
                         ToPostion = int.Parse(dr["STATION_NO_ADDRESS"].ToString());
                         FromStation = dr["IN_STATION"].ToString();
                         ToStation = dr["STATION_NO"].ToString();
-
                     }
                     else
                     {
@@ -450,8 +449,6 @@ namespace THOK.XC.Process.Process_Car
                         ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
                         FromStation = dr["STATION_NO"].ToString();
                         ToStation = dr["OUT_STATION_1"].ToString();
-
-
 
                         if (!dBillUseTarget.ContainsKey(dr["FORDERBILLNO"].ToString()))
                         {
@@ -471,11 +468,10 @@ namespace THOK.XC.Process.Process_Car
                                 ToPostion = int.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
                                 ToStation = dr["OUT_STATION_2"].ToString();
                             }
-
-
                         }
                         else
                         {
+                            //制丝线1 正常走360,390拆盘有故障的时候,走340
                             if (dr["TARGET_CODE"].ToString().Trim() == "01")
                             {
                                 int objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_370")).ToString());
@@ -494,10 +490,9 @@ namespace THOK.XC.Process.Process_Car
                                         ToStation = dr["OUT_STATION_2"].ToString();
                                         TargetCode = "390";
                                     }
-
                                 }
-                            }
-                            else
+                            }                               
+                            else  //制丝线02,03 走340 如果370拆盘坏掉，走360至390处拆盘
                             {
                                 int objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_390")).ToString());
                                 if (objstate == 0)
@@ -559,11 +554,6 @@ namespace THOK.XC.Process.Process_Car
                     WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_3", b);
                     WriteToService("StockPLC_02", dr["WriteItem"].ToString() + "_4", 1);
 
-
-
-
-
-
                     dal.UpdateTaskDetailCar(FromStation, ToStation, "1", dr["CAR_NO"].ToString(), string.Format("TASK_ID='{0}' and ITEM_NO='{1}'", dr["TASK_ID"], dr["ITEM_NO"]));
 
                     #endregion
@@ -580,34 +570,24 @@ namespace THOK.XC.Process.Process_Car
                     DataRow[] drsNotCar = dtCar.Select("CAR_NO='' and STATE=0", "Index");
                     if (drsNotCar.Length > 0)
                     {
-
-
-
                         for (int i = 0; i < drs.Length; i++)
                         {
-
                             DataRow dr = drs[i];
 
                             if (dr["TASK_TYPE"].ToString() == "21")
                             {
-
                                 CurPostion = long.Parse(dr["IN_STATION_ADDRESS"].ToString());
                                 ToPostion = long.Parse(dr["STATION_NO_ADDRESS"].ToString());
                                 FromStation = dr["IN_STATION"].ToString();
                                 ToStation = dr["STATION_NO"].ToString();
-
                             }
                             else
                             {
                                 CurPostion = long.Parse(dr["STATION_NO_ADDRESS"].ToString());
                                 //判断使用哪个出口？
-
                                 ToPostion = long.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
                                 ToStation = dr["OUT_STATION_1"].ToString();
-
                                 FromStation = dr["STATION_NO"].ToString();
-
-
 
                                 ToPostion = -1;
 
@@ -635,13 +615,12 @@ namespace THOK.XC.Process.Process_Car
                                             ToPostion = long.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
                                             ToStation = dr["OUT_STATION_2"].ToString();
                                         }
-
-
                                     }
                                     else
                                     {
                                         if (dr["TARGET_CODE"].ToString().Trim() == "01")
                                         {
+                                            //读取370拆盘有无故障
                                             int objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_370")).ToString());
                                             if (objstate == 0)
                                             {
@@ -651,6 +630,7 @@ namespace THOK.XC.Process.Process_Car
                                             }
                                             else
                                             {
+                                                //读取390拆盘有无故障
                                                 objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_390")).ToString());
                                                 if (objstate == 0)
                                                 {
@@ -658,7 +638,6 @@ namespace THOK.XC.Process.Process_Car
                                                     ToStation = dr["OUT_STATION_2"].ToString();
                                                     TargetCode = "390";
                                                 }
-
                                             }
                                         }
                                         else
@@ -679,7 +658,6 @@ namespace THOK.XC.Process.Process_Car
                                                     ToPostion = long.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
                                                     TargetCode = "370";
                                                 }
-
                                             }
                                         }
 
@@ -687,7 +665,6 @@ namespace THOK.XC.Process.Process_Car
                                         {
                                             dBillUseTarget[dr["FORDERBILLNO"].ToString()] = true;
                                             dBillTargetCode[dr["FORDERBILLNO"].ToString()] = TargetCode;
-
                                         }
                                         else
                                         {

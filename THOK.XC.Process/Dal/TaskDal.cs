@@ -327,7 +327,7 @@ namespace THOK.XC.Process.Dal
         }
 
          /// <summary>
-        /// 出库任务排序，判断能否给穿梭车下达出库任务
+        /// 出库任务排序，判断能否给穿梭车下达出库任务 blnCar=false 堆垛机 blnCar=true 穿梭车
         /// </summary>
         /// <param name="ForderBillNo"></param>
         /// <param name="Forder"></param>

@@ -264,7 +264,6 @@ namespace THOK.XC.Process.Dao
             return ExecuteQuery(strSQL).Tables[0];
         }
 
-
         /// <summary>
         /// 获取堆垛机最大流水号
         /// </summary>
