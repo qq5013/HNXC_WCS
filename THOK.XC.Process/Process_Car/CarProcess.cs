@@ -299,23 +299,17 @@ namespace THOK.XC.Process.Process_Car
                         {
                             if (dtCar.Select(string.Format("STATE=0 and CAR_NO='{0}'", drsOrder[i]["CAR_NO"].ToString())).Length == 0) //判断当前小车，是否已经有分配未执行的任务，则给小车分配任务
                             {
-                                DataRow[] drs = dtCar.Select(string.Format("TASK_ID='{0}'", dr["TASK_ID"]));
                                 //判断二楼能否出库
                                 bool blnCan = false;
-                                if (drs[0]["TASK_TYPE"].ToString() == "21")
+                                if (dr["TASK_TYPE"].ToString() == "21")
                                     blnCan = true;
                                 else
-                                    blnCan = dal.ProductCanToCar(drs[0]["FORDERBILLNO"].ToString(), drs[0]["FORDER"].ToString(), drs[0]["IS_MIX"].ToString(), true, blnOutOrder);
+                                    blnCan = dal.ProductCanToCar(dr["FORDERBILLNO"].ToString(), dr["FORDER"].ToString(), dr["IS_MIX"].ToString(), true, blnOutOrder);
                                 if (blnCan)
                                 {
-
-                                    drs[0].BeginEdit();
-                                    drs[0]["CAR_NO"] = drsOrder[i]["CAR_NO"];
-                                    drs[0]["WriteItem"] = drsOrder[i]["WriteItem"];
-                                    drs[0].EndEdit();
-
                                     dr.BeginEdit();
                                     dr["CAR_NO"] = drsOrder[i]["CAR_NO"];
+                                    dr["WriteItem"] = drsOrder[i]["WriteItem"];
                                     dr.EndEdit();
                                     break;
                                 }
