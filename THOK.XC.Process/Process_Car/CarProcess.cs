@@ -671,7 +671,6 @@ namespace THOK.XC.Process.Process_Car
                                             dBillTargetCode[dr["FORDERBILLNO"].ToString()] = TargetCode;
                                         }
                                     }
-
                                 }
                             }
 
@@ -710,8 +709,6 @@ namespace THOK.XC.Process.Process_Car
                                 break;
                             }
                         }
-
-
                     }
                     #endregion
 
@@ -743,9 +740,6 @@ namespace THOK.XC.Process.Process_Car
                                 string barcode = "";
                                 string palletcode = "";
 
-                              
-
-
                                 byte[] b = new byte[190];
                                 Common.ConvertStringChar.stringToByte(barcode, 80).CopyTo(b, 0);
                                 Common.ConvertStringChar.stringToByte(palletcode, 110).CopyTo(b, 80);
@@ -753,11 +747,8 @@ namespace THOK.XC.Process.Process_Car
                                 WriteToService("StockPLC_02", WriteItem + "_2", WriteValue);//地址。
                                 WriteToService("StockPLC_02", WriteItem + "_3", b);
                                 WriteToService("StockPLC_02", WriteItem + "_4", 1);
-
                             }
-
                         }
-
                     }
                     #endregion
                 }
@@ -802,17 +793,11 @@ namespace THOK.XC.Process.Process_Car
                             WriteToService("StockPLC_02", drMax[i]["WriteItem"].ToString() + "_2", WriteValue);//地址。
                             WriteToService("StockPLC_02", drMax[i]["WriteItem"].ToString() + "_3", b);
                             WriteToService("StockPLC_02", drMax[i]["WriteItem"].ToString() + "_4", 1);
-
                         }
-
-
                     }
-
                 }
                 #endregion
             }
-
-
         }
 
         private string GetNextStation(string CurStation)
