@@ -474,26 +474,6 @@ namespace THOK.XC.Process.Process_Car
                             //制丝线1 正常走360,390拆盘有故障的时候,走340
                             if (dr["TARGET_CODE"].ToString().Trim() == "01")
                             {
-                                int objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_370")).ToString());
-                                if (objstate == 0)
-                                {
-                                    ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
-                                    ToStation = dr["OUT_STATION_1"].ToString();
-                                    TargetCode = "370";
-                                }
-                                else
-                                {
-                                    objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_390")).ToString());
-                                    if (objstate == 0)
-                                    {
-                                        ToPostion = int.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
-                                        ToStation = dr["OUT_STATION_2"].ToString();
-                                        TargetCode = "390";
-                                    }
-                                }
-                            }                               
-                            else  //制丝线02,03 走340 如果370拆盘坏掉，走360至390处拆盘
-                            {
                                 int objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_390")).ToString());
                                 if (objstate == 0)
                                 {
@@ -506,9 +486,29 @@ namespace THOK.XC.Process.Process_Car
                                     objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_370")).ToString());
                                     if (objstate == 0)
                                     {
-                                        ToStation = dr["OUT_STATION_1"].ToString();
                                         ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
+                                        ToStation = dr["OUT_STATION_1"].ToString();
                                         TargetCode = "370";
+                                    }
+                                }
+                            }                               
+                            else  //制丝线02,03 走340 如果370拆盘坏掉，走360至390处拆盘
+                            {
+                                int objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_370")).ToString());
+                                if (objstate == 0)
+                                {
+                                    ToPostion = int.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
+                                    ToStation = dr["OUT_STATION_1"].ToString();
+                                    TargetCode = "370";
+                                }
+                                else
+                                {
+                                    objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_390")).ToString());
+                                    if (objstate == 0)
+                                    {
+                                        ToStation = dr["OUT_STATION_2"].ToString();
+                                        ToPostion = int.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
+                                        TargetCode = "390";
                                     }
 
                                 }
@@ -621,27 +621,6 @@ namespace THOK.XC.Process.Process_Car
                                         if (dr["TARGET_CODE"].ToString().Trim() == "01")
                                         {
                                             //读取370拆盘有无故障
-                                            int objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_370")).ToString());
-                                            if (objstate == 0)
-                                            {
-                                                ToPostion = long.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
-                                                ToStation = dr["OUT_STATION_1"].ToString();
-                                                TargetCode = "370";
-                                            }
-                                            else
-                                            {
-                                                //读取390拆盘有无故障
-                                                objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_390")).ToString());
-                                                if (objstate == 0)
-                                                {
-                                                    ToPostion = long.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
-                                                    ToStation = dr["OUT_STATION_2"].ToString();
-                                                    TargetCode = "390";
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
                                             int objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_390")).ToString());
                                             if (objstate == 0)
                                             {
@@ -651,12 +630,33 @@ namespace THOK.XC.Process.Process_Car
                                             }
                                             else
                                             {
+                                                //读取390拆盘有无故障
                                                 objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_370")).ToString());
                                                 if (objstate == 0)
                                                 {
-                                                    ToStation = dr["OUT_STATION_1"].ToString();
-                                                    ToPostion = long.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
+                                                    ToPostion = long.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
+                                                    ToStation = dr["OUT_STATION_2"].ToString();
                                                     TargetCode = "370";
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            int objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_370")).ToString());
+                                            if (objstate == 0)
+                                            {
+                                                ToPostion = long.Parse(dr["OUT_STATION_1_ADDRESS"].ToString());
+                                                ToStation = dr["OUT_STATION_1"].ToString();
+                                                TargetCode = "370";
+                                            }
+                                            else
+                                            {
+                                                objstate = int.Parse(ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_390")).ToString());
+                                                if (objstate == 0)
+                                                {
+                                                    ToStation = dr["OUT_STATION_2"].ToString();
+                                                    ToPostion = long.Parse(dr["OUT_STATION_2_ADDRESS"].ToString());
+                                                    TargetCode = "390";
                                                 }
                                             }
                                         }
