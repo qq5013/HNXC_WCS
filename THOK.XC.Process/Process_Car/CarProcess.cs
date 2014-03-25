@@ -749,10 +749,11 @@ namespace THOK.XC.Process.Process_Car
                         {
                             if ((int)drMax[0]["ToStation"] > int.Parse(obj2[1].ToString()))
                             {
+                                string strNextStation = GetNextStation(obj2[1].ToString());
                                 int[] WriteValue = new int[2];
 
                                 WriteValue[0] = int.Parse(obj2[0].ToString()); ;
-                                WriteValue[1] = (int)drMax[0]["ToStation"] + 10;//下任务给小车移动到最大目的地址+1个工位。;
+                                WriteValue[1] = int.Parse(strNextStation);//下任务给小车移动到最大目的地址+1个工位。;
 
                                 int TaskNo = 9999;
 
@@ -799,10 +800,12 @@ namespace THOK.XC.Process.Process_Car
                     {
                         for (int i = 0; i < drMax.Length; i++)
                         {
+                            string strNextStation = GetNextStation(obj[2].ToString());
+
                             int[] WriteValue = new int[2];
 
                             WriteValue[0] = (int)drMax[i]["CurStation"]; 
-                            WriteValue[1] = int.Parse(obj[1].ToString()) + (drMax.Length - i) * 10;//下任务给小车移动到最大目的地址+1个工位。;
+                            WriteValue[1] = int.Parse(strNextStation);//下任务给小车移动到最大目的地址+1个工位。;
 
                             int TaskNo = 9999;
 
@@ -834,7 +837,19 @@ namespace THOK.XC.Process.Process_Car
 
         }
 
+        private string GetNextStation(string CurStation)
+        {
+            string strValue = "";
 
+            DataRow[] drs = dtCarAddress.Select(string.Format("CAR_ADDRESS>{0}", CurStation), "CAR_ADDRESS");
+            if (drs.Length == 0)
+            {
+                //当前位置在301，则直接指定到359入库位置。
+                drs = dtCarAddress.Select("STATION_NO='359'"); 
+            }
+            strValue = drs[0]["CAR_ADDRESS"].ToString();
+            return strValue;
+        }
     }
 }
 
