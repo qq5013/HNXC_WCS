@@ -34,32 +34,19 @@ namespace THOK.XC.Process.Dal
                     {
                         case "01":
                         case "02":
-                            DataRow[] drs = dt.Select("QTY>0 AND QTY<CACHE_QTY", "ORDERNO");
-                            if (drs.Length == 0)
+                            strChannel_No = Cdao.GetChannelNoByBillNo(BillNo);
+                            if (strChannel_No == "")
                             {
-                                drs = dt.Select("QTY=0 AND QTY<CACHE_QTY", "ORDERNO");
+                                DataRow[] drs = dt.Select("QTY=0 AND QTY<CACHE_QTY", "ORDERNO");
                                 if (drs.Length > 0)
                                     strChannel_No = drs[0]["CHANNEL_NO"].ToString();
-
                             }
                             else
                             {
-                                if (drs.Length > 1)
+                                DataRow[] drs = dt.Select(string.Format("QTY<CACHE_QTY and CHANNEL_NO='{0}'", strChannel_No), "ORDERNO");
+                                if (drs.Length == 0)
                                 {
-                                    strChannel_No = Cdao.GetChannelNoByBillNo(BillNo);
-                                }
-                                else
-                                {
-                                    DataTable dtHaveProduct = Cdao.ChannelProductInfo(drs[0]["CHANNEL_NO"].ToString());
-                                    if (dtHaveProduct.Rows.Count > 0)
-                                    {
-                                        if (dtHaveProduct.Rows[0]["BILL_NO"].ToString() == BillNo)
-                                            strChannel_No = drs[0]["CHANNEL_NO"].ToString();
-                                    }
-                                }
-                                if (strChannel_No == "")
-                                {
-                                    drs = dt.Select("QTY=0 AND QTY<CACHE_QTY", "ORDERNO");
+                                     drs = dt.Select("QTY=0 AND QTY<CACHE_QTY", "ORDERNO");
                                     if (drs.Length > 0)
                                         strChannel_No = drs[0]["CHANNEL_NO"].ToString();
                                 }
