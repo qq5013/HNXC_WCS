@@ -115,5 +115,21 @@ namespace THOK.XC.Process.Dao
                                           "WHERE TASK_ID='{0}' AND BILL_NO='{1}' ", TaskID, Bill_No, ChannelNo);
             ExecuteNonQuery(strSQL);
         }
+        /// <summary>
+        /// 根据单号，获取缓存表中该单号的最近入库。
+        /// </summary>
+        /// <param name="BillNo"></param>
+        /// <returns></returns>
+        public string GetChannelNoByBillNo(string BillNo)
+        {
+            string strValue = "";
+            string strSQL = string.Format("SELECT  ROWNUM,t.* FROM WCS_PRODUCT_CACHE T WHERE BILL_NO='{0}' AND ROWNUM=1 ORDER BY ORDER_NO DESC", BillNo);
+            DataTable dt= ExecuteQuery(strSQL).Tables[0];
+            if (dt.Rows.Count > 0)
+            {
+                strValue = dt.Rows[0]["CHANNEL_NO"].ToString();
+            }
+            return strValue;
+        }
     }
 }

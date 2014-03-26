@@ -44,18 +44,24 @@ namespace THOK.XC.Process.Dal
                             }
                             else
                             {
-                                for (int i = 0; i < drs.Length; i++)
+                                if (drs.Length > 1)
                                 {
-                                    DataTable dtHaveProduct = Cdao.ChannelProductInfo(drs[i]["CHANNEL_NO"].ToString());
+                                    strChannel_No = Cdao.GetChannelNoByBillNo(BillNo);
+                                }
+                                else
+                                {
+                                    DataTable dtHaveProduct = Cdao.ChannelProductInfo(drs[0]["CHANNEL_NO"].ToString());
                                     if (dtHaveProduct.Rows.Count > 0)
                                     {
                                         if (dtHaveProduct.Rows[0]["BILL_NO"].ToString() == BillNo)
-                                        {
-                                            strChannel_No = drs[i]["CHANNEL_NO"].ToString();
-                                            break;
-                                        }
-
+                                            strChannel_No = drs[0]["CHANNEL_NO"].ToString();
                                     }
+                                }
+                                if (strChannel_No == "")
+                                {
+                                    drs = dt.Select("QTY=0 AND QTY<CACHE_QTY", "ORDERNO");
+                                    if (drs.Length > 0)
+                                        strChannel_No = drs[0]["CHANNEL_NO"].ToString();
                                 }
                             }
                             break;
@@ -161,6 +167,24 @@ namespace THOK.XC.Process.Dal
                 dao.UpdateInChannelAndTime(TaskID, Bill_No, ChannelNo);
                 return strValue;
             }
+        }
+
+        /// <summary>
+        /// 根据单号，获取最近入库的缓存道编号。
+        /// </summary>
+        /// <param name="BillNo"></param>
+        /// <returns></returns>
+        public string GetChannelNoByBillNo(string BillNo)
+        {
+            using (PersistentManager pm = new PersistentManager())
+            {
+                string strChannelNo = "";
+                ChannelDao dao = new ChannelDao();
+                strChannelNo = dao.GetChannelNoByBillNo(BillNo);
+
+                return strChannelNo;
+            }
+
         }
        
     }
