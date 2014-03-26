@@ -45,7 +45,24 @@ namespace THOK.XC.Process.Process_02
 
                     WriteToService("StockPLC_02", WriteItem, 1);
                 }
-                
+
+                //读取码盘机是否处于，申请位；
+                string SeparateItem = "";
+                object objSeparate = ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_372_1"));
+                if (objSeparate.ToString() != "0")
+                    SeparateItem = "02_1_372_1";
+                else
+                {
+
+                    objSeparate = ObjectUtil.GetObject(WriteToService("StockPLC_02", "02_1_392_1"));
+                    if (objSeparate.ToString() != "0")
+                        SeparateItem = "02_1_392_1";
+                }
+                if (SeparateItem != "")
+                {
+                    WriteToProcess("StockOutSeparateProcess", SeparateItem, 1);
+                }
+                    
                
             }
             catch (Exception e)
