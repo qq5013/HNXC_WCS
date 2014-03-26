@@ -389,7 +389,7 @@ namespace THOK.XC.Process.Process_Car
                 object[] obj1 = ObjectUtil.GetObjects(WriteToService("StockPLC_02", CarItem + "_1"));//小车任务号，状态
                 object[] obj2 = ObjectUtil.GetObjects(WriteToService("StockPLC_02", CarItem+"_2"));//读取小车位置,目标地址
 
-                DataRow[] drsAddress = dtCarAddress.Select(string.Format("CAR_ADDRESS >'{0}' and CAR_ADDRESS<'{1}'", long.Parse(obj2[1].ToString())-MaxDifferenceValue,long.Parse(obj2[1].ToString())+MaxDifferenceValue);
+                DataRow[] drsAddress = dtCarAddress.Select(string.Format("CAR_ADDRESS >'{0}' and CAR_ADDRESS<'{1}'", long.Parse(obj2[1].ToString())-MaxDifferenceValue,long.Parse(obj2[1].ToString())+MaxDifferenceValue));
                 if (drsAddress.Length > 0)
                 {
                     string strStationNo = drsAddress[0]["STATION_NO"].ToString();
