@@ -368,7 +368,9 @@ namespace THOK.XC.Process.Process_Car
                     dr["OrderNo"] = Position + 10000; //小车位置小于当前位置，加上最大码尺地址。
                 else
                     dr["OrderNo"] = Position;
-                dr["ToStation"] = DesPosition; //目的地
+                //目的地
+                dr["ToStation"] = DesPosition;
+                //目的地址排序字段
                 dr["ToStationOrder"] = DesPosition;
                 if (DesPosition < 5000)
                     dr["ToStationOrder"] = DesPosition + 10000;//最大码尺地址

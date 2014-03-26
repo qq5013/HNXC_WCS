@@ -15,9 +15,10 @@ namespace THOK.XC.Process.Dao
         /// <returns></returns>
         public DataTable ChannelInfo(string Line_No)
         {
-            string strSQL = string.Format("SELECT LINE_NO, ORDERNO, CMD_CACHE_CHANNEL.CHANNEL_NO,CACHE_QTY,DECODE(TMPCACHE.QTY,NULL, 0,TMPCACHE.QTY) AS QTY  FROM CMD_CACHE_CHANNEL " +
-                            "LEFT JOIN (SELECT  CHANNEL_NO, COUNT(*) AS QTY FROM WCS_PRODUCT_CACHE WHERE STATE=0 GROUP BY CHANNEL_NO) TMPCACHE " +
-                            "ON CMD_CACHE_CHANNEL.CHANNEL_NO=TMPCACHE.CHANNEL_NO WHERE LINE_NO='{0}' ORDER BY ORDERNO", Line_No);
+            string strSQL = string.Format("SELECT LINE_NO, ORDERNO, CMD_CACHE_CHANNEL.CHANNEL_NO,CACHE_QTY,DECODE(TMPCACHE.QTY,NULL, 0,TMPCACHE.QTY) AS QTY " +
+                                          "FROM CMD_CACHE_CHANNEL " +
+                                          "LEFT JOIN (SELECT CHANNEL_NO, COUNT(*) AS QTY FROM WCS_PRODUCT_CACHE WHERE STATE=0 GROUP BY CHANNEL_NO) TMPCACHE " +
+                                          "ON CMD_CACHE_CHANNEL.CHANNEL_NO=TMPCACHE.CHANNEL_NO WHERE LINE_NO='{0}' ORDER BY ORDERNO", Line_No);
             return ExecuteQuery(strSQL).Tables[0];
         }
         /// <summary>
