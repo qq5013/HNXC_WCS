@@ -15,6 +15,7 @@ namespace THOK.XC.Dispatching.WCS
         public Main()
         {
             InitializeComponent();
+
         }
         private void CreateDirectory(string directoryName)
         {
